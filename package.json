@@ -1,0 +1,21 @@
+{
+  "name": "serialarduino",
+  "version": "0.0.1",
+  "description": "node interface for at32u4",
+  "main": "src/",
+  "dependencies": {
+    "serialport": "^4.0.1"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "1.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "serial",
+    "arduino"
+  ],
+  "author": "qcabrol",
+  "license": "MIT"
+}
