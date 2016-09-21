@@ -2,11 +2,11 @@
  * Created by qcabrol on 9/15/16.
  */
 "use strict"
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow} = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
 
 function createWindow () {
     // Create the browser window.
