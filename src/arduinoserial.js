@@ -23,17 +23,24 @@ setInterval(function(){  // !!!!!!!!!!! SETINTERVAL TO BE REMOVED LATER, JUST FO
 
         arduinoPorts.forEach(function (port) {
             if (!serialComPorts[port.comName]) {
-
                 //create new serial Queue manager if a new arduino was connected
                 serialComPorts[port.comName] = new SerialQueueManager(port.comName, {
                     baudRate: 38400,
                     parser: SerialPort.parsers.readline('\n')
+                },
+                {
+                    init:'q'
                 });
 
-                //delete SerialQueueManager object when device is disconnected
-                serialComPorts[port.comName].on('close', function () {
-                    delete serialComPorts[port.comName];
+
+                serialComPorts[port.comName].port.on('idchange', err => {
+                    if (err) return console.log('ERR on idchange event:' + err.message);
+                    console.log('opened port:', this.portParam);
+                    this.emit('open', err);
+                    this.status = 'Serial port not initialized';
+                    this._scheduleInit();
                 });
+                //add event listener for change in id and destroy the object accordingly then create a new one with the correct por call
             }
         });
     });
