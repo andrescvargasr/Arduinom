@@ -35,10 +35,8 @@ setInterval(function(){  // !!!!!!!!!!! SETINTERVAL TO BE REMOVED LATER, JUST FO
 
                 serialComPorts[port.comName].port.on('idchange', err => {
                     if (err) return console.log('ERR on idchange event:' + err.message);
-                    console.log('opened port:', this.portParam);
-                    this.emit('open', err);
-                    this.status = 'Serial port not initialized';
-                    this._scheduleInit();
+                    console.log('device id changed, deleting serial queue manager' + port.comName);
+                    delete serialComPorts[port.comName];
                 });
                 //add event listener for change in id and destroy the object accordingly then create a new one with the correct por call
             }
