@@ -29,7 +29,7 @@ function serialDevicesHandler(options, initialize) {
                 //create new serial Queue manager if a new serial device was connected
                 serialComPorts[port.comName] = new SerialQueueManager(port.comName, {
                         baudRate: 38400,
-                        parser: SerialPort.parsers.readline('\n')
+                        parser: SerialPort.parsers.raw
                     },
                     {
                         init: initialize.init //remove it from here to make the code more generic in the future

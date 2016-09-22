@@ -103,15 +103,15 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 function doTimeout(force) {
                     //keeps calling itself recursively as long as the request was not served
                     if (bufferSize < that.buffer.length || force) {
-                        if (force) console.log('timeout forced');
-                        else console.log('timeout renewed');
+                        //if (force) console.log('timeout forced');
+                        //else console.log('timeout renewed');
                         bufferSize = that.buffer.length;
                         that.timeout = setTimeout(function () {
                             doTimeout();
                         }, timeout);
                         return;
                     }
-                    console.log('command served:' + that.buffer);
+                    //console.log('command served:' + that.buffer);
                     that._resolve(that.buffer);
                     that.buffer = ""; //empty the buffer
                 }
@@ -151,10 +151,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
              propagate SerialPort events + handle messages (listeners)
              ****************************************************************/
             //handle the SerialPort open events
-            this.port.on('open', err => {
-                if (err) return console.log('ERR on opening port:' + err.message);
+            this.port.on('open',() => {
                 console.log('opened port:', this.portParam);
-                this.emit('open', err);
+                this.emit('open');
                 this.status = 'Serial port not initialized';
                 this._scheduleInit();
             });
@@ -188,11 +187,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             });
 
             //handle the SerialPort data events
-            this.port.on('data', (data, err) => {
-                if (err) return console.log('ERR on data event:' + err.message);
-                else     this.buffer += data.toString();     //that or this ???? not clear when using one or the other
-                console.log('Data event: ' + data);
-                this.emit('data', data, err);
+            this.port.on('data', (data) => {
+                this.buffer += data.toString();     //that or this ???? not clear when using one or the other
+                //console.log(this.buffer);
+                //console.log('Data event: ' + data);
+                this.emit('data', data);
             });
         }, (err)=> {
             this.status = 'Unable to find the port.';
