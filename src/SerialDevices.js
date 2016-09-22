@@ -8,7 +8,7 @@ const SerialQueueManager = require("./SerialQueueManager"); //constructor for se
 
 //polls the serial ports in search for an specific serial device every 3sec
 var selectedPorts;
-var serialComPorts = {};
+var serialComPorts={};
 
 /***********************************
  Manages Serial Devices
