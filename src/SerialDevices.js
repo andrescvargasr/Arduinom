@@ -13,12 +13,10 @@ var serialComPorts = {};
 //To be done:
 //handle serial port error event, disconnect event and data event in SerialQueue manager
 // separate in two functions and create instanciation of SerialQueue objects only when a request is performed from the visualizer after a call of getList
-//function getList() {
-setInterval(function(){  // !!!!!!!!!!! SETINTERVAL TO BE REMOVED LATER, JUST FOR TEST PURPOSES
+function getList(options) {
     SerialPort.list(function (err, ports) {
-        //select the ports connected to arduinos
         arduinoPorts = ports.filter(function (port) {
-            return port.manufacturer === 'Arduino_LLC'; //return port infos if true (boolean for filter method)
+            return port.manufacturer === options.manufacturer; //return port infos if true (boolean for filter method) see if it actually works on other platforms
         });
 
         arduinoPorts.forEach(function (port) {
@@ -42,5 +40,7 @@ setInterval(function(){  // !!!!!!!!!!! SETINTERVAL TO BE REMOVED LATER, JUST FO
             }
         });
     });
-}, 3000);
+}
 
+//function exports
+exports.getList=getList;

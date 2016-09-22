@@ -230,4 +230,3 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 }
 
 module.exports = SerialQueueManager;
-
