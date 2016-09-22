@@ -6,30 +6,34 @@
 const SerialPort = require("serialport"); //constructor for serial port objects
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
 
-//polls the serial ports in search for an arduino every 10sec
-var arduinoPorts;
+//polls the serial ports in search for an specific serial device every 3sec
+var selectedPorts;
 var serialComPorts = {};
 
-//To be done:
-//handle serial port error event, disconnect event and data event in SerialQueue manager
-// separate in two functions and create instanciation of SerialQueue objects only when a request is performed from the visualizer after a call of getList
-function getList(options) {
+/***********************************
+ Manages Serial Devices
+ Connection and Disconnections
+ **********************************/
+function serialDevicesHandler(options, initialize) {
     SerialPort.list(function (err, ports) {
-        arduinoPorts = ports.filter(function (port) {
-            return port.manufacturer === options.manufacturer; //return port infos if true (boolean for filter method) see if it actually works on other platforms
+        selectedPorts = ports.filter(function (port) {
+            for(var key in options){
+                if(port[key]!==options[key])
+                    return false
+            }
+            return true; //return port infos if true (boolean for filter method)
         });
 
-        arduinoPorts.forEach(function (port) {
+        selectedPorts.forEach(function (port) {
             if (!serialComPorts[port.comName]) {
-                //create new serial Queue manager if a new arduino was connected
+                //create new serial Queue manager if a new serial device was connected
                 serialComPorts[port.comName] = new SerialQueueManager(port.comName, {
-                    baudRate: 38400,
-                    parser: SerialPort.parsers.readline('\n')
-                },
-                {
-                    init:'q'
-                });
-
+                        baudRate: 38400,
+                        parser: SerialPort.parsers.readline('\n')
+                    },
+                    {
+                        init: initialize.init //remove it from here to make the code more generic in the future
+                    });
 
                 serialComPorts[port.comName].port.on('idchange', err => {
                     if (err) return console.log('ERR on idchange event:' + err.message);
@@ -40,7 +44,8 @@ function getList(options) {
             }
         });
     });
+    return serialComPorts;
 }
 
 //function exports
-exports.getList=getList;
+exports.serialDevicesHandler = serialDevicesHandler;
