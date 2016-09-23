@@ -28,23 +28,6 @@ setInterval(()=> {
          });
          }*/
 
-         /*if (bioreactorQManagers[key].ready) {
-         _readCommand(bioreactorQManagers[key], 'm').then(function (buffer) {
-         console.log(buffer);
-         }).catch(function (err) {
-         console.log('last id' + err);
-         });
-         }*/
-
-        /*if (bioreactorQManagers[key].ready) {
-         _readCommand(bioreactorQManagers[key], 'm0').then(function (buffer) {
-         console.log(buffer);
-         }).catch(function (err) {
-         console.log('last id' + err);
-         });
-         }*/
-
-
         if (bioreactorQManagers[key].ready) {_retrieveLastSavedLog(bioreactorQManagers[key], bioreactorCurrentLog[key] || 0)
             .then((logs)=>{bioreactorCurrentLog[key]= logs;})
             .catch((err)=> {console.log('error on retrieve lastsaved log call', err)});
