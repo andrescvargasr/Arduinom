@@ -5,16 +5,50 @@
 
 const SerialPort = require("serialport"); //constructor for serial port objects
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
+const PouchDB = require("pouchdb");
 
 //polls the serial ports in search for an specific serial device every 3sec
 var selectedPorts;
-var serialComPorts={};
+var serialQManagers={};
+var serialDBList = {};
+var definedReadyListener = {};
+
+/***********************************
+ Manages Serial Devices
+ DB creation or binding
+ **********************************/
+//add options here for pouchdb eg dbname, adapter, ajax...
+function serialDBs(dbOptions){
+    for (let key in serialQManagers) {
+        //prevent multiple instances of the listener to be declared --> to be removed with the setinterval later
+        if (!definedReadyListener[key]) {
+            definedReadyListener[key] = true;
+            serialQManagers[key].on('ready', () => {
+                //create a db linked to the deviceId if not existing
+                if (!serialDBList[serialQManagers[key].deviceId]) {
+                    serialDBList[serialQManagers[key].deviceId] = {
+                        q: serialQManagers[key].deviceId,
+                        db: new PouchDB('deviceId' + serialQManagers[key].deviceId),
+                        serialQ: serialQManagers[key]
+                    };
+                    console.log('creating a database for device:' + serialQManagers[key].deviceId);
+                }
+
+                else {
+                    console.log('rematching the database with the queue manager for device:' + serialQManagers[key].deviceId);
+                    serialDBList[serialQManagers[key].deviceId].serialQ = serialQManagers[key];
+                }
+            });
+        }
+    }
+    return serialDBList;
+}
 
 /***********************************
  Manages Serial Devices
  Connection and Disconnections
  **********************************/
-function serialDevicesHandler(options, initialize) {
+function serialDevices(options, initialize) {
     SerialPort.list(function (err, ports) {
         selectedPorts = ports.filter(function (port) {
             for(var key in options){
@@ -25,27 +59,30 @@ function serialDevicesHandler(options, initialize) {
         });
 
         selectedPorts.forEach(function (port) {
-            if (!serialComPorts[port.comName]) {
+            if (!serialQManagers[port.comName]) {
                 //create new serial Queue manager if a new serial device was connected
-                serialComPorts[port.comName] = new SerialQueueManager(port.comName, {
+                serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
                         baudRate: 38400,
                         parser: SerialPort.parsers.raw
                     },
                     {
-                        init: initialize.init //remove it from here to make the code more generic in the future
+                        init: initialize.init,
+                        endString: initialize.endString
                     });
 
-                serialComPorts[port.comName].port.on('idchange', err => {
+                serialQManagers[port.comName].port.on('idchange', err => {
                     if (err) return console.log('ERR on idchange event:' + err.message);
                     console.log('device id changed, deleting serial queue manager' + port.comName);
-                    delete serialComPorts[port.comName];
+                    delete serialQManagers[port.comName];
                 });
                 //add event listener for change in id and destroy the object accordingly then create a new one with the correct por call
             }
         });
     });
-    return serialComPorts;
+    return serialQManagers;
 }
 
+
 //function exports
-exports.serialDevicesHandler = serialDevicesHandler;
+exports.serialDBs = serialDBs;
+exports.serialDevices = serialDevices;

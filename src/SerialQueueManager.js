@@ -8,6 +8,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.portOptions = options;
         this.portParam = port;
         this.initCommand=(initialize.init || 'q');
+        this.endString=(initialize.endString || '\n\n');
         this.queueLength = 0;
         this.buffer = "";
         this.lastRequest = Promise.resolve('');      // The Last received request
@@ -112,6 +113,8 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                         return;
                     }
                     //console.log('command served:' + that.buffer);
+                    if(that.buffer.endsWith(that.endString)) console.log('buffer OK'); //should return the buffer // throw
+                    else return reject(new Error('buffer not ending properly')); //console.log('buffer does not end with proper endstring'); //should
                     that._resolve(that.buffer);
                     that.buffer = ""; //empty the buffer
                 }
