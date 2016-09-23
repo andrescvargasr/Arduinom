@@ -20,7 +20,6 @@ var definedReadyListener = {};
 //add options here for pouchdb eg dbname, adapter, ajax...
 function serialDBs(dbOptions){
     for (let key in serialQManagers) {
-        //prevent multiple instances of the listener to be declared --> to be removed with the setinterval later
         if (!definedReadyListener[key]) {
             definedReadyListener[key] = true;
             serialQManagers[key].on('ready', () => {
@@ -75,7 +74,6 @@ function serialDevices(options, initialize) {
                     console.log('device id changed, deleting serial queue manager' + port.comName);
                     delete serialQManagers[port.comName];
                 });
-                //add event listener for change in id and destroy the object accordingly then create a new one with the correct por call
             }
         });
     });

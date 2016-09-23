@@ -17,3 +17,13 @@ function addPouchEntry(db, entry) {
 
 //function exports
 exports.addPouchEntry=addPouchEntry;
+
+/*
+ function getPouchEntry(db, id){
+
+ }
+
+ function getPouchLastEntry(db){
+
+ }*/
+
