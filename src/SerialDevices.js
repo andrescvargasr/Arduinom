@@ -14,7 +14,7 @@ var serialDBList = {};
 var ready=serialDBs();
 
 
-//return promise of a serialQobject with given id
+//return promise of a serialQ object with given id
 function getDB(id) {
     return ready.then(()=> {
         if(serialDBList[id]) return serialDBList[id].db;
@@ -23,7 +23,7 @@ function getDB(id) {
 }
 
 
-//return promise of q SerialDB objectwith fiven ID
+//return promise of q serialDB object with fiven ID
 function getSerialQ(id) {
     return ready.then(()=> {
         if(serialDBList[id]) return serialDBList[id].serialQ;
@@ -33,8 +33,7 @@ function getSerialQ(id) {
 
 
 function refreshSerialDevices(options, initialize, dboptions) {
-    serialDevices(options, initialize);
-//    return //, refreshSerialDevices); --> need to call refresh with a timeout
+    ready= serialDevices(options, initialize, dboptions);
 }
 
 /***********************************
@@ -45,6 +44,7 @@ function refreshSerialDevices(options, initialize, dboptions) {
 function serialDBs(dbOptions) {
     var arr=[];
     for (let key in serialQManagers) {
+        //array of promises that resolve when the device is ready
         arr.push(new Promise (function(resolve){
             serialQManagers[key].on('ready', () => {
                 //create a db linked to the deviceId if not existing
@@ -65,7 +65,8 @@ function serialDBs(dbOptions) {
             });
         }))
     }
-    return Promise.all(arr);//must return a promise
+    //only resolves once all of the listed devices are ready
+    return Promise.all(arr);
 }
 
 /***********************************
