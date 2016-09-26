@@ -10,10 +10,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.initCommand=(initialize.init || 'q');
         this.endString=(initialize.endString || '\n\n');
         this.queueLength = 0;
+        this.maxQLength=(initialize.maxQLength || 30);
         this.buffer = "";
         this.lastRequest = Promise.resolve('');      // The Last received request
         this.currentRequest = Promise.resolve(''); // The current request being executed
-        this.serialResponseTimeout = 200;//config.serialResponseTimeout || 125;
+        this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
         this.ready = false; // True if ready to accept new requests into the queue
         this.status = 'Serial port not initialized';
         this._reconnectionAttempt(port, options);
@@ -39,13 +40,20 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 } else if (that.deviceId &&(that.deviceId !== buffer)) {
                     that.emit('idchange');
                     throw new Error('Device Id changed to:' + buffer);
-                } else {
-                    that.deviceId = buffer;
+                } else if (!that.deviceId){
+                    that.deviceId = parseInt(buffer);
                     that.status = 'Serial port initialized';
                     that.ready = true;
-                    that.emit('ready');
-                    console.log('Serial port initialized:' + buffer);
+                    if(!that.deviceId)that.emit('ready');
+                    console.log('Serial port initialized:' + parseInt(buffer));
+                } else {
+                    that.deviceId = parseInt(buffer);
+                    that.status = 'Serial port initialized';
+                    that.ready = true;
+                    if(!that.deviceId)that.emit('initialized');
+                    console.log('Serial port re-initialized:' + parseInt(buffer));
                 }
+
             })
             .catch(function (err) {
                 //console.log('serial init failed');
@@ -68,7 +76,8 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
     addRequest(cmd, options) {
         var that = this;
         options = options || {};
-        if (!that.ready && (cmd!== that.initCommand)) return Promise.reject(that.status);
+        if (!that.ready && (cmd!== that.initCommand)) return Promise.reject(new Error('Device is not ready yet', that.status)); //new error is better practice
+        if (that.queueLength>that.maxQLength) return Promise.reject(new Error('Maximum Queue size exceeded, wait for commands to be processed'));
         that.queueLength++;
         //add one request to the queue at the beginning or the end
         that.lastRequest = that.lastRequest.then(that._appendRequest(cmd, options.timeout), that._appendRequest(cmd, options.timeout));

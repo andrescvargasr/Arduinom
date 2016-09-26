@@ -89,22 +89,9 @@ function _extractEpoch(log){
  serialQ.addRequest(`e${epoch}\n`);
  }
 
- function getLastID(serialQ){
- serialQ.addRequest('m')
- }
-
- function getLastLog(serialQ){
-
- }
-
- function getLastLogs(serialQ){
-
- }
-
  function getConfig(serialQ){
 
  }
-
  function setParameter(serialQ, value, param){
 
  }

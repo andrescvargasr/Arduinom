@@ -9,19 +9,43 @@ const PouchDB = require("pouchdb");
 
 //polls the serial ports in search for an specific serial device every 3sec
 var selectedPorts;
-var serialQManagers={};
+var serialQManagers = {};
 var serialDBList = {};
-var definedReadyListener = {};
+var ready=serialDBs();
+
+
+//return promise of a serialQobject with given id
+function getDB(id) {
+    return ready.then(()=> {
+        if(serialDBList[id]) return serialDBList[id].db;
+        else throw new Error('no existing device with ID', id);
+    })
+}
+
+
+//return promise of q SerialDB objectwith fiven ID
+function getSerialQ(id) {
+    return ready.then(()=> {
+        if(serialDBList[id]) return serialDBList[id].serialQ;
+        else throw new Error('no existing device with ID', id);
+    })
+}
+
+
+function refreshSerialDevices(options, initialize, dboptions) {
+    serialDevices(options, initialize);
+//    return //, refreshSerialDevices); --> need to call refresh with a timeout
+}
 
 /***********************************
  Manages Serial Devices
  DB creation or binding
  **********************************/
 //add options here for pouchdb eg dbname, adapter, ajax...
-function serialDBs(dbOptions){
+function serialDBs(dbOptions) {
+    var arr=[];
     for (let key in serialQManagers) {
-        if (!definedReadyListener[key]) {
-            definedReadyListener[key] = true;
+        arr.push(new Promise (function(resolve){
             serialQManagers[key].on('ready', () => {
                 //create a db linked to the deviceId if not existing
                 if (!serialDBList[serialQManagers[key].deviceId]) {
@@ -37,21 +61,22 @@ function serialDBs(dbOptions){
                     console.log('rematching the database with the queue manager for device:' + serialQManagers[key].deviceId);
                     serialDBList[serialQManagers[key].deviceId].serialQ = serialQManagers[key];
                 }
+                resolve();
             });
-        }
+        }))
     }
-    return serialDBList;
+    return Promise.all(arr);//must return a promise
 }
 
 /***********************************
  Manages Serial Devices
  Connection and Disconnections
  **********************************/
-function serialDevices(options, initialize) {
+function serialDevices(options, initialize,dboptions) {
     SerialPort.list(function (err, ports) {
         selectedPorts = ports.filter(function (port) {
-            for(var key in options){
-                if(port[key]!==options[key])
+            for (var key in options) {
+                if (port[key] !== options[key])
                     return false
             }
             return true; //return port infos if true (boolean for filter method)
@@ -76,6 +101,7 @@ function serialDevices(options, initialize) {
                 });
             }
         });
+        serialDBs(dboptions);
     });
     return serialQManagers;
 }
