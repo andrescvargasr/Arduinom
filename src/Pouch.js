@@ -3,15 +3,17 @@
  */
 "use strict"
 const PouchDB = require("pouchdb");
+const debug = require("debug")('main:pouchDB');
 
 /********************************************************
  PouchDB related functions for DB entries
  *******************************************************/
 function addPouchEntry(db, entry) {
-    db.put(entry).then(function (response) { //define the response callback
-        console.log('Entry written in PouchDB:' + id);
+    debug('trying to add a db entry');
+    db.put(entry).then(function () { //define the response callback
+        debug('Entry written in PouchDB:' + db);
     }).catch(function (err) {
-        console.log('Error on pouchDB write:' + err);
+        debug('Error on pouchDB write:' + err);
     })
 }
 

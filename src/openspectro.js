@@ -5,7 +5,7 @@
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
-//const PouchDB = require("pouchdb");
+const PouchDB = require("./Pouch");
 
 
 class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
@@ -110,7 +110,11 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
 
 
     testAll() {
-        if (this._ready) this.serialQ.addRequest('t',{timeout: 15000}).then((buff)=>debug('test all: ', buff));
+        var that=this;
+        if (this._ready) this.serialQ.addRequest('t',{timeout: 15000}).then((buff)=>{
+            debug('test all: ', buff);
+            PouchDB.addPouchEntry(that.db.db, buff);
+        });
         else this._notReady();
     }
 
@@ -142,11 +146,10 @@ setInterval(()=> {
         spectro = new openSpectro(21296);
     }
 
-    debug('trololo');
     spectro.testAll();
 
 
-}, 3000);
+}, 20000);
 
 
 module.exports = openSpectro;
