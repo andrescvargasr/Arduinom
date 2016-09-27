@@ -6,18 +6,24 @@
 const SerialPort = require("serialport"); //constructor for serial port objects
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
 const PouchDB = require("pouchdb");
+const debug = require("debug")('main:serialdevices');
 
 //polls the serial ports in search for an specific serial device every 3sec
 var selectedPorts;
 var serialQManagers = {};
 var serialDBList = {};
-var ready=serialDBs();
+var ready = serialDevices();
+var serialQListener = {};
 
 
 //return promise of a serialQ object with given id
 function getDB(id) {
+    debug('getting serialDB for device', id);
     return ready.then(()=> {
-        if(serialDBList[id]) return serialDBList[id].db;
+        debug('resolved getDB');
+        if (serialDBList[id]){
+            return serialDBList[id].db;
+        }
         else throw new Error('no existing device with ID', id);
     })
 }
@@ -25,55 +31,28 @@ function getDB(id) {
 
 //return promise of q serialDB object with fiven ID
 function getSerialQ(id) {
+    debug('getting serialQ for device', id);
     return ready.then(()=> {
-        if(serialDBList[id]) return serialDBList[id].serialQ;
+        debug('resolved get serialQ');
+        if (serialDBList[id]) {
+            return serialDBList[id].serialQ;
+        }
         else throw new Error('no existing device with ID', id);
     })
 }
 
 
-function refreshSerialDevices(options, initialize, dboptions) {
-    ready= serialDevices(options, initialize, dboptions);
-}
-
-/***********************************
- Manages Serial Devices
- DB creation or binding
- **********************************/
-//add options here for pouchdb eg dbname, adapter, ajax...
-function serialDBs(dbOptions) {
-    var arr=[];
-    for (let key in serialQManagers) {
-        //array of promises that resolve when the device is ready
-        arr.push(new Promise (function(resolve){
-            serialQManagers[key].on('ready', () => {
-                //create a db linked to the deviceId if not existing
-                if (!serialDBList[serialQManagers[key].deviceId]) {
-                    serialDBList[serialQManagers[key].deviceId] = {
-                        q: serialQManagers[key].deviceId,
-                        db: new PouchDB('deviceId' + serialQManagers[key].deviceId),
-                        serialQ: serialQManagers[key]
-                    };
-                    console.log('creating a database for device:' + serialQManagers[key].deviceId);
-                }
-
-                else {
-                    console.log('rematching the database with the queue manager for device:' + serialQManagers[key].deviceId);
-                    serialDBList[serialQManagers[key].deviceId].serialQ = serialQManagers[key];
-                }
-                resolve();
-            });
-        }))
-    }
-    //only resolves once all of the listed devices are ready
-    return Promise.all(arr);
+function refreshDevices(options, initialize, dboptions) {
+    ready = serialDevices(options, initialize, dboptions);
+    return ready;
 }
 
 /***********************************
  Manages Serial Devices
  Connection and Disconnections
  **********************************/
-function serialDevices(options, initialize,dboptions) {
+function serialDevices(options, initialize, dboptions) {
+    var arr = [];
     SerialPort.list(function (err, ports) {
         selectedPorts = ports.filter(function (port) {
             for (var key in options) {
@@ -92,22 +71,47 @@ function serialDevices(options, initialize,dboptions) {
                     },
                     {
                         init: initialize.init,
+
                         endString: initialize.endString
                     });
 
+                arr.push(new Promise(function (resolve) {
+                    if (!serialQListener[port.comName]) {
+                        serialQListener[port.comName] = true;
+                        debug('Serial devices ready listener for device', port.comName);
+                        serialQManagers[port.comName].on('ready', () => {
+                            //create a db linked to the deviceId if not existing
+                            serialDBList[serialQManagers[port.comName].deviceId] = {
+                                q: serialQManagers[port.comName].deviceId,
+                                db: new PouchDB('deviceId' + serialQManagers[port.comName].deviceId),
+                                serialQ: serialQManagers[port.comName]
+                            };
+                            debug('creating a database for device:' + serialQManagers[port.comName].deviceId);
+                            resolve();
+                        });
+                        serialQManagers[port.comName].on('reinitialized', () => {
+                            debug('rematching the database with the queue manager for device:' + serialQManagers[port.comName].deviceId);
+                            serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
+                            resolve();
+                        });
+                    }
+                }))
+
+
                 serialQManagers[port.comName].port.on('idchange', err => {
-                    if (err) return console.log('ERR on idchange event:' + err.message);
-                    console.log('device id changed, deleting serial queue manager' + port.comName);
+                    if (err) return debug('ERR on idchange event:' + err.message);
+                    debug('device id changed, deleting serial queue manager' + port.comName);
                     delete serialQManagers[port.comName];
+                    serialQListener[port.comName] = false;
                 });
             }
         });
-        serialDBs(dboptions);
     });
-    return serialQManagers;
+    return Promise.all(arr);
 }
 
 
 //function exports
-exports.serialDBs = serialDBs;
-exports.serialDevices = serialDevices;
+exports.getSerialQ = getSerialQ;
+exports.getDB = getDB;
+exports.refreshDevices = refreshDevices;

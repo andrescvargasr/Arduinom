@@ -4,6 +4,7 @@
   "description": "node interface for at32u4",
   "main": "src/",
   "dependencies": {
+    "debug": "^2.2.0",
     "pouchdb": "^6.0.5",
     "serialport": "^4.0.1"
   },
