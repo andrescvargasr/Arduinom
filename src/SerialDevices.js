@@ -63,6 +63,9 @@ function serialDevices(options, initialize, dboptions) {
         });
 
         selectedPorts.forEach(function (port) {
+
+            debug('device with desired specs detected on port :', port.comName);
+
             if (!serialQManagers[port.comName]) {
                 //create new serial Queue manager if a new serial device was connected
                 serialQManagers[port.comName] = new SerialQueueManager(port.comName, {

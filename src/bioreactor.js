@@ -1,101 +1,134 @@
 /**
- * Created by qcabrol on 9/22/16.
+ * Created by qcabrol on 9/26/16.
  */
 "use strict"
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
-const PouchDB = require("pouchdb");
+const debug = require("debug")('main:openspectro');
+//const PouchDB = require("pouchdb");
 
-/**********************************************************************************
- * This file will have to be separated between pouch related generic functions and
- * device related ones (setEpoch, requireLog, requireMultiLog...)
- **********************************************************************************/
-var bioreactorQManagers = {};
-var bioreactorDBs = {};
-var bioreactorCurrentLog={};
 
-//need to add options here for pouchdb eg dbname, adapter, ajax... ++ remove the setinterval
-setInterval(()=> {
-    bioreactorQManagers = Serial.serialDevices({manufacturer: 'Arduino_LLC'}, {init: 'q', endString: '\n'}); //for it to be a bioreactor, need a condition on the qualifier value 'isbioreactor'
-    bioreactorDBs = Serial.serialDBs();//should call dboptions here
-
-    for (let key in bioreactorQManagers) {
-        /*        if (bioreactorQManagers[key].ready) {
-         _readCommand(bioreactorQManagers[key], 'e').then(function (buffer) {
-         console.log('epoch is :' + buffer);
-         }).catch(function (err) {
-         console.log('getEpoch error' + err);
-         });
-         }*/
-
-        if (bioreactorQManagers[key].ready) {_retrieveLastSavedLog(bioreactorQManagers[key], bioreactorCurrentLog[key] || 0)
-            .then((logs)=>{bioreactorCurrentLog[key]= logs;})
-            .catch((err)=> {console.log('error on retrieve lastsaved log call', err)});
-
-        console.log('current logID :', bioreactorCurrentLog[key]);
-        }
+class openBioreactor /*extends EventEmitter*/ { //issue with extends EventEmitter
+    constructor(id) {
+        this.id=id;
+        this._ready=false;
+        this.serialQ = {};// new SerialQManager();
+        this.db = {};
+        this._init=this.openBioInit(id);
     }
-}, 3000);
+
+    openBioInit(id){
+        Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {
+            init: 'q',
+            endString: '\r\n\r\n'
+        })
+            .then(() => {
+                debug('devices refreshed');
+                return Serial.getSerialQ(id);
+            })
+            .then(Q => {
+                if (Q) this.serialQ = Q;
+                else throw new Error('no serialQ for device ', id);
+            })
+            .then(() => {
+                return Serial.getDB(id);
+            })
+            .then(db => {
+                if(db) {
+                    this.db = db;
+                    this._ready=true;
+                    debug('openspectro device ready');
+                }
+                else throw new Error('no db for device ', id);
+            }).catch((err)=>{
+            debug(err);
+            this._scheduleInit(id);
+        });
+    }
+
+    //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
+    _scheduleInit(id){
+        if(this.initTimeout){
+            clearTimeout(this.initTimeout) //core of the solution
+        }
+        this.initTimeout= setTimeout(()=> {
+            this.openBioInit(id)
+        }, 5000);
+    }
 
 
-/********************************************************
- Device Interface related functions
- *******************************************************/
+    _notReady(){
+        debug('openspectro no ready or not existing device', this.id);
+    }
 
-//probably not useful
-function _retrieveOldestLog(serialQ) {
-    _readCommand(serialQ, 'm0').then(function (buffer) {
-        var logs = buffer.split('\n')
-        logs=_extractID(logs[0]);
-        console.log('device: ', serialQ.deviceId);
-        console.log('Oldest Flash log has entryID: ', logs);
-        return logs;
-    });
 
+    /********************************
+     *      User utililties ---> Need to be redefined for the bioreactor application
+     ********************************/
+
+    /*
+    getHelp() {
+        if (this._ready) this.serialQ.addRequest('h').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getSettings() {
+        if (this._ready) this.serialQ.addRequest('s').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getEpoch() {
+        if (this._ready) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
+        else this._notReady();
+    }
+
+    getFreeMem() {
+        if (this._ready) this.serialQ.addRequest('f').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getQualifier() {
+        if (this._ready) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
+        else this._notReady();
+    }
+
+    getEEPROM() {
+        if (this._ready) this.serialQ.addRequest('z',{timeout: 3000}).then((buff)=>debug('eeprom :',buff));
+        else this._notReady();
+    }
+
+    initializeParameters() {
+        if (this._ready) this.serialQ.addRequest('i').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
+    //request exceeding maxQueue length will be disregarded
+    getRGB() {
+        if (this._ready) this.serialQ.addRequest('a',{timeout: 15000}).then((buff)=>debug('rgb data: ', buff));
+        else this._notReady();
+    }
+
+
+    testAll() {
+        if (this._ready) this.serialQ.addRequest('t',{timeout: 15000}).then((buff)=>debug('test all: ', buff));
+        else this._notReady();
+    }
+
+    runExperiment() {
+        if (this._ready) this.serialQ.addRequest('r',{timeout: 15000}).then((buff)=>debug('experiment results: ', buff));
+        else this._notReady();
+    }
+
+    calibrate() {
+        if (this._ready) this.serialQ.addRequest('c',{timeout: 2000}).then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    //start experiment acquisition with command 'r' and log in the dedicated database
+    //runExperimentAndLog(){}*/
 }
 
-function _retrieveLastSavedLog(serialQ, currentLog){
-    return _readCommand(serialQ, ('m'+(currentLog+1))).then(function (buffer) {
-        var logs = buffer.split('\n')
-        console.log(logs.length);
-        logs=_extractID(logs[logs.length-2]); //first need to call the promise that write these logs in memory and check double check why the parsing is so strange
-        console.log('device: ', serialQ.deviceId);
-        console.log('Last DB Log is ',logs);
-        return logs;
-    });
-}
-
-//Send the epoch request command 'e' and read the value
-function _readCommand(serialQ, cmd) {
-    return serialQ.addRequest(cmd);
-}
-
-/***********************************
-    Utilities, device dependent
- **********************************/
-function _extractID(log){
-    var id= log.substr(0,8);
-    return parseInt(id, 32);
-}
-
-function _extractEpoch(log){
-    var id= log.substr(8,8);
-    return parseInt(id, 32);
-}
 
 
-/*
- function setEpoch(serialQ,epoch, param){
- serialQ.addRequest(`e${epoch}\n`);
- }
-
- function getConfig(serialQ){
-
- }
- function setParameter(serialQ, value, param){
-
- }
-
- function getParameter(serialQ, param){
-
- }*/
+module.exports = openBioreactor;

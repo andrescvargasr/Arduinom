@@ -208,7 +208,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             this.port.on('data', (data) => {
                 this.buffer += data.toString();     //that or this ???? not clear when using one or the other
                 //debug(this.buffer);
-                debug('Data event');
+                //debug('Data event');
                 this.emit('data', data);
             });
         }, (err)=> {

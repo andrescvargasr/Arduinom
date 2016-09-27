@@ -53,7 +53,7 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
         }
         this.initTimeout= setTimeout(()=> {
             this.openspectroInit(id)
-        }, 2000);
+        }, 5000);
     }
 
 
@@ -142,19 +142,11 @@ setInterval(()=> {
         spectro = new openSpectro(21296);
     }
 
+    debug('trololo');
     spectro.testAll();
-    /*
-     for (let key in bioreactorQManagers) {
-     if (bioreactorQManagers[key].ready) {
-     _readCommand(bioreactorQManagers[key], 'a').then(function (buffer) {
-     console.log('qualifier is :' + buffer);
-     }).catch(function (err) {
-     console.log('getQualifier error' + err);
-     });
-     }
-     }*/
 
-}, 2000);
+
+}, 3000);
 
 
 module.exports = openSpectro;
