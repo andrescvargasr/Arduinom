@@ -5,7 +5,7 @@
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
-//const PouchDB = require(""./Pouch");
+//const pouchDB = require(""./pouch");
 
 
 class openBioreactor /*extends EventEmitter*/ { //issue with extends EventEmitter

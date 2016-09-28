@@ -103,7 +103,6 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 //attach solvers to the currentRequest object
                 that.resolveRequest = resolve;
                 that.rejectRequest = reject;
-                //debug('appendRequest');
                 var bufferSize = 0;
                 doTimeout(true);
                 debug('Sending command:' + cmd)

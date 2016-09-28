@@ -5,7 +5,7 @@
 
 const SerialPort = require("serialport"); //constructor for serial port objects
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
-const PouchDB = require("pouchdb");
+const pouchDB = require("pouchdb");
 const debug = require("debug")('main:serialdevices');
 
 //polls the serial ports in search for an specific serial device every 3sec
@@ -86,7 +86,7 @@ function serialDevices(options, initialize, dboptions) {
                             //create a db linked to the deviceId if not existing
                             serialDBList[serialQManagers[port.comName].deviceId] = {
                                 q: serialQManagers[port.comName].deviceId,
-                                db: new PouchDB('deviceId' + serialQManagers[port.comName].deviceId),
+                                db: new pouchDB('deviceId' + serialQManagers[port.comName].deviceId),
                                 serialQ: serialQManagers[port.comName]
                             };
                             debug('creating a database for device:' + serialQManagers[port.comName].deviceId);

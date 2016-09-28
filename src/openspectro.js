@@ -5,131 +5,174 @@
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
-const PouchDB = require("./pouch");
-const util= require("./util");
+const pouchDB = require("./pouch");
+const util = require("./util");
 
 class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
     constructor(id) {
-        this.id=id;
-        this._ready=false;
+        this.id = id;
+        this._ready = false;
         this.serialQ = {};// new SerialQManager();
         this.db = {};
-        this._init=this.openspectroInit(id);
+        this._init = this.openspectroInit(id);
     }
 
-    openspectroInit(id){
-            Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {
-                init: 'q',
-                endString: '\r\n\r\n'
+    openspectroInit(id) {
+        Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {
+            init: 'q',
+            endString: '\r\n\r\n'
+        })
+            .then(() => {
+                debug('devices refreshed');
+                return Serial.getSerialQ(id);
             })
-                .then(() => {
-                    debug('devices refreshed');
-                    return Serial.getSerialQ(id);
-                })
-                .then(Q => {
-                    if (Q) this.serialQ = Q;
-                    else throw new Error('no serialQ for device ', id);
-                })
-                .then(() => {
-                    return Serial.getDB(id);
-                })
-                .then(db => {
-                    if(db) {
-                        this.db = db;
-                        this._ready=true;
-                        debug('openspectro device ready');
-                    }
-                    else throw new Error('no db for device ', id);
-                }).catch((err)=>{
+            .then(Q => {
+                if (Q) this.serialQ = Q;
+                else throw new Error('no serialQ for device ', id);
+            })
+            .then(() => {
+                return Serial.getDB(id);
+            })
+            .then(db => {
+                if (db) {
+                    this.db = db;
+                    this._ready = true;
+                    this.serialQ.on('ready', ()=> {
+                        debug('reinitializing openspectro instance');
+                        openSpectro(id);
+                    });
+                    this.serialQ.on('disconnect', ()=> {
+                        this._ready = false;
+                        this.pending = false;
+                        debug('disconnected openspectro, experiment interrupted');
+                    });
+                    debug('openspectro device ready');
+                }
+                else throw new Error('no db for device ', id);
+            })
+            .catch((err)=> {
                 debug(err);
                 this._scheduleInit(id);
             });
-        }
+    }
 
     //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
-    _scheduleInit(id){
-        if(this.initTimeout){
+    _scheduleInit(id) {
+        if (this.initTimeout) {
             clearTimeout(this.initTimeout) //core of the solution
         }
-        this.initTimeout= setTimeout(()=> {
+        this.initTimeout = setTimeout(()=> {
             this.openspectroInit(id)
         }, 5000);
     }
 
 
-    _notReady(){
-        debug('openspectro no ready or not existing device', this.id);
+    _notReady() {
+        debug('openspectro not ready or not existing device :', this.id);
     }
 
+    _pendingExperiment() {
+        debug('rejected request, wait for completion of the experiment running on openspectro :', this.id);
+    }
 
     /********************************
      *      User utililties
      ********************************/
 
     getHelp() {
-        if (this._ready) this.serialQ.addRequest('h').then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('h').then((buff)=>debug(buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     getSettings() {
-        if (this._ready) this.serialQ.addRequest('s').then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=>debug(buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     getEpoch() {
-        if (this._ready) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
+        if (this._ready && !this.pending) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     getFreeMem() {
-        if (this._ready) this.serialQ.addRequest('f').then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('f').then((buff)=>debug(buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     getQualifier() {
-        if (this._ready) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     getEEPROM() {
-        if (this._ready) this.serialQ.addRequest('z',{timeout: 3000}).then((buff)=>debug('eeprom :',buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('z', {timeout: 3000}).then((buff)=>debug('eeprom :', buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     initializeParameters() {
-        if (this._ready) this.serialQ.addRequest('i').then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('i').then((buff)=>debug(buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded
     getRGB() {
-        if (this._ready) this.serialQ.addRequest('a',{timeout: 15000}).then((buff)=>debug('rgb data: ', buff));
+        if (this._ready && !this.pending) {
+            this.pending = true;
+            this.serialQ.addRequest('a', {timeout: 5000}).then((buff)=> {
+                this.pending = false;
+                debug('rgb data: ', buff)
+            });
+        }
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
 
     testAll() {
-        var that=this;
-        if (this._ready) this.serialQ.addRequest('t',{timeout: 15000}).then((buff)=>{
-            debug('test all: ', buff);
-            PouchDB.addPouchEntry(that.db.db, buff);
-        });
+        if (this._ready && !this.pending) {
+            this.pending = true;
+            this.serialQ.addRequest('t', {timeout: 5000}).then((buff)=> {
+                this.pending = false;
+                debug('test all: ', buff);
+            });
+        }
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     runExperiment() {
-        if (this._ready) this.serialQ.addRequest('r',{timeout: 15000}).then((buff)=>debug('experiment results: ', buff));
+        if (this._ready && !this.pending) {
+            this.pending = true;
+            this.serialQ.addRequest('I',{timeout:500})
+                .then((delay)=> {
+                    debug('experiment delay in ms :', parseInt(delay));
+                    return this.serialQ.addRequest('r', {timeout: (parseInt(delay) * 1000 + 4000)});
+                })
+                .then((buff)=> {
+                    this.pending = false;
+                    debug('openspectro experiment results received');
+                    pouchDB.addPouchEntry(this.db.db, buff, 'r', {devicetype: 'openspectro'});
+                });
+        }
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
     calibrate() {
-        if (this._ready) this.serialQ.addRequest('c',{timeout: 2000}).then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('c', {timeout: 500}).then((buff)=>debug(buff));
+        else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
 
-     //start experiment acquisition with command 'r' and log in the dedicated database
-     //runExperimentAndLog(){}
+
 }
 
 /**********************************************************************************
@@ -146,10 +189,10 @@ setInterval(()=> {
         spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
     }
 
-    spectro.testAll();
+    if (spectro._ready) spectro.runExperiment();
 
 
-}, 20000);
+}, 5000);
 
 
 module.exports = openSpectro;

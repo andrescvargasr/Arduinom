@@ -1,50 +1,77 @@
 var debug = require('debug')('main: parser');
-var util = require('../util/util');
+var util = require("./util");
+var opSpectro=require('open-spectro');
 
 
 exports = module.exports = {
     parse: function (cmd, result, options) {
         options = options || {};
-        var commandReg = /^(.{2})?([a-z])(\d+)?/;
+        //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
+        var commandReg = /^([A-Z]{1,2}|[a-z])(\d+)?$/;
         var m = commandReg.exec(cmd);
 
-        if (!m || !m[2]) {
+        if (!m) {
             debug('The command did not match the regex.');
             return false;
         }
 
-        switch (m[2]) {
-            case 'c':
-                // If c was specify without the number of params to retrieve
-                // We use the parameter in the device config file
-                nbParam = m[3] || options.nbParamCompact;
-                var reqLength = nbParam * 4 + 14;
-                var lines = result.split(/[\r\n]+/);
-                // We are ready to process the next request
-                var entries = [];
-                if (lines.length >= 2) {
-                    debug('process lines');
-                    entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
-                }
-                return entries;
-            case 'm':
-                // m require an argument which is the log position
-                if (!m[3]) return result;
-                // The nb of parameters is specified in the config file
-                var nbParam = options.nbParam;
-                var hasEventHexas = options.hasEvent ? 8 : 0;
-                var reqLength = nbParam * 4 + 22 + hasEventHexas;
-                var lines = result.split(/[\r\n]+/);
-                // We are ready to process the next request
-                var entries = [];
-                if (lines.length >= 2) {
-                    debug('process lines');
-                    entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
-                }
-                return entries;
-            default:
-                return false;
+        if (options.devicetype === 'openspectro') {
+            switch (m[1]) {
+                /*case 'a':
+                    return true;*/
+                case 'r':
+                    return opSpectro.parse(result);
+                /*case 't':
+                    return true;*/
+
+                default:
+                    debug('Error while parsing openspectro, undefined command');
+                    return false;
+            }
         }
+
+        else if (options.devicetype === 'bioreactor') {
+            switch (m[1]) {
+                case 'c':
+                    // If c was specify without the number of params to retrieve
+                    // We use the parameter in the device config file
+                    nbParam = m[3] || options.nbParamCompact;
+                    var reqLength = nbParam * 4 + 14;
+                    var lines = result.split(/[\r\n]+/);
+                    // We are ready to process the next request
+                    var entries = [];
+                    if (lines.length >= 2) {
+                        debug('process lines');
+                        entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
+                    }
+                    return entries;
+                case 'm':
+                    // m require an argument which is the log position
+                    if (!m[3]) return result;
+                    // The nb of parameters is specified in the config file
+                    var nbParam = options.nbParam;
+                    var hasEventHexas = options.hasEvent ? 8 : 0;
+                    var reqLength = nbParam * 4 + 22 + hasEventHexas;
+                    var lines = result.split(/[\r\n]+/);
+                    // We are ready to process the next request
+                    var entries = [];
+                    if (lines.length >= 2) {
+                        debug('process lines');
+                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
+                    }
+                    return entries;
+                default:
+                    debug('Error while parsing bioreactor, undefined command');
+                    return false;
+            }
+        }
+
+
+        else {
+            debug('Error while parsing, device type undefined');
+            return false;
+        }
+
     }
 };
 
