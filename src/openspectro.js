@@ -5,8 +5,8 @@
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
-const PouchDB = require("./Pouch");
-
+const PouchDB = require("./pouch");
+const util= require("./util");
 
 class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
     constructor(id) {
@@ -143,7 +143,7 @@ var initialized = false;
 setInterval(()=> {
     if (!initialized) {
         initialized = true;
-        spectro = new openSpectro(21296);
+        spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
     }
 
     spectro.testAll();
