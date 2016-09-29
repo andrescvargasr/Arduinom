@@ -39,9 +39,6 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                     this._ready = true;
                     debug('openspectro device ready');
 
-                    /*this.serialQ.on('ready', ()=> {
-
-                     });*/
                     this.serialQ.on('close', ()=> {
                         this._ready = false;
                         this.pending = false;
@@ -160,12 +157,12 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
             this.serialQ.addRequest('I', {timeout: 500})
                 .then((delay)=> {
                     debug('experiment delay in ms :', parseInt(delay));
-                    return this.serialQ.addRequest('r', {timeout: (parseInt(delay) * 1000 + 4000)});
+                    return this.serialQ.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
                 })
                 .then((buff)=> {
                     this.pending = false;
                     debug('openspectro experiment results received');
-                    pouchDB.addPouchEntry(this.db.db, buff, 'r', {devicetype: 'openspectro'});
+                    pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro'});
                 });
         }
         else if (this.pending) this._pendingExperiment();

@@ -17,13 +17,8 @@ exports = module.exports = {
 
         if (options.devicetype === 'openspectro') {
             switch (m[1]) {
-                /*case 'a':
-                    return true;*/
                 case 'r':
                     return opSpectro.parse(result);
-                /*case 't':
-                    return true;*/
-
                 default:
                     debug('Error while parsing openspectro, undefined command');
                     return false;
