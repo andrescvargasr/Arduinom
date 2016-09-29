@@ -37,16 +37,20 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                 if (db) {
                     this.db = db;
                     this._ready = true;
-                    this.serialQ.on('ready', ()=> {
-                        debug('reinitializing openspectro instance');
-                        openSpectro(id);
-                    });
-                    this.serialQ.on('disconnect', ()=> {
+                    debug('openspectro device ready');
+
+                    /*this.serialQ.on('ready', ()=> {
+
+                     });*/
+                    this.serialQ.on('close', ()=> {
                         this._ready = false;
                         this.pending = false;
                         debug('disconnected openspectro, experiment interrupted');
                     });
-                    debug('openspectro device ready');
+                    this.serialQ.on('reinitialized', ()=> {
+                        debug('openspectro reinitialized');
+                        this._ready=true;
+                    });
                 }
                 else throw new Error('no db for device ', id);
             })
@@ -54,6 +58,8 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                 debug(err);
                 this._scheduleInit(id);
             });
+
+
     }
 
     //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
@@ -151,7 +157,7 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
     runExperiment() {
         if (this._ready && !this.pending) {
             this.pending = true;
-            this.serialQ.addRequest('I',{timeout:500})
+            this.serialQ.addRequest('I', {timeout: 500})
                 .then((delay)=> {
                     debug('experiment delay in ms :', parseInt(delay));
                     return this.serialQ.addRequest('r', {timeout: (parseInt(delay) * 1000 + 4000)});
