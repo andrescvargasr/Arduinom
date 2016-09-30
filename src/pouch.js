@@ -9,14 +9,13 @@ const parser= require("./parser");
 /********************************************************
  PouchDB related functions for DB entries
  *******************************************************/
-var d = new Date();
-var n = d.getTime();
-
 function addPouchEntry(db, entry, cmd, options) {
-    n=d.getTime();
+    var d = new Date();
+    var n=d.getTime();
     n=n.toString();
+    debug('time is', n);
     var parsedEntry= parser.parse(cmd, entry, options);
-    db.put({_id: (options.filename || {n}), parsedEntry}).then(function () { //define the response callback
+    db.put({_id: (options.filename || n), parsedEntry}).then(function () { //define the response callback
         debug('Entry written in PouchDB:');
         return true;
     }).catch(function (err) {
