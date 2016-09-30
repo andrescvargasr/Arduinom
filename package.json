@@ -7,6 +7,7 @@
     "debug": "^2.2.0",
     "open-spectro": "0.0.7",
     "pouchdb": "^6.0.5",
+    "pouchdb-find": "^0.10.3",
     "serialport": "^4.0.1"
   },
   "devDependencies": {

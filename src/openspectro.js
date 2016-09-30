@@ -162,11 +162,15 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                 .then((buff)=> {
                     this.pending = false;
                     debug('openspectro experiment results received');
-                    pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro'});
+                    pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id});
                 });
         }
         else if (this.pending) this._pendingExperiment();
         else this._notReady();
+    }
+
+    getExperimentResults(){
+        return pouchDB.getPouchEntries(this.db, {devicetype: 'openspectro', deviceID: this.id});
     }
 
     calibrate() {
@@ -182,20 +186,20 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
  * This file will have to be separated between pouch related generic functions and
  * device related ones (setEpoch, requireLog, requireMultiLog...)
  **********************************************************************************/
-var spectro = {}; //create a device spectro for address 'S0' = 21296
-var initialized = false;
-
-//need to add options here for pouchdb eg dbname, adapter, ajax... ++ remove the setinterval
-setInterval(()=> {
-    if (!initialized) {
-        initialized = true;
-        spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
-    }
-
-    if (spectro._ready) spectro.runExperiment();
-
-
-}, 5000);
+// var spectro = {}; //create a device spectro for address 'S0' = 21296
+// var initialized = false;
+//
+// //need to add options here for pouchdb eg dbname, adapter, ajax... ++ remove the setinterval
+// setInterval(()=> {
+//     if (!initialized) {
+//         initialized = true;
+//         spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
+//     }
+//
+//     if (spectro._ready) spectro.runExperiment();
+//
+//
+// }, 5000);
 
 
 module.exports = openSpectro;
