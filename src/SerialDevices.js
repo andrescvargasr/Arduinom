@@ -12,21 +12,9 @@ const debug = require("debug")('main:serialdevices');
 var selectedPorts;
 var serialQManagers = {};
 var serialDBList = {};
+var serialDB = new pouchDB('serialData');
 var ready = serialDevices();
 var serialQListener = {};
-
-
-//return promise of a serialQ object with given id
-function getDB(id) {
-    debug('getting serialDB for device', id);
-    return ready.then(()=> {
-        debug('resolved getDB');
-        if (serialDBList[id]){
-            return serialDBList[id].db;
-        }
-        else throw new Error('no existing device with ID', id);
-    })
-}
 
 
 //return promise of q serialDB object with fiven ID
@@ -86,7 +74,7 @@ function serialDevices(options, initialize, dboptions) {
                             //create a db linked to the deviceId if not existing
                             serialDBList[serialQManagers[port.comName].deviceId] = {
                                 q: serialQManagers[port.comName].deviceId,
-                                db: new pouchDB('deviceId' + serialQManagers[port.comName].deviceId),
+                                db: serialDB,
                                 serialQ: serialQManagers[port.comName]
                             };
                             debug('creating a database for device:' + serialQManagers[port.comName].deviceId);
