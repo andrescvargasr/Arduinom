@@ -18,6 +18,7 @@ function addPouchEntry(db, entry, cmd, options) {
     var parsedEntry= parser.parse(cmd, entry, options);
     db.put({_id: (options.filename || {n}), parsedEntry}).then(function () { //define the response callback
         debug('Entry written in PouchDB:');
+        return true;
     }).catch(function (err) {
         debug('Error on pouchDB write:' + err);
     });
