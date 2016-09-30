@@ -17,6 +17,19 @@ var ready = serialDevices();
 var serialQListener = {};
 
 
+//return promise of a serialQ object with given id
+function getDB(id) {
+    debug('getting serialDB for device', id);
+    return ready.then(()=> {
+        debug('resolved getDB');
+        if (serialDBList[id]){
+            return serialDBList[id].db;
+        }
+        else throw new Error('no existing device with ID', id);
+    })
+}
+
+
 //return promise of q serialDB object with fiven ID
 function getSerialQ(id) {
     debug('getting serialQ for device', id);
