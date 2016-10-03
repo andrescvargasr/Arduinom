@@ -1,6 +1,6 @@
 "use strict"
 const EventEmitter = require("events");
-const SerialPort = require("serialport"); //constructor for serial port objects
+const SerialPort = require("serialport");
 const debug= require("debug")('main:serialqmanager');
 
 class SerialQueueManager extends EventEmitter { //issue with extends EventEmitter
@@ -179,8 +179,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             this.port.on('error', err => {
                 this.status = 'Serial port Error';
                 this.ready = false;
-                if (err) return debug('ERR event:' + err.message);
-                debug('ERR event: ', this.portParam);
+                debugger;
+                if (err) return debug('ERR event1:' + err);
+                debug('ERR event2: ', this.portParam);
                 this.emit('error', err);
             });
 
@@ -220,6 +221,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
     //see if the port that was used is actually connected
     _hasPort() {
+        debug('called _hasPort');
         var that = this;
         return new Promise(function (resolve, reject) {
             SerialPort.list(function (err, ports) {
@@ -227,6 +229,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 var port = ports.find((port)=> {
                     return port.comName === that.portParam;
                 });
+                debug('found Port');
                 if (port) return resolve();
                 reject(new Error(`Port ${that.portParm} not found`));
             });

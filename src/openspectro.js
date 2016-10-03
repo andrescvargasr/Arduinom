@@ -1,7 +1,10 @@
 /**
  * Created by qcabrol on 9/26/16.
  */
-"use strict"
+"use strict";
+
+process.on('unhandledRejection', e => {throw e});
+
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
@@ -72,10 +75,12 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
 
     _notReady() {
         debug('openspectro not ready or not existing device :', this.id);
+        return Promise.reject('openspectro not ready or not existing device :'+ this.id);
     }
 
     _pendingExperiment() {
         debug('rejected request, wait for completion of the experiment running on openspectro :', this.id);
+        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :'+ this.id));
     }
 
     /********************************
@@ -152,9 +157,11 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
     }
 
     runExperiment() {
-        if (this._ready && !this.pending) {
+        if (this.pending) return this._pendingExperiment();
+        else if(!this._ready) return this._notReady();
+        else{
             this.pending = true;
-            this.serialQ.addRequest('I', {timeout: 500})
+            return this.serialQ.addRequest('I', {timeout: 500})
                 .then((delay)=> {
                     debug('experiment delay in ms :', parseInt(delay));
                     return this.serialQ.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
@@ -162,11 +169,10 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                 .then((buff)=> {
                     this.pending = false;
                     debug('openspectro experiment results received');
-                    pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id});
+                    return pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id});
                 });
         }
-        else if (this.pending) this._pendingExperiment();
-        else this._notReady();
+
     }
 
     getExperimentResults(){
@@ -193,7 +199,7 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
 // setInterval(()=> {
 //     if (!initialized) {
 //         initialized = true;
-//         spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
+// var   spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
 //     }
 //
 //     if (spectro._ready) spectro.runExperiment();

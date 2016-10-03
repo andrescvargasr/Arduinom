@@ -13,7 +13,7 @@ var selectedPorts;
 var serialQManagers = {};
 var serialDBList = {};
 var serialDB = new pouchDB('serialData');
-var ready = serialDevices();
+var ready;
 var serialQListener = {};
 
 
@@ -25,7 +25,7 @@ function getDB(id) {
         if (serialDBList[id]){
             return serialDBList[id].db;
         }
-        else throw new Error('no existing device with ID', id);
+        else throw new Error('no existing db for device with ID:'+ id);
     })
 }
 
@@ -38,7 +38,7 @@ function getSerialQ(id) {
         if (serialDBList[id]) {
             return serialDBList[id].serialQ;
         }
-        else throw new Error('no existing device with ID', id);
+        else throw new Error('no existing device with ID: '+ id);
     })
 }
 
@@ -53,65 +53,71 @@ function refreshDevices(options, initialize, dboptions) {
  Connection and Disconnections
  **********************************/
 function serialDevices(options, initialize, dboptions) {
-    var arr = [];
-    SerialPort.list(function (err, ports) {
-        selectedPorts = ports.filter(function (port) {
-            for (var key in options) {
-                if (port[key] !== options[key])
-                    return false
-            }
-            return true; //return port infos if true (boolean for filter method)
-        });
+    return new Promise(function (resolve, reject) {
+        SerialPort.list(function (err, ports) {
+            if (err) return reject(err);
+            var arr = [];
+            selectedPorts = ports.filter(function (port) {
+                for (var key in options) {
+                    if (port[key] !== options[key])
+                        return false
+                }
+                return true; //return port infos if true (boolean for filter method)
+            });
 
-        selectedPorts.forEach(function (port) {
+            selectedPorts.forEach(function (port) {
 
-            debug('device with desired specs detected on port :', port.comName);
+                debug('device with desired specs detected on port :', port.comName);
 
-            if (!serialQManagers[port.comName]) {
-                //create new serial Queue manager if a new serial device was connected
-                serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
-                        baudRate: 38400,
-                        parser: SerialPort.parsers.raw
-                    },
-                    {
-                        init: initialize.init,
+                if (!serialQManagers[port.comName]) {
 
-                        endString: initialize.endString
-                    });
-
-                arr.push(new Promise(function (resolve) {
-                    if (!serialQListener[port.comName]) {
-                        serialQListener[port.comName] = true;
-                        debug('Serial devices ready listener for device', port.comName);
-                        serialQManagers[port.comName].on('ready', () => {
-                            //create a db linked to the deviceId if not existing
-                            serialDBList[serialQManagers[port.comName].deviceId] = {
-                                q: serialQManagers[port.comName].deviceId,
-                                db: serialDB,
-                                serialQ: serialQManagers[port.comName]
-                            };
-                            debug('creating a database for device:' + serialQManagers[port.comName].deviceId);
-                            resolve();
+                    //create new serial Queue manager if a new serial device was connected
+                    serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
+                            baudRate: 38400,
+                            parser: SerialPort.parsers.raw
+                        },
+                        {
+                            init: initialize.init,
+                            endString: initialize.endString
                         });
-                        serialQManagers[port.comName].on('reinitialized', () => {
-                            debug('rematching the database with the queue manager for device:' + serialQManagers[port.comName].deviceId);
-                            serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
-                            resolve();
-                        });
-                    }
-                }))
+                    debug('created new SerialQManager');
+
+                    arr.push(new Promise(function (resolve) {
+                        if (!serialQListener[port.comName]) {
+                            serialQListener[port.comName] = true;
+                            debug('Serial devices ready listener for device', port.comName);
+                            serialQManagers[port.comName].on('ready', () => {
+                                debug('serialQManager ready event');
+                                //create a db linked to the deviceId if not existing
+                                serialDBList[serialQManagers[port.comName].deviceId] = {
+                                    q: serialQManagers[port.comName].deviceId,
+                                    db: serialDB,
+                                    serialQ: serialQManagers[port.comName]
+                                };
+                                debug('linking database to device:' + serialQManagers[port.comName].deviceId);
+                                resolve();
+                            });
+                            serialQManagers[port.comName].on('reinitialized', () => {
+                                debug('rematching the database with the queue manager for device:' + serialQManagers[port.comName].deviceId);
+                                serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
+                                resolve();
+                            });
+                            serialQManagers[port.comName].port.on('idchange', err => {
+                                if (err) return debug('ERR on idchange event:' + err.message);
+                                debug('device id changed, deleting serial queue manager' + port.comName);
+                                delete serialQManagers[port.comName];
+                                serialQListener[port.comName] = false;
+                            });
+                        }
+                    }))
 
 
-                serialQManagers[port.comName].port.on('idchange', err => {
-                    if (err) return debug('ERR on idchange event:' + err.message);
-                    debug('device id changed, deleting serial queue manager' + port.comName);
-                    delete serialQManagers[port.comName];
-                    serialQListener[port.comName] = false;
-                });
-            }
+
+                }
+            });
+            resolve(Promise.all(arr));
         });
     });
-    return Promise.all(arr);
 }
 
 

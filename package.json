@@ -8,13 +8,18 @@
     "open-spectro": "0.0.7",
     "pouchdb": "^6.0.5",
     "pouchdb-find": "^0.10.3",
-    "serialport": "^4.0.1"
+    "serialport": "^4.0.0"
   },
   "devDependencies": {
-    "electron-prebuilt": "1.2.1"
+    "electron-prebuilt": "1.2.1",
+    "node-gyp": "^3.4.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "npm run build-serialport && npm run build-leveldown",
+    "build-serialport": "node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/serialport --dist-url=https://atom.io/download/atom-shell",
+    "build-leveldown": "node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/leveldown --dist-url=https://atom.io/download/atom-shell",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
   "keywords": [
     "serial",
