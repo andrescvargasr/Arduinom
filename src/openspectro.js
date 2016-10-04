@@ -5,19 +5,20 @@
 
 process.on('unhandledRejection', e => {throw e});
 
+
+const EventEmitter = require("events");
 const Serial = require("./SerialDevices");
 const SerialQManager = require("./SerialQueueManager");
 const debug = require("debug")('main:openspectro');
 const pouchDB = require("./pouch");
 const util = require("./util");
 
-class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
+class openSpectro extends EventEmitter { //issue with extends EventEmitter
     constructor(id) {
+        super();
         this.id = id;
         this._ready = false;
-        this.serialQ = {};// new SerialQManager();
-        this.db = {};
-        this._init = this.openspectroInit(id);
+        this.openspectroInit(id);
     }
 
     openspectroInit(id) {
@@ -40,17 +41,37 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
                 if (db) {
                     this.db = db;
                     this._ready = true;
+                    this.emit('ready');
                     debug('openspectro device ready');
+
+
 
                     this.serialQ.on('close', ()=> {
                         this._ready = false;
                         this.pending = false;
                         debug('disconnected openspectro, experiment interrupted');
+                        this.emit('close');
                     });
+
+
                     this.serialQ.on('reinitialized', ()=> {
                         debug('openspectro reinitialized');
                         this._ready=true;
+                        this.emit('reinitialized');
                     });
+
+                    this.serialQ.on('disconnect', ()=> {
+                        this.emit('disconnect');
+                    });
+
+                    this.serialQ.on('error', (err)=> {
+                        this.emit('error', err);
+                    });
+
+                    this.serialQ.on('open', (err)=> {
+                        this.emit('open');
+                    });
+
                 }
                 else throw new Error('no db for device ', id);
             })
@@ -187,25 +208,6 @@ class openSpectro /*extends EventEmitter*/ { //issue with extends EventEmitter
 
 
 }
-
-/**********************************************************************************
- * This file will have to be separated between pouch related generic functions and
- * device related ones (setEpoch, requireLog, requireMultiLog...)
- **********************************************************************************/
-// var spectro = {}; //create a device spectro for address 'S0' = 21296
-// var initialized = false;
-//
-// //need to add options here for pouchdb eg dbname, adapter, ajax... ++ remove the setinterval
-// setInterval(()=> {
-//     if (!initialized) {
-//         initialized = true;
-// var   spectro = new openSpectro(util.deviceIdStringToNumber('S0'));
-//     }
-//
-//     if (spectro._ready) spectro.runExperiment();
-//
-//
-// }, 5000);
 
 
 module.exports = openSpectro;

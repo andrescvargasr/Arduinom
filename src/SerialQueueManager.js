@@ -18,6 +18,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
         this.ready = false; // True if ready to accept new requests into the queue
         this.status = 'Serial port not initialized';
+        this.statusCode=0;
         this._reconnectionAttempt(port, options);
     }
 
@@ -29,6 +30,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
     serialPortInit() {
         var that = this;
+        that.statusCode=1;
         that.status = 'Serial port initializing';
         this.addRequest(that.initCommand, {timeout: 200})
             .then(function (buffer) {
@@ -44,12 +46,14 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     throw new Error('Device Id changed to:' + buffer);
                 } else if (!that.deviceId){
                     that.deviceId = parseInt(buffer);
+                    that.statusCode=2;
                     that.status = 'Serial port initialized';
                     that.ready = true;
                     that.emit('ready');
                     debug('Serial port initialized:' + parseInt(buffer));
                 } else {
                     that.deviceId = parseInt(buffer);
+                    that.statusCode=2;
                     that.status = 'Serial port initialized';
                     that.ready = true;
                     that.emit('reinitialized');
@@ -171,12 +175,14 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             this.port.on('open',() => {
                 debug('opened port:', this.portParam);
                 this.emit('open');
+                this.statusCode=0;
                 this.status = 'Serial port not initialized';
                 this._scheduleInit();
             });
 
             //handle the SerialPort error events
             this.port.on('error', err => {
+                this.statusCode=-1;
                 this.status = 'Serial port Error';
                 this.ready = false;
                 debugger;
@@ -187,6 +193,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
             //handle the SerialPort disconnect events
             this.port.on('disconnect', err => {
+                this.statusCode=4;
                 this.status = 'Serial port disconnected';
                 this.ready = false;
                 if (err) return debug('ERR on disconnect:' + err.message);
@@ -196,6 +203,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
             //handle the SerialPort close events and destruct the SerialQueue manager
             this.port.on('close', err => {
+                this.statusCode=5;
                 this.status = 'Serial port closed';
                 if (err) return this.debug('ERR on closing:' + err.message);
                 debug('closed port:', this.portParam);
@@ -212,6 +220,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.emit('data', data);
             });
         }, (err)=> {
+            this.statusCode=6;
             this.status = 'Unable to find the port.';
             this._tryLater();
         });

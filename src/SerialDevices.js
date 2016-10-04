@@ -115,7 +115,10 @@ function serialDevices(options, initialize, dboptions) {
 
                 }
             });
-            resolve(Promise.all(arr));
+            Promise.all(arr).then(()=>{
+                resolve(serialDBList);
+            });
+
         });
     });
 }

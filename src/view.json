@@ -1,5 +1,5 @@
 {
-  "version": "2.67.0",
+  "version": "2.67.1",
   "modules": [
     {
       "url": "modules/types/display/fasttable/",
@@ -2530,7 +2530,7 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 101.99999780654908,
+            "left": 102,
             "top": 0
           },
           "size": {
@@ -2659,7 +2659,7 @@
             "top": 7
           },
           "size": {
-            "width": 54,
+            "width": 49,
             "height": 52
           },
           "zIndex": 0,
@@ -2944,7 +2944,7 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 92,
+            "left": 116,
             "top": 66
           },
           "size": {
@@ -3003,6 +3003,348 @@
         }
       ],
       "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "const Serial = require.node(\"./SerialDevices\");\nvar OpenSpectro=require.node('./openspectro');\nvar util=require.node('./util');\nconst SerialQManager = require.node(\"./SerialQueueManager\");\n\nvar spectroList={};\nvar spectroArray;\nvar qualifierReg = /^([S])([\\x21-\\x7A])$/;\n\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n            init: 'q',\n            endString: '\\r\\n\\r\\n'\n        }).then((dbList)=>{\n            console.log('devices refreshed');\n            if(dbList){\n            for(var key in dbList){\n                var id_value=dbList[key].q;\n                var id= util.deviceIdNumberToString(dbList[key].q);\n                var m = qualifierReg.exec(id);\n                if(m) {\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\n                    if(!spectroList[key]){\n                        spectroList[key]=new OpenSpectro(id_value);\n                        spectroList[key].on('open', ()=>updateArray());\n                        spectroList[key].on('close', ()=>updateArray());\n                        spectroList[key].on('ready', ()=>updateArray());\n                        spectroList[key].on('reinitialized', ()=>updateArray());\n                        spectroList[key].on('disconnect', ()=>updateArray());\n                        spectroList[key].on('error', ()=>updateArray());\n                        //updateArray();\n                    } \n                }\n            }\n}\n            \n        });\n}, 3000);\n\n\nfunction updateArray(){\n    spectroArray=[];\n    var counter=0;\n    for(var key in spectroList){\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\n                               idValue: spectroList[key].id,\n                               status: spectroList[key].serialQ.status,\n                               statusCode:spectroList[key].serialQ.statusCode\n        };\n        counter++;\n    }\n    API.createData(\"spectroArray\",spectroArray);\n}\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('spectroList',spectroList); \nAPI.cache('spectroArray',spectroArray); \n\n\n\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 66
+          },
+          "size": {
+            "width": 75,
+            "height": 49
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 20,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/db85d9cc12c6204e4a3afb69bba6d695f6f8bad5/src/modules/types/edition/slick_grid/view.js#L918-L940"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 76,
+            "top": 67
+          },
+          "size": {
+            "width": 39,
+            "height": 65
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List ov values (you may right click -> Export)",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 21,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "spectroArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "List ov values (you may right click -> Export)",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
       "actions_out": [
         {
           "jpath": []
