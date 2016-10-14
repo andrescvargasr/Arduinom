@@ -10,34 +10,38 @@ const parser = require("./parser");
 /********************************************************
  PouchDB related functions for DB entries
  *******************************************************/
-function addPouchEntry(db, entry, cmd, options) {
-    var d = new Date();
-    var n = d.getTime();
-    n = n.toString();
-    debug('time is', n);
-    var parsedEntry = parser.parse(cmd, entry, options);
-    return db.post(
-        {
-            $id: (options.id || n),
-            $kind: (options.devicetype || 'openspectro'),
-            //manually entered title as option
-            general: {
-                title: options.title,
-                description: options.description
-            },
-            //output data of the experiment also containing device id
-            $content: {
-                qualifier: options.deviceId,
-                epoch: (options.epoch || n),
-                memEntry: options.memEntry,
-                data: parsedEntry
-            }
-        }).then(function () { //define the response callback
-        debug('Entry written in PouchDB:');
-        return true;
-    }).catch(function (err) {
-        debug('Error on pouchDB write:' + err);
-    });
+function parseAndSave(db, data, cmd, options) {
+
+    var parsedData = parser.parse(cmd, data, options);
+    for (let i = 0; i < parsedData.length; i++) {
+        //return
+        db.post(
+            {
+                $id: (options.id || Date.now()),
+                $kind: (options.devicetype || 'openspectro'),
+                $modificationDate: Date.now(),
+                //manually entered title as option
+
+                //output data of the experiment also containing device id
+                $content: {
+                    general: {
+                        title: options.title,
+                        description: options.description
+                    },
+                    misc: {
+                        command: cmd,
+                        qualifier: options.deviceId,
+                        memEntry: options.memEntry,
+                    },
+                    data: parsedData[i]
+                }
+            }).then(function () { //define the response callback
+            debug('Entry written in PouchDB:');
+            return true;
+        }).catch(function (err) {
+            debug('Error on pouchDB write:' + err);
+        });
+    }
 }
 
 
@@ -55,6 +59,46 @@ function getPouchEntries(db, options) {
 }
 
 
+// document that tells PouchDB/CouchDB
+// to build up an index on doc.$modificationDate for bioreactor devices
+var ddoc = {
+    _id: '_design/multilogs',
+    views: {
+        by_name: {
+            map: function (doc) {
+                if(doc.$kind!='bioreactor') return;
+                emit(doc.$modificationDate); }.toString()
+        }
+    }
+};
+
+pouch.put(ddoc).then(function () {
+    // success!
+}).catch(function (err) {
+    // some error (maybe a 409, because it already exists?)
+});
+
+
+// document that tells PouchDB/CouchDB
+// to build up an index on doc.$modificationDate for openspectro
+var ddoc = {
+    _id: '_design/multilogs',
+    views: {
+        by_name: {
+            map: function (doc) {
+                if(doc.$kind!='openspectro') return;
+                emit(doc.$content.general.title); }.toString()
+        }
+    }
+};
+
+pouch.put(ddoc).then(function () {
+    // success!
+}).catch(function (err) {
+    // some error (maybe a 409, because it already exists?)
+});
+
+
 //function exports
-exports.addPouchEntry = addPouchEntry;
+exports.parseAndSave = parseAndSave();
 exports.getPouchEntries = getPouchEntries;

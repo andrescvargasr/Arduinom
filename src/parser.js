@@ -11,7 +11,7 @@ exports = module.exports = {
         var m = commandReg.exec(cmd);
 
         if (!m) {
-            debug('The command did not match the regex.');
+            debug('The command did not match the regex. Send a correct command.');
             return false;
         }
 

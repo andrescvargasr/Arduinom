@@ -3,30 +3,24 @@
  */
 "use strict";
 
-process.on('unhandledRejection', e => {throw e});
+process.on('unhandledRejection', e => {
+    throw e
+});
 
-
-const EventEmitter = require("events");
-const Serial = require("./../SerialDevices");
-const SerialQManager = require("./../SerialQueueManager");
+const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:OpenBio');
 const pouchDB = require("./../pouch");
-const util = require("./../util");
 
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
+        this.maxParam = 52;
     }
 
 
     _notReady() {
         debug('OpenBio not ready or not existing device :', this.id);
-        return Promise.reject('OpenBio not ready or not existing device :'+ this.id);
-    }
-
-    _pendingExperiment() {
-        debug('rejected request, wait for completion of the experiment running on OpenBio :', this.id);
-        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on OpenBio :'+ this.id));
+        return Promise.reject('OpenBio not ready or not existing device :' + this.id);
     }
 
     /********************************
@@ -34,59 +28,100 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
      ********************************/
 
     getHelp() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('h').then((buff)=>debug(buff));
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest('h').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getLastLog() {
+        if (this._ready) this.serialQ.addRequest('l').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getCompactLog() {
+        if (this._ready) this.serialQ.addRequest('c').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getMultiLog(entry) {
+        var cmd = 'm' + entry;
+        if (this._ready) this.serialQ.addRequest(cmd).then(
+            (buff)=> {
+                debug('openspectro experiment results received');
+                debug(buff);
+                return pouchDB.addPouchEntry(this.db, buff, cmd, {
+                    devicetype: 'bioreactor',
+                    deviceID: this.id,
+                    nbParamCompact: this.maxParam,
+                    nbParam: this.maxParam
+                });
+            });
+        else this._notReady();
+    }
+
+    getI2C() {
+        if (this._ready) this.serialQ.addRequest('i').then((buff)=>debug(buff));
+        else this._notReady();
+    }
+
+    getOneWire() {
+        if (this._ready) this.serialQ.addRequest('o').then((buff)=>debug(buff));
         else this._notReady();
     }
 
     getSettings() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=>debug(buff));
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest('s').then((buff)=>debug(buff));
         else this._notReady();
     }
 
     getEpoch() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
         else this._notReady();
     }
 
     getFreeMem() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('f').then((buff)=>debug(buff));
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest('f').then((buff)=>debug(buff));
         else this._notReady();
     }
 
     getQualifier() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
         else this._notReady();
     }
 
-    //careful, the data acquisition on the OpenBio require time, sending to many requests can overfill the queue
-    //request exceeding maxQueue length will be disregarded
-    getRGB() {
-        if (this._ready && !this.pending) {
-            this.pending = true;
-            this.serialQ.addRequest('a', {timeout: 5000}).then((buff)=> {
-                this.pending = false;
-                debug('rgb data: ', buff)
-            });
+    getEEPROM() {
+        if (this._ready) this.serialQ.addRequest('z').then((buff)=>debug('eeprom :', buff));
+        else this._notReady();
+    }
+
+    setParameter(param, value) {
+        var commandReg = /^([A-Z]{1,2})(\d+)?$/;
+        var m = commandReg.exec(param + value);
+        if (!m){
+            debug('command does not match expected format A-AZ + value, no parameter set');
+            return false;
         }
-        else if (this.pending) this._pendingExperiment();
+        if (this._ready) this.serialQ.addRequest(param + value).then((buff)=> {
+            if (buff === value.toString()) {
+                debug('written:', buff);
+                return true
+            }
+            else {
+                debug('error writing buffer:', buff);
+                return false
+            } //throw an error here ?
+        });
+        else this._notReady();
+    }
+
+    setEpoch(epoch) {
+        if (this._ready) this.serialQ.addRequest('e'+epoch).then((buff)=>debug('eeprom :', buff));
         else this._notReady();
     }
 
 
-
-
-
-    calibrate() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('c', {timeout: 500}).then((buff)=>debug(buff));
-        else if (this.pending) this._pendingExperiment();
-        else this._notReady();
+    setEpochNow() {
+        this.setEpoch(Date.now());
     }
-
 
 }
 

@@ -4,14 +4,10 @@
 "use strict";
 
 process.on('unhandledRejection', e => {throw e});
-const EventEmitter = require("events");
-const Serial = require("./../SerialDevices");
-const SerialQManager = require("./../SerialQueueManager");
 const debug = require("debug")('main:openspectro');
 const pouchDB = require("./../pouch");
-const util = require("./../util");
 
-class openSpectro extends AbstractDevice { //issue with extends EventEmitter
+class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
     }
@@ -99,7 +95,7 @@ class openSpectro extends AbstractDevice { //issue with extends EventEmitter
         else this._notReady();
     }
 
-    runExperiment() {
+    runExperiment(title, description) {
         if (this.pending) return this._pendingExperiment();
         else if(!this._ready) return this._notReady();
         else{
@@ -112,7 +108,7 @@ class openSpectro extends AbstractDevice { //issue with extends EventEmitter
                 .then((buff)=> {
                     this.pending = false;
                     debug('openspectro experiment results received');
-                    return pouchDB.addPouchEntry(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id});
+                    return pouchDB.parseAndSave(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id, title: title, description : description});
                 });
         }
 
