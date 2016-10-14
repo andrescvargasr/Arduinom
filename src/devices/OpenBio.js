@@ -16,7 +16,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
         this.maxParam = 52;
-        this.paramInfo = paramConfig.table;
+        this.paramInfo = paramConfig;
     }
 
 

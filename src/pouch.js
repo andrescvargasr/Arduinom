@@ -100,5 +100,5 @@ pouch.put(ddocSpectro).then(function () {
 
 
 //function exports
-exports.parseAndSave = parseAndSave();
+exports.parseAndSave = parseAndSave;
 exports.getPouchEntries = getPouchEntries;
