@@ -4,96 +4,18 @@
 "use strict";
 
 process.on('unhandledRejection', e => {throw e});
-
-
 const EventEmitter = require("events");
-const Serial = require("./SerialDevices");
-const SerialQManager = require("./SerialQueueManager");
+const Serial = require("./../SerialDevices");
+const SerialQManager = require("./../SerialQueueManager");
 const debug = require("debug")('main:openspectro');
-const pouchDB = require("./pouch");
-const util = require("./util");
+const pouchDB = require("./../pouch");
+const util = require("./../util");
 
-class openSpectro extends EventEmitter { //issue with extends EventEmitter
+class openSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
-        super();
-        this.id = id;
-        this._ready = false;
-        this.openspectroInit(id);
+        super(id);
     }
-
-    openspectroInit(id) {
-        Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {
-            init: 'q',
-            endString: '\r\n\r\n'
-        })
-            .then(() => {
-                debug('devices refreshed');
-                return Serial.getSerialQ(id);
-            })
-            .then(Q => {
-                if (Q) this.serialQ = Q;
-                else throw new Error('no serialQ for device ', id);
-            })
-            .then(() => {
-                return Serial.getDB(id);
-            })
-            .then(db => {
-                if (db) {
-                    this.db = db;
-                    this._ready = true;
-                    this.emit('ready');
-                    debug('openspectro device ready');
-
-
-
-                    this.serialQ.on('close', ()=> {
-                        this._ready = false;
-                        this.pending = false;
-                        debug('disconnected openspectro, experiment interrupted');
-                        this.emit('close');
-                    });
-
-
-                    this.serialQ.on('reinitialized', ()=> {
-                        debug('openspectro reinitialized');
-                        this._ready=true;
-                        this.emit('reinitialized');
-                    });
-
-                    this.serialQ.on('disconnect', ()=> {
-                        this.emit('disconnect');
-                    });
-
-                    this.serialQ.on('error', (err)=> {
-                        this.emit('error', err);
-                    });
-
-                    this.serialQ.on('open', (err)=> {
-                        this.emit('open');
-                    });
-
-                }
-                else throw new Error('no db for device ', id);
-            })
-            .catch((err)=> {
-                debug(err);
-                this._scheduleInit(id);
-            });
-
-
-    }
-
-    //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
-    _scheduleInit(id) {
-        if (this.initTimeout) {
-            clearTimeout(this.initTimeout) //core of the solution
-        }
-        this.initTimeout = setTimeout(()=> {
-            this.openspectroInit(id)
-        }, 5000);
-    }
-
-
+    
     _notReady() {
         debug('openspectro not ready or not existing device :', this.id);
         return Promise.reject('openspectro not ready or not existing device :'+ this.id);
@@ -210,4 +132,4 @@ class openSpectro extends EventEmitter { //issue with extends EventEmitter
 }
 
 
-module.exports = openSpectro;
+module.exports = OpenSpectro;

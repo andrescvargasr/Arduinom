@@ -1,0 +1,3553 @@
+{
+  "version": "2.67.1",
+  "modules": [
+    {
+      "url": "modules/types/display/fasttable/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "nblines": [
+                20
+              ],
+              "toggle": [
+                null
+              ],
+              "colorjpath": [
+                null
+              ],
+              "filterRow": [
+                null
+              ],
+              "highlightLine": [
+                [
+                  "Yes"
+                ]
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "ID",
+                "jpath": "element.i",
+                "number": [],
+                "editable": "none"
+              },
+              {
+                "name": "Background",
+                "jpath": "element.background",
+                "number": [],
+                "editable": "none"
+              },
+              {
+                "name": "Analysis",
+                "jpath": "element.analysis",
+                "number": [],
+                "editable": "none"
+              },
+              {
+                "name": "Difference",
+                "jpath": "element.difference",
+                "number": [],
+                "editable": "none"
+              }
+            ]
+          ]
+        }
+      },
+      "id": 1,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "debug"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 110,
+            "top": 0,
+            "right": 0
+          },
+          "size": {
+            "width": 30,
+            "height": 41
+          },
+          "display": false,
+          "title": "Debug information",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ]
+        },
+        "Admin": {
+          "position": {
+            "left": 144,
+            "top": 34,
+            "right": 0
+          },
+          "size": {
+            "width": 29,
+            "height": 22
+          },
+          "display": true,
+          "title": "Debug information",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ]
+        }
+      },
+      "title": "Debug information",
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {
+          "graph": [
+            {
+              "sections": {},
+              "groups": {
+                "graph": [
+                  {
+                    "url": [
+                      ""
+                    ],
+                    "zoom": [
+                      "xy"
+                    ],
+                    "wheelAction": [
+                      "zoomY"
+                    ],
+                    "wheelbaseline": [
+                      0
+                    ],
+                    "fullOut": [
+                      "both"
+                    ],
+                    "legend": [
+                      "none"
+                    ],
+                    "legendOptions": [
+                      [
+                        "isSerieHideable",
+                        "isSerieSelectable"
+                      ]
+                    ],
+                    "mouseTracking": [
+                      [
+                        "track"
+                      ]
+                    ],
+                    "selectScatter": [
+                      []
+                    ],
+                    "independantYZoom": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "axis": [
+            {
+              "sections": {},
+              "groups": {
+                "xAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "nm"
+                    ],
+                    "beforeSpacing": [
+                      0
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "axismodification": [
+                      []
+                    ]
+                  }
+                ],
+                "yAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "% Transmisttance"
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      "0.1"
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "fitToAxisOnFromTo": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variables": [
+            {
+              "sections": {},
+              "groups": {
+                "variables": [
+                  [
+                    {
+                      "variable": "chartTransmittance",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ],
+                      "strokewidth": "2",
+                      "strokestyle": "1",
+                      "plotcontinuous": "continuous",
+                      "peakpicking": [],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "none",
+                      "optimizeSlots": [],
+                      "degrade": 0,
+                      "monotoneous": [],
+                      "tracking": []
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {}
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "annotations",
+          "name": "annotations"
+        },
+        {
+          "rel": "chart",
+          "name": "chartTransmittance"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onTrackMouse",
+          "rel": "trackData",
+          "jpath": [],
+          "name": "tracking"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 16,
+            "right": 0
+          },
+          "size": {
+            "width": 68,
+            "height": 24
+          },
+          "display": true,
+          "title": "Transmittance",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            [
+              255,
+              255,
+              255,
+              0
+            ]
+          ]
+        },
+        "Admin": {
+          "position": {
+            "left": 48,
+            "top": 46,
+            "right": 0
+          },
+          "size": {
+            "width": 47,
+            "height": 29
+          },
+          "display": true,
+          "title": "Transmittance",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            [
+              255,
+              255,
+              255,
+              0
+            ]
+          ]
+        }
+      },
+      "title": "Transmittance",
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Show fullscreen"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/onde/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "hasButton": [
+                [
+                  "onload"
+                ]
+              ],
+              "button_text": [
+                "Apply"
+              ],
+              "debouncing": [
+                0
+              ],
+              "output": [
+                "new"
+              ],
+              "mode": [
+                "schema"
+              ],
+              "schemaSource": [
+                "config"
+              ],
+              "schema": [
+                "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"smooth\": {\n            \"type\": \"number\",\n            \"label\": \"Smooth\",\n            \"default\": 8\n        },\n        \"normalize\": {\n            \"type\": \"boolean\",\n            \"label\": \"Normalize\"\n        }\n    }\n}"
+              ],
+              "onchangeFilter": [
+                null
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 34,
+            "top": 0
+          },
+          "size": {
+            "width": 34,
+            "height": 10
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Spectra filtering",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 61,
+            "top": 0
+          },
+          "size": {
+            "width": 33,
+            "height": 15
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Spectra filtering",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": {},
+      "title": "Spectra filtering",
+      "vars_out": [
+        {
+          "event": "onFormSubmit",
+          "rel": "outputValue",
+          "jpath": [],
+          "name": "options"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {
+          "graph": [
+            {
+              "sections": {},
+              "groups": {
+                "graph": [
+                  {
+                    "url": [
+                      ""
+                    ],
+                    "zoom": [
+                      "xy"
+                    ],
+                    "wheelAction": [
+                      "zoomY"
+                    ],
+                    "wheelbaseline": [
+                      0
+                    ],
+                    "fullOut": [
+                      "both"
+                    ],
+                    "legend": [
+                      "none"
+                    ],
+                    "legendOptions": [
+                      [
+                        "isSerieHideable",
+                        "isSerieSelectable"
+                      ]
+                    ],
+                    "mouseTracking": [
+                      [
+                        "track"
+                      ]
+                    ],
+                    "selectScatter": [
+                      []
+                    ],
+                    "independantYZoom": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "axis": [
+            {
+              "sections": {},
+              "groups": {
+                "xAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "nm"
+                    ],
+                    "beforeSpacing": [
+                      0
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "axismodification": [
+                      []
+                    ]
+                  }
+                ],
+                "yAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "Relative intensity (blank / experiment)"
+                    ],
+                    "beforeSpacing": [
+                      0
+                    ],
+                    "afterSpacing": [
+                      "0.1"
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "fitToAxisOnFromTo": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variables": [
+            {
+              "sections": {},
+              "groups": {
+                "variables": [
+                  [
+                    {
+                      "variable": "chartAbsorbance",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        0,
+                        0,
+                        0,
+                        1
+                      ],
+                      "strokewidth": "2",
+                      "strokestyle": "1",
+                      "plotcontinuous": "continuous",
+                      "peakpicking": [],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "none",
+                      "optimizeSlots": [],
+                      "degrade": 0,
+                      "monotoneous": [],
+                      "tracking": []
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {}
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "chart",
+          "name": "chartAbsorbance"
+        },
+        {
+          "rel": "annotations",
+          "name": "annotations"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onTrackMouse",
+          "rel": "trackData",
+          "jpath": [],
+          "name": "tracking"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 41,
+            "right": 0
+          },
+          "size": {
+            "width": 68,
+            "height": 24
+          },
+          "display": true,
+          "title": "Absorbance",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            [
+              255,
+              255,
+              255,
+              0
+            ]
+          ]
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 46,
+            "right": 0
+          },
+          "size": {
+            "width": 47,
+            "height": 30
+          },
+          "display": true,
+          "title": "Absorbance",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            [
+              255,
+              255,
+              255,
+              0
+            ]
+          ]
+        }
+      },
+      "title": "Absorbance",
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Show fullscreen"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 144,
+            "top": 43
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 132,
+            "top": 59
+          },
+          "size": {
+            "width": 39,
+            "height": 40
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "spectra"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "",
+      "actions_out": [],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "text"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                [
+                  "expand"
+                ]
+              ],
+              "displayValue": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{\"R\":{\"label\":\"Red\",\"chartName\":\"redChart\"},\"G\":{\"label\":\"Green\",\"chartName\":\"greenChart\"},\"B\":{\"label\":\"Blue\",\"chartName\":\"blueChart\"},\"W\":{\"label\":\"White\",\"chartName\":\"whiteChart\"},\"U\":{\"label\":\"UV\",\"chartName\":\"uvChart\"},\"Z\":{\"label\":\"Reference\",\"chartName\":\"referenceChart\"},\"E\":{\"label\":\"Experiment\",\"chartName\":\"experimentChart\"},\"Y\":{\"label\":\"Result\",\"chartName\":\"resultChart\"},\"A\":{\"label\":\"Result\",\"chartName\":\"rgbChart\"}}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 122,
+            "top": 1
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 144,
+            "top": 0
+          },
+          "size": {
+            "width": 31,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onObjectChange",
+          "rel": "output",
+          "jpath": [],
+          "name": "chartInfos"
+        }
+      ],
+      "title": "",
+      "actions_out": [],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "setAsync();\n\nAPI.loading('processing','Acquisition in prograss');\nvar resultCallback=function(result) {\n    if ((result.status===\"info\") || (result.status===\"warn\")){\n        API.loading(\"processing\",result.message+\": \"+result.data, result.status);\n    } else {\n        set('result',result);\n        API.stopLoading('processing');\n        if (result.status===\"error\") {\n            UI.showNotification(result.message, \n                { className:'error', autoHide: false }\n            );\n        }\n        done();\n    }\n}\n\npostChromeMessage('serial.send','r',resultCallback);\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "src/util/ui",
+                "alias": "UI"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Start acquisition"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 20,
+            "top": 7
+          },
+          "size": {
+            "width": 14,
+            "height": 8
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "result"
+          ],
+          "name": "result"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "result",
+            "data"
+          ],
+          "name": "data"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "result",
+            "messageID"
+          ],
+          "name": "messageID"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "result",
+            "message"
+          ],
+          "name": "command"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "result",
+            "status"
+          ],
+          "name": "status"
+        }
+      ],
+      "actions_out": [],
+      "zindex": 13,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/rich_text/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                [
+                  "isEditable"
+                ]
+              ],
+              "modifyInVariable": [
+                []
+              ],
+              "autoHeight": [
+                []
+              ],
+              "bgColor": [
+                [
+                  255,
+                  229,
+                  153,
+                  1
+                ]
+              ],
+              "postit": [
+                [
+                  "yes"
+                ]
+              ],
+              "html": [
+                [
+                  "yes"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 2,
+            "top": 0
+          },
+          "size": {
+            "width": 31,
+            "height": 15
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "richtext": "<p><strong><span style=\"font-size:18px\">Run an experiment.</span></strong></p>\n\n<p><span style=\"font-size:16px\">During blinkng blue you should put your reference sample.</span></p>\n\n<p><span style=\"font-size:16px\">During blinking green you should put your sample.</span></p>\n",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "",
+      "actions_out": [],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "template": [
+                "<table>\n    <tr>\n        <th>Chart</th>\n        <th>Wavelength (nm)</th>\n        <th>Intensity</th>\n    </tr>\n    {% for key, value in tracking %}\n    <tr>\n     <td>{{key}}</td>\n     <td>{{value.xBefore|number_format(0)}}</td>\n     <td>{{value.yBefore|number_format(2)}}</td>\n{% endfor %} \n</tr>\n</table>\n\n    "
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 69,
+            "top": 54
+          },
+          "size": {
+            "width": 32,
+            "height": 11
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Tracking information",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 96,
+            "top": 59
+          },
+          "size": {
+            "width": 35,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Tracking information",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 9,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "tracking"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "Tracking information",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "rowDelete",
+                  "filterColumns",
+                  "editable"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/87ba3af17e07f6766c266385c41b177d5094150b/src/modules/types/edition/slick_grid/view.js#L1253-L1279"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "Name",
+                "jpath": [
+                  "$id"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 69,
+            "top": 0
+          },
+          "size": {
+            "width": 32,
+            "height": 33
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 10,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "results"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onSelect",
+          "rel": "row",
+          "jpath": [
+            "$content",
+            "data"
+          ],
+          "name": "data"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 1,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "buttons",
+                  "editor"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "var method=\"EXP\";\n\nvar experiments=API.getData('experiments');\n\nvar data=API.getData('data');\n\nvar info=getAction().value;\n\n\nif (! info.name) {\n    UI.dialog(\"Please enter a name for this experiment\");\n} else if (checkExists(info)) {\n    UI.dialog(\"This experiment already exists, please delete it first or change the name / comment\");\n} else {\n    experiments.push(\n        {   name: info.name,\n            comment: info.comment,\n            concentration: info.concentration,\n            method: method,\n            date: new Date().getTime(),\n            data: data\n        }\n    );\n    experiments.triggerChange();\n}\n\n\nfunction checkExists(info) {\n    for (var i=0; i<experiments.length; i++) {\n        var experiment=experiments[i];\n        if ((experiment.concentration==info.concentration) && (experiment.name==info.name) && (experiment.comment==info.comment)) {\n            return true;\n        }\n    }\n    return false;\n}\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "src/util/ui",
+                "alias": "UI"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 121,
+            "top": 17
+          },
+          "size": {
+            "width": 56,
+            "height": 37
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Saving the data",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 13.99999933242798,
+            "top": 15.9985782623291
+          },
+          "size": {
+            "width": 47,
+            "height": 29
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Saving the data",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 11,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {
+          "rel": "execute",
+          "name": "saveExperiment"
+        }
+      ],
+      "title": "Saving the data",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/onde/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "hasButton": [
+                [
+                  "show"
+                ]
+              ],
+              "button_text": [
+                "Run Experiment"
+              ],
+              "debouncing": [
+                -1
+              ],
+              "output": [
+                "new"
+              ],
+              "mode": [
+                "schema"
+              ],
+              "schemaSource": [
+                "config"
+              ],
+              "schema": [
+                "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"name\": {\n            \"type\": \"string\",\n            \"label\": \"Name\"\n        },\n         \"concentration\": {\n            \"type\": \"string\",\n            \"label\": \"Concentration\",\n            \"description\": \"Concentration in mM\"\n        },\n        \"comment\": {\n            \"type\": \"string\",\n            \"label\": \"Comment\"\n        }\n    }\n}"
+              ],
+              "onchangeFilter": [
+                null
+              ]
+            }
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 69,
+            "top": 34
+          },
+          "size": {
+            "width": 32,
+            "height": 19
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "OpenSpectro Experiment",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 24,
+            "top": 0
+          },
+          "size": {
+            "width": 33,
+            "height": 15
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Untitled",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 12,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "OpenSpectro Experiment",
+      "vars_out": [
+        {
+          "event": "onFormSubmit",
+          "rel": "outputValue",
+          "jpath": [],
+          "name": "experiment"
+        }
+      ],
+      "actions_out": [
+        {
+          "event": "onFormSubmit",
+          "rel": "outputValue",
+          "jpath": [],
+          "name": "saveExperiment"
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "API.createData('chartAbsorbance');\nAPI.createData('chartTransmittance');\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "clear",
+                "label": "Clear charts"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 58,
+            "top": 10
+          },
+          "size": {
+            "width": 13,
+            "height": 6
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 59,
+            "top": 76
+          },
+          "size": {
+            "width": 27,
+            "height": 9
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 13,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [],
+      "zindex": 14,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Test exp"
+              ],
+              "iseditable": [
+                []
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                ">Z,I256,RGB212/108/75,REF630/535/475,BG953/1170\r\n   678   733   769   762   765   756   778   765   761   773   775   796   800   815   820   875\r\n   834   878   855   954   984  1012  1066  1159  1174  1301  1408  1506  1646  1864  1969  2183\r\n  2437  2764  2675  3337  3624  4044  4314  4771  5291  5822  6289  6956  7534  8252  7874  9749\r\n  9933 11018 11614 12429 12951 13837 13979 14573 15295 15687 16481 16601 16904 17447 17483 18004\r\n 17985 18166 18360 18068 17749 18265 17077 17072 17658 16801 16700 16308 15415 15410 14654 14586\r\n 13867 13688 12887 12267 11803 11807 11335 11227 10427 10065 10089  9495  9384  9222  8697  9056\r\n  8844  8797  8548  8539  8418  8551  8211  8416  8411  8225  8163  8230  5411  7989  8364  8282\r\n  8250  8107  7309  7554  8087  8247  8468  8458  6998  7569  8335  8266  8035  8185  8139  7921\r\n  7636  7811  7719  7796  7644  7455  7428  7414  7407  7287  7203  7156  7185  7197  7167  7040\r\n  7235  6982  7021  6842  6997  6771  6896  6029  6201  6749  6441  6362  6351  6322  6131  6092\r\n  6123  5962  5801  5852  5804  5596  5681  5581  5417  5448  5475  5224  5306  5132  5351  4469\r\n  4643  4611  4788  4824  4684  4391  4530  4526  4168  4285  4152  4251  4145  4062  3872  3589\r\n  4005  3833  3784  3578  3458  3571  3442  3443  3392  3327  3344  3285  3197  2803  3030  3070\r\n  2991  2963  2662  2114  2694  2712  2630  2594  2408  2576  2415  2427  2402  2278  2378  2288\r\n  2120  2199  2103  2068  2035  1910  1922  1831  1881  1830  1774  1806  1706  1743  1680  1614\r\n  1606  1517  1507  1407  1457  1480  1385  1384  1338  1307  1281  1214  1277  1236  1130  1225\r\n>E,I256,RGB212/108/75,REF630/535/475,BG951/1166\r\n    78    45    57    67    64    61    51    69    58    62    62    68    72    79    65    97\r\n    55   103    57   104    86    97    76   112    92   135   102   146    99   160   130   166\r\n   157   180   174   212   231   230   255   278   294   334   341   373   363   425   391   479\r\n   438   468   540   553   568   615   607   669   669   714   713   736   753   790   764   824\r\n   801   826   818   867   820   875   819   847   858   853   837   878   790   832   797   817\r\n   780   813   754   754   738   735   714   722   657   672   637   646   620   618   563   598\r\n   584   575   562   540   537   540   529   512   502   492   501   500   405   501   479   485\r\n   473   474   429   481   452   485   472   473   416   472   464   479   438   483   446   473\r\n   448   423   422   440   422   434   420   429   416   420   415   424   415   421   416   416\r\n   399   419   401   412   397   399   395   358   394   418   219   389   393   390   392   380\r\n   382   357   374   364   357   348   361   330   340   303   352   300   338   312   324   258\r\n   303   278   313   282   304   249   310   272   288   255   284   250   270   240   225   225\r\n   290   242   270   231   237   217   224   220   237   224   215   218   218   206   199   222\r\n   207   212   150   154   182   193   167   184   148   189   152   164   151   147   145   169\r\n   138   141   141   124   121   132   105   123   108   110   111   120    98   109   102   100\r\n    97    95    84    74    89    95    82    79    87    90    80    80    78    84    85    83"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                6
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 44,
+            "top": 9
+          },
+          "size": {
+            "width": 15,
+            "height": 7
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 64.99999780654908,
+            "top": 15.99573860168457
+          },
+          "size": {
+            "width": 16,
+            "height": 11
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 14,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onButtonClick",
+          "rel": "data",
+          "jpath": [],
+          "name": "data"
+        }
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "\nvar spectra=get('data');\nvar options=get('options');\n\n\n\n//var spectra=OSP.parse(data, options);\n\n\n\nvar annotations=OSP.getAnnotations(spectra.A);\nvar chartTransmittance=OSP.getChart(spectra,{channels:'T'});\nvar chartAbsorbance=OSP.getChart(spectra,{channels:'A'});\n\nvar spectraArray=OSP.Util.toArray(spectra);\n\n\n// we will create a table with all the information\n\n\nvar table=[];\nif (spectraArray && spectraArray.length>0) {\n    var x=spectraArray[0].x;\n    for (var i=0; i<x.length; i++) {\n        console.log(\"X\")\n        var line={x:x[i]};\n        table.push(line);\n        for (var j=0; j<spectraArray.length; j++) {\n            line[spectraArray[j].type]=spectraArray[j].y[i];\n        }\n    }\n}\n\nset('chartTransmittance', chartTransmittance);\nset('chartAbsorbance', chartAbsorbance);\nset('annotations', annotations);\nset('spectra', spectra);\nset('spectraArray', spectraArray);\nset('table', table);\nconsole.log(chartTransmittance);\nconsole.log(chartAbsorbance);"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "open-spectro",
+                "alias": "OSP"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "execute",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 123,
+            "top": 37
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 93.99999780654908,
+            "top": 0.9985794067382813
+          },
+          "size": {
+            "width": 50,
+            "height": 52
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 15,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "data"
+        },
+        {
+          "rel": "inputValue",
+          "name": "options"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "vars_out": [
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "chart"
+          ],
+          "name": "chart"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "annotations"
+          ],
+          "name": "annotations"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "spectra"
+          ],
+          "name": "specvtra"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "spectraArray"
+          ],
+          "name": "spectraArray"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "chartTransmittance"
+          ],
+          "name": "chartTransmittance"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "chartAbsorbance"
+          ],
+          "name": "chartAbsorbance"
+        },
+        {
+          "event": "onScriptEnded",
+          "rel": "outputValue",
+          "jpath": [
+            "table"
+          ],
+          "name": "table"
+        }
+      ],
+      "actions_out": [],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/db85d9cc12c6204e4a3afb69bba6d695f6f8bad5/src/modules/types/edition/slick_grid/view.js#L918-L940"
+              ],
+              "slick.headerRowHeight": [
+                null
+              ],
+              "idProperty": [
+                null
+              ],
+              "customJpaths": [
+                null
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "X",
+                "jpath": [
+                  "x"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0.0'",
+                "hideColumn": []
+              },
+              {
+                "name": "Z",
+                "jpath": [
+                  "Z"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0'",
+                "hideColumn": []
+              },
+              {
+                "name": "E",
+                "jpath": [
+                  "E"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0'",
+                "hideColumn": []
+              },
+              {
+                "name": "A",
+                "jpath": [
+                  "A"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0.000'",
+                "hideColumn": []
+              },
+              {
+                "name": "T",
+                "jpath": [
+                  "T"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "numeral:'0.0'",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "position": "end"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                null
+              ],
+              "varname": [
+                null
+              ],
+              "data": [
+                null
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 102,
+            "top": 0
+          },
+          "size": {
+            "width": 25,
+            "height": 65
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List ov values (you may right click -> Export)",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 16,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "table"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "List ov values (you may right click -> Export)",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "var openSpectro=require.node('./openspectro');\nvar util=require.node('./util');\nconst Serial = require.node(\"./SerialDevices\");\nconst SerialQManager = require.node(\"./SerialQueueManager\");\nconst pouchDB = require.node(\"./pouch\");\n\n\nvar spectro = API.cache('spectro'); //create a device spectro for address 'S0' = 21296\n\nif (!spectro) {\nspectro = new openSpectro(util.deviceIdStringToNumber('S0'));    \n    API.cache('spectro', spectro);    \n}\n\nif(spectro._ready) {\n    //spectro.runExperiment().then(\n  spectro.getExperimentResults().then(\n        (res)=> API.createData(\"results\",res.docs)).catch((err)=> API.createData(\"error\",err.message));\n    \n}\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 129,
+            "top": 7
+          },
+          "size": {
+            "width": 49,
+            "height": 52
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 17,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/display/single_value/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "append": [
+                []
+              ],
+              "maxEntries": [
+                1
+              ],
+              "editable": [
+                []
+              ],
+              "debounce": [
+                0
+              ],
+              "defaultvalue": [
+                null
+              ],
+              "font": [
+                null
+              ],
+              "fontcolor": [
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "fontsize": [
+                null
+              ],
+              "align": [
+                null
+              ],
+              "valign": [
+                null
+              ],
+              "rendererOptions": [
+                ""
+              ],
+              "forceType": [
+                ""
+              ],
+              "sprintf": [
+                null
+              ],
+              "sprintfOrder": [
+                null
+              ],
+              "preformatted": [
+                []
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 133,
+            "top": 61
+          },
+          "size": {
+            "width": 42,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 18,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "error"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "",
+      "vars_out": [],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "searchBox": [
+                [
+                  "search"
+                ]
+              ],
+              "sendButton": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 116,
+            "top": 66
+          },
+          "size": {
+            "width": 39,
+            "height": 29
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 19,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "results"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "script": [
+                "const Serial = require.node(\"./SerialDevices\");\nvar OpenSpectro=require.node('./openspectro');\nvar util=require.node('./util');\nconst SerialQManager = require.node(\"./SerialQueueManager\");\n\nvar spectroList={};\nvar spectroArray;\nvar qualifierReg = /^([S])([\\x21-\\x7A])$/;\n\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n            init: 'q',\n            endString: '\\r\\n\\r\\n'\n        }).then((dbList)=>{\n            console.log('devices refreshed');\n            if(dbList){\n            for(var key in dbList){\n                var id_value=dbList[key].q;\n                var id= util.deviceIdNumberToString(dbList[key].q);\n                var m = qualifierReg.exec(id);\n                if(m) {\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\n                    if(!spectroList[key]){\n                        spectroList[key]=new OpenSpectro(id_value);\n                        spectroList[key].on('open', ()=>updateArray());\n                        spectroList[key].on('close', ()=>updateArray());\n                        spectroList[key].on('ready', ()=>updateArray());\n                        spectroList[key].on('reinitialized', ()=>updateArray());\n                        spectroList[key].on('disconnect', ()=>updateArray());\n                        spectroList[key].on('error', ()=>updateArray());\n                        //updateArray();\n                    } \n                }\n            }\n}\n            \n        });\n}, 3000);\n\n\nfunction updateArray(){\n    spectroArray=[];\n    var counter=0;\n    for(var key in spectroList){\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\n                               idValue: spectroList[key].id,\n                               status: spectroList[key].serialQ.status,\n                               statusCode:spectroList[key].serialQ.statusCode\n        };\n        counter++;\n    }\n    API.createData(\"spectroArray\",spectroArray);\n}\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('spectroList',spectroList); \nAPI.cache('spectroArray',spectroArray); \n\n\n\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute"
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 66
+          },
+          "size": {
+            "width": 75,
+            "height": 49
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 20,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/db85d9cc12c6204e4a3afb69bba6d695f6f8bad5/src/modules/types/edition/slick_grid/view.js#L918-L940"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 76,
+            "top": 67
+          },
+          "size": {
+            "width": 39,
+            "height": 65
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List ov values (you may right click -> Export)",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 21,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "spectroArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "List ov values (you may right click -> Export)",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "varname": "version",
+      "jpath": [
+        "version"
+      ]
+    },
+    {
+      "varname": "modules",
+      "jpath": [
+        "modules"
+      ]
+    },
+    {
+      "varname": "variables",
+      "jpath": [
+        "variables"
+      ]
+    },
+    {
+      "varname": "pouchvariables",
+      "jpath": [
+        "pouchvariables"
+      ]
+    },
+    {
+      "varname": "configuration",
+      "jpath": [
+        "configuration"
+      ]
+    }
+  ],
+  "pouchvariables": [
+    {}
+  ],
+  "configuration": {
+    "title": "No title"
+  },
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      },
+      "Admin": {
+        "name": "Admin"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "aliases": [
+    {
+      "path": "https://direct.lactame.com//lib/open-spectro/HEAD/open-spectro",
+      "alias": "open-spectro"
+    }
+  ],
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "couch_replication": [
+    {
+      "sections": {},
+      "groups": {
+        "couch": [
+          [
+            {
+              "direction": "both",
+              "continuous": []
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              "var experiments=[];\nvar data=localStorage.getItem('spectro.experiments');\nif (data) {\n    try {\n        var parsed=JSON.parse(data);\n        if (Array.isArray(parsed)) experiments=parsed;\n    } catch (exception) {\n        console.log(exception);\n    }\n}\n\nAPI.createData('experiments', experiments);\n\nvar data = require('src/util/versioning').getData();\ndata.onChange(function (evt) {\n    if(evt.jpath.length==1 && evt.jpath[0]=='experiments') {\n        localStorage.setItem('spectro.experiments', JSON.stringify(experiments));\n    }\n});"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ]
+}
