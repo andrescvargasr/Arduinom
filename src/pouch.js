@@ -61,7 +61,7 @@ function getPouchEntries(db, options) {
 
 // document that tells PouchDB/CouchDB
 // to build up an index on doc.$modificationDate for bioreactor devices
-var ddoc = {
+var ddocBioreactor = {
     _id: '_design/multilogs',
     views: {
         by_name: {
@@ -81,7 +81,7 @@ pouch.put(ddoc).then(function () {
 
 // document that tells PouchDB/CouchDB
 // to build up an index on doc.$modificationDate for openspectro
-var ddoc = {
+var ddocSpectro = {
     _id: '_design/multilogs',
     views: {
         by_name: {
