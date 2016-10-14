@@ -10,11 +10,13 @@ process.on('unhandledRejection', e => {
 const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:OpenBio');
 const pouchDB = require("./../pouch");
+const paramConfig = require("./../config/paramInfo/bioParam");
 
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
         this.maxParam = 52;
+        this.paramInfo = paramConfig.table;
     }
 
 
@@ -96,7 +98,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     setParameter(param, value) {
         var commandReg = /^([A-Z]{1,2})(\d+)?$/;
         var m = commandReg.exec(param + value);
-        if (!m){
+        if (!m) {
             debug('command does not match expected format A-AZ + value, no parameter set');
             return false;
         }
@@ -114,7 +116,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     setEpoch(epoch) {
-        if (this._ready) this.serialQ.addRequest('e'+epoch).then((buff)=>debug('eeprom :', buff));
+        if (this._ready) this.serialQ.addRequest('e' + epoch).then((buff)=>debug('eeprom :', buff));
         else this._notReady();
     }
 

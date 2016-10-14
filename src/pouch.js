@@ -72,7 +72,7 @@ var ddocBioreactor = {
     }
 };
 
-pouch.put(ddoc).then(function () {
+pouch.put(ddocBioreactor).then(function () {
     // success!
 }).catch(function (err) {
     // some error (maybe a 409, because it already exists?)
@@ -92,7 +92,7 @@ var ddocSpectro = {
     }
 };
 
-pouch.put(ddoc).then(function () {
+pouch.put(ddocSpectro).then(function () {
     // success!
 }).catch(function (err) {
     // some error (maybe a 409, because it already exists?)
