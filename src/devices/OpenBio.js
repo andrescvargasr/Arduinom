@@ -1,8 +1,4 @@
-/**
- * Created by qcabrol on 9/26/16.
- */
 "use strict";
-
 process.on('unhandledRejection', e => {throw e});
 const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:OpenBio');

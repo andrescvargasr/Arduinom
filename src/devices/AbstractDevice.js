@@ -2,10 +2,10 @@
 
 const EventEmitter = require("events");
 const Serial = require("./../SerialDevices");
-const SerialQManager = require("./../SerialQueueManager");
-const debug = require("debug")('main:openBio');
-const pouchDB = require("./../pouch");
-const util = require("./../util");
+//const SerialQManager = require("./../SerialQueueManager");
+const debug = require("debug")('main:abstractDevice');
+//const pouchDB = require("./../pouch");
+//const util = require("./../util");
 
 class AbstractDevice extends EventEmitter {
 
@@ -36,7 +36,7 @@ class AbstractDevice extends EventEmitter {
                     this.db = db;
                     this._ready = true;
                     this.emit('ready', id);
-                    debug('device device ready');
+                    debug('device ready');
 
 
                     this.serialQ.on('close', ()=> {

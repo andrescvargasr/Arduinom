@@ -103,10 +103,12 @@ function serialDevices(options, initialize, dboptions) {
                                 resolve();
                             });
                             serialQManagers[port.comName].port.on('idchange', err => {
-                                if (err) return debug('ERR on idchange event:' + err.message);
-                                debug('device id changed, deleting serial queue manager' + port.comName);
-                                delete serialQManagers[port.comName];
-                                serialQListener[port.comName] = false;
+                                if (err) {
+                                    debug('device id changed, deleting serial queue manager' + port.comName); //seems it is not doing the proper job
+                                    delete serialQManagers[port.comName];
+                                    serialQListener[port.comName] = false;
+                                    return debug('ERR on idchange event:' + err.message);
+                                }
                             });
                         }
                     }))

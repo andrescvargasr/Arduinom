@@ -1,8 +1,4 @@
-/**
- * Created by qcabrol on 9/26/16.
- */
 "use strict";
-
 process.on('unhandledRejection', e => {throw e});
 const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:openspectro');
@@ -36,7 +32,10 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getSettings() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=>debug(buff));
+        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=>{
+            debug(buff);
+            return buff;
+        });
         else if (this.pending) this._pendingExperiment();
         else this._notReady();
     }
