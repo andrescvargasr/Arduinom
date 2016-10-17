@@ -27,7 +27,7 @@
                 []
               ],
               "script": [
-                "const Serial = require.node(\"./../SerialDevices\");\r\nvar OpenBio=require.node('./../devices/OpenBio');\r\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\r\nvar util=require.node('./../util');\r\n\r\nvar bioList={};\r\nvar bioArray;\r\nvar spectroList={};\r\nvar spectroArray;\r\nvar qualifierReg = /^([\\x21-\\x7A])([\\x21-\\x7A])$/;\r\n\r\nvar intervalId = API.cache('intervalId');\r\nif(intervalId) {\r\n    clearInterval(intervalId);\r\n    console.log('clear interval', intervalId);\r\n}\r\n\r\nintervalId = setInterval(function(){\r\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\r\n            init: 'q',\r\n            endString: '\\r\\n\\r\\n'\r\n        }).then((dbList)=>{\r\n            console.log('devices refreshed');\r\n            if(dbList){\r\n            console.log('dbList defined'+ (JSON.stringify(dbList)));\r\n            for(var key in dbList){\r\n                console.log('looping in dbList');\r\n                var id_value=dbList[key].q;\r\n                var id= util.deviceIdNumberToString(dbList[key].q);\r\n                var m = qualifierReg.exec(id);\r\n                switch(m[1]){\r\n                    case '$':\r\n                    console.log('detected bioreactor with id:', id); //then create a filter fo spectro objects\r\n                    if(!bioList[key]){\r\n                        bioList[key]=new OpenBio(id_value);\r\n                        bioList[key].on('open', ()=>bioUpdateArray());\r\n                        bioList[key].on('close', ()=>bioUpdateArray());\r\n                        bioList[key].on('ready', ()=>bioUpdateArray());\r\n                        bioList[key].on('reinitialized', ()=>bioUpdateArray());\r\n                        bioList[key].on('disconnect', ()=>bioUpdateArray());\r\n                        bioList[key].on('error', ()=>bioUpdateArray());\r\n                    }\r\n                        break;\r\n                        \r\n                    case 'S':\r\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\r\n                    if(!spectroList[key]){\r\n                        spectroList[key]=new OpenSpectro(id_value);\r\n                        spectroList[key].on('open', ()=>spectroUupdateArray());\r\n                        spectroList[key].on('close', ()=>spectroUpdateArray());\r\n                        spectroList[key].on('ready', ()=>spectroUupdateArray());\r\n                        spectroList[key].on('reinitialized', ()=>spectroUupdateArray());\r\n                        spectroList[key].on('disconnect', ()=>spectroUpdateArray());\r\n                        spectroList[key].on('error', ()=>spectroUpdateArray());\r\n                    } \r\n                            break;\r\n                    \r\n                    default:\r\n                    console.log('detected unknown device with id:', id);\r\n                    break; \r\n                }\r\n\r\n                }\r\n            }\r\n        });\r\n}, 3000);\r\n\r\n\r\nfunction bioUpdateArray(){\r\n    bioArray=[];\r\n    var counter=0;\r\n    for(var key in bioList){\r\n        bioArray[counter]={id: util.deviceIdNumberToString(bioList[key].id),\r\n                               idValue: bioList[key].id,\r\n                               status:  bioList[key].serialQ.status,\r\n                               statusCode:bioList[key].serialQ.statusCode\r\n        };\r\n        counter++;\r\n    }\r\n    API.createData(\"bioArray\",bioArray);\r\n}\r\n\r\nfunction spectroUpdateArray(){\r\n    spectroArray=[];\r\n    var counter=0;\r\n    for(var key in spectroList){\r\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\r\n                               idValue: spectroList[key].id,\r\n                               status: spectroList[key].serialQ.status,\r\n                               statusCode:spectroList[key].serialQ.statusCode\r\n        };\r\n        counter++;\r\n    }\r\n    API.createData(\"spectroArray\",spectroArray);\r\n}\r\n\r\nAPI.cache('intervalId', intervalId);\r\nAPI.cache('bioList',bioList); \r\nAPI.cache('bioArray',bioArray); \r\nAPI.cache('spectroList',spectroList); \r\nAPI.cache('spectroArray',spectroArray);"
+                "const Serial = require.node(\"./../SerialDevices\");\r\nvar OpenBio=require.node('./../devices/OpenBio');\r\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\r\nvar util=require.node('./../util');\r\n\r\nvar bioList={};\r\nvar bioArray;\r\nvar spectroList={};\r\nvar spectroArray;\r\nvar qualifierReg = /^([\\x21-\\x7A])([\\x21-\\x7A])$/;\r\n\r\nvar intervalId = API.cache('intervalId');\r\nif(intervalId) {\r\n    clearInterval(intervalId);\r\n    console.log('clear interval', intervalId);\r\n}\r\n\r\nintervalId = setInterval(function(){\r\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\r\n            init: 'q',\r\n            endString: '\\r\\n\\r\\n'\r\n        }).then((dbList)=>{\r\n            console.log('devices refreshed');\r\n            if(dbList){\r\n            for(var key in dbList){\r\n                var id_value=dbList[key].q;\r\n                var id= util.deviceIdNumberToString(dbList[key].q);\r\n                var m = qualifierReg.exec(id);\r\n                switch(m[1]){\r\n                    case '$':\r\n                    console.log('detected bioreactor with id:', id); //then create a filter fo spectro objects\r\n                    if(!bioList[key]){\r\n                        bioList[key]=new OpenBio(id_value);\r\n                        bioList[key].on('open', bioUpdateArray);\r\n                        bioList[key].on('close',bioUpdateArray);\r\n                        bioList[key].on('ready',bioUpdateArray);\r\n                        bioList[key].on('reinitialized',bioUpdateArray);\r\n                        bioList[key].on('disconnect', bioUpdateArray);\r\n                        bioList[key].on('error', bioUpdateArray);\r\n                    }\r\n                        break;\r\n                        \r\n                    case 'S':\r\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\r\n                    if(!spectroList[key]){\r\n                        spectroList[key]=new OpenSpectro(id_value);\r\n                        spectroList[key].on('open', spectroUpdateArray);\r\n                        spectroList[key].on('close',spectroUpdateArray);\r\n                        spectroList[key].on('ready',spectroUpdateArray);\r\n                        spectroList[key].on('reinitialized',spectroUpdateArray);\r\n                        spectroList[key].on('disconnect',spectroUpdateArray);\r\n                        spectroList[key].on('error',spectroUpdateArray);\r\n                    } \r\n                            break;\r\n                    \r\n                    default:\r\n                    console.log('detected unknown device with id:', id);\r\n                    break; \r\n                }\r\n\r\n                }\r\n            }\r\n        });\r\n}, 15000);\r\n\r\n\r\nfunction bioUpdateArray(){\r\n    bioArray=[];\r\n    var counter=0;\r\n    for(var key in bioList){\r\n        bioArray[counter]={id: util.deviceIdNumberToString(bioList[key].id),\r\n                               idValue: bioList[key].id,\r\n                               status:  bioList[key].serialQ.status,\r\n                               statusCode:bioList[key].serialQ.statusCode\r\n        };\r\n        counter++;\r\n    }\r\n    API.createData(\"bioArray\",bioArray);\r\n}\r\n\r\nfunction spectroUpdateArray(){\r\n    spectroArray=[];\r\n    var counter=0;\r\n    for(var key in spectroList){\r\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\r\n                               idValue: spectroList[key].id,\r\n                               status: spectroList[key].serialQ.status,\r\n                               statusCode:spectroList[key].serialQ.statusCode\r\n        };\r\n        counter++;\r\n    }\r\n    API.createData(\"spectroArray\",spectroArray);\r\n}\r\n\r\nAPI.cache('intervalId', intervalId);\r\nAPI.cache('bioList',bioList); \r\nAPI.cache('bioArray',bioArray); \r\nAPI.cache('spectroList',spectroList); \r\nAPI.cache('spectroArray',spectroArray);"
               ]
             }
           ],
@@ -54,7 +54,7 @@
           },
           "size": {
             "width": 62,
-            "height": 43
+            "height": 50
           },
           "zIndex": 0,
           "display": true,
@@ -142,7 +142,9 @@
                 []
               ],
               "colorjpath": [
-                []
+                [
+                  "statusCode"
+                ]
               ],
               "slick.defaultColumnWidth": [
                 null
@@ -239,11 +241,11 @@
           },
           "size": {
             "width": 37,
-            "height": 42
+            "height": 23
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "openSpectro Devices",
           "bgColor": [
             255,
             255,
@@ -259,10 +261,6 @@
       "vars_in": [
         {
           "rel": "list",
-          "name": "bioArray"
-        },
-        {
-          "rel": "list",
           "name": "spectroArray"
         }
       ],
@@ -274,7 +272,691 @@
           "jpath": []
         }
       ],
+      "title": "openSpectro Devices",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "searchBox": [
+                [
+                  "search"
+                ]
+              ],
+              "sendButton": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 1,
+            "top": 52
+          },
+          "size": {
+            "width": 34,
+            "height": 21
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "spectroArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
       "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                [
+                  "statusCode"
+                ]
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/87ba3af17e07f6766c266385c41b177d5094150b/src/modules/types/edition/slick_grid/view.js#L1253-L1279"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 64,
+            "top": 25
+          },
+          "size": {
+            "width": 37,
+            "height": 25
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Bioreactor v4 Devices",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "bioArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Bioreactor v4 Devices",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                [
+                  "statusCode"
+                ]
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/87ba3af17e07f6766c266385c41b177d5094150b/src/modules/types/edition/slick_grid/view.js#L1253-L1279"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 102,
+            "top": 1
+          },
+          "size": {
+            "width": 32,
+            "height": 49
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Parameters Infos",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "bioArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Parameters Infos",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                [
+                  "statusCode"
+                ]
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/87ba3af17e07f6766c266385c41b177d5094150b/src/modules/types/edition/slick_grid/view.js#L1253-L1279"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "jpath": [],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  1
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 135,
+            "top": 1
+          },
+          "size": {
+            "width": 32,
+            "height": 49
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Settings",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "bioArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Settings",
       "vars_out": [
         {
           "jpath": []

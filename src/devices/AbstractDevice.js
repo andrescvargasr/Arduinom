@@ -12,6 +12,7 @@ class AbstractDevice extends EventEmitter {
     constructor(id) {
         super();
         this._init(id)
+        this.id=id;
     }
 
     _init(id) {
@@ -79,7 +80,7 @@ class AbstractDevice extends EventEmitter {
             clearTimeout(this.initTimeout) //core of the solution
         }
         this.initTimeout = setTimeout(()=> {
-            this.openBioInit(id)
+            this._init(id)
         }, 5000);
     }
 
