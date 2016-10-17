@@ -1,5 +1,5 @@
 {
-  "version": "2.67.1",
+  "version": "2.69.0",
   "modules": [
     {
       "url": "modules/types/display/fasttable/",
@@ -2633,7 +2633,7 @@
                 []
               ],
               "script": [
-                "var openSpectro=require.node('./openspectro');\nvar util=require.node('./util');\nconst Serial = require.node(\"./SerialDevices\");\nconst SerialQManager = require.node(\"./SerialQueueManager\");\nconst pouchDB = require.node(\"./pouch\");\n\n\nvar spectro = API.cache('spectro'); //create a device spectro for address 'S0' = 21296\n\nif (!spectro) {\nspectro = new openSpectro(util.deviceIdStringToNumber('S0'));    \n    API.cache('spectro', spectro);    \n}\n\nif(spectro._ready) {\n    //spectro.runExperiment().then(\n  spectro.getExperimentResults().then(\n        (res)=> API.createData(\"results\",res.docs)).catch((err)=> API.createData(\"error\",err.message));\n    \n}\n"
+                "var openSpectro=require.node('./../OpenSpectro');\nvar util=require.node('./../util');\nconst pouchDB = require.node(\"./../pouch\");\n\n\nvar spectro = API.cache('spectro'); //create a device spectro for address 'S0' = 21296\n\nif (!spectro) {\nspectro = new openSpectro(util.deviceIdStringToNumber('S0'));    \n    API.cache('spectro', spectro);    \n}\n\nif(spectro._ready) {\n    //spectro.runExperiment().then(\n  spectro.getExperimentResults().then(\n        (res)=> API.createData(\"results\",res.docs)).catch((err)=> API.createData(\"error\",err.message));\n    \n}\n"
               ]
             }
           ],
@@ -3057,7 +3057,7 @@
                 []
               ],
               "script": [
-                "const Serial = require.node(\"./SerialDevices\");\nvar OpenSpectro=require.node('./openspectro');\nvar util=require.node('./util');\nconst SerialQManager = require.node(\"./SerialQueueManager\");\n\nvar spectroList={};\nvar spectroArray;\nvar qualifierReg = /^([S])([\\x21-\\x7A])$/;\n\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n            init: 'q',\n            endString: '\\r\\n\\r\\n'\n        }).then((dbList)=>{\n            console.log('devices refreshed');\n            if(dbList){\n            for(var key in dbList){\n                var id_value=dbList[key].q;\n                var id= util.deviceIdNumberToString(dbList[key].q);\n                var m = qualifierReg.exec(id);\n                if(m) {\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\n                    if(!spectroList[key]){\n                        spectroList[key]=new OpenSpectro(id_value);\n                        spectroList[key].on('open', ()=>updateArray());\n                        spectroList[key].on('close', ()=>updateArray());\n                        spectroList[key].on('ready', ()=>updateArray());\n                        spectroList[key].on('reinitialized', ()=>updateArray());\n                        spectroList[key].on('disconnect', ()=>updateArray());\n                        spectroList[key].on('error', ()=>updateArray());\n                        //updateArray();\n                    } \n                }\n            }\n}\n            \n        });\n}, 3000);\n\n\nfunction updateArray(){\n    spectroArray=[];\n    var counter=0;\n    for(var key in spectroList){\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\n                               idValue: spectroList[key].id,\n                               status: spectroList[key].serialQ.status,\n                               statusCode:spectroList[key].serialQ.statusCode\n        };\n        counter++;\n    }\n    API.createData(\"spectroArray\",spectroArray);\n}\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('spectroList',spectroList); \nAPI.cache('spectroArray',spectroArray); \n\n\n\n\n"
+                "const Serial = require.node(\"./../SerialDevices\");\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\nvar util=require.node('./../util');\n\nvar spectroList={};\nvar spectroArray;\nvar qualifierReg = /^([S])([\\x21-\\x7A])$/;\n\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n            init: 'q',\n            endString: '\\r\\n\\r\\n'\n        }).then((dbList)=>{\n            console.log('devices refreshed');\n            if(dbList){\n            for(var key in dbList){\n                var id_value=dbList[key].q;\n                var id= util.deviceIdNumberToString(dbList[key].q);\n                var m = qualifierReg.exec(id);\n                if(m) {\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\n                    if(!spectroList[key]){\n                        spectroList[key]=new OpenSpectro(id_value);\n                        spectroList[key].on('open', ()=>updateArray());\n                        spectroList[key].on('close', ()=>updateArray());\n                        spectroList[key].on('ready', ()=>updateArray());\n                        spectroList[key].on('reinitialized', ()=>updateArray());\n                        spectroList[key].on('disconnect', ()=>updateArray());\n                        spectroList[key].on('error', ()=>updateArray());\n                        //updateArray();\n                    } \n                }\n            }\n}\n            \n        });\n}, 3000);\n\n\nfunction updateArray(){\n    spectroArray=[];\n    var counter=0;\n    for(var key in spectroList){\n        spectroArray[counter]={id: util.deviceIdNumberToString(spectroList[key].id),\n                               idValue: spectroList[key].id,\n                               status: spectroList[key].serialQ.status,\n                               statusCode:spectroList[key].serialQ.statusCode\n        };\n        counter++;\n    }\n    API.createData(\"spectroArray\",spectroArray);\n}\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('spectroList',spectroList); \nAPI.cache('spectroArray',spectroArray); \n\n\n\n\n"
               ]
             }
           ],
@@ -3287,7 +3287,7 @@
         "Default layer": {
           "position": {
             "left": 76,
-            "top": 67
+            "top": 66
           },
           "size": {
             "width": 39,
