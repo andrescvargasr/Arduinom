@@ -18,7 +18,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
         //this.ready = false; // True if ready to accept new requests into the queue
         this.statusCode=0;
-        this._updateStatus(this.statusCode);
+        this._updateStatus(0);
         this._reconnectionAttempt(port, options);
     }
 
@@ -30,9 +30,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
     serialPortInit() {
         var that = this;
-        this.statusCode=1;
-        this._updateStatus(this.statusCode);
-        this.addRequest(that.initCommand, {timeout: 200})
+        that.statusCode=1;
+        that._updateStatus();
+        that.addRequest(that.initCommand, {timeout: 200})
             .then(function (buffer) {
                 debug('init command buffer ready ', buffer);
                 //manage a change in device Id
@@ -46,15 +46,15 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     throw new Error('Device Id changed to:' + buffer);
                 } else if (!that.deviceId){
                     that.deviceId = parseInt(buffer);
-                    this.statusCode=2;
-                    this._updateStatus(this.statusCode);
+                    that.statusCode=2;
+                    that._updateStatus();
                     that.ready = true;
                     that.emit('ready');
                     debug('Serial port initialized:' + parseInt(buffer));
                 } else {
                     that.deviceId = parseInt(buffer);
-                    this.statusCode=2;
-                    this._updateStatus(this.statusCode);
+                    that.statusCode=2;
+                    that._updateStatus();
                     that.ready = true;
                     that.emit('reinitialized');
                     debug('Serial port re-initialized:' + parseInt(buffer));
@@ -99,9 +99,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
      Main Utility function, adds a Request
      To the Serial Queue and return a Promise
      ************************************************/
-    _updateStatus(code){
+    _updateStatus(){
         var that=this;
-        switch (code){
+        switch (that.statusCode){
 
             case -1:
                 that.statusColor='Fuchsia ';
@@ -215,14 +215,14 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 debug('opened port:', this.portParam);
                 this.emit('open');
                 this.statusCode=0;
-                this._updateStatus(this.statusCode);
+                this._updateStatus();
                 this._scheduleInit();
             });
 
             //handle the SerialPort error events
             this.port.on('error', err => {
                 this.statusCode=-1;
-                this._updateStatus(this.statusCode);
+                this._updateStatus();
                 this.ready = false;
                 debugger;
                 if (err) return debug('ERR event1:' + err);
@@ -233,7 +233,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             //handle the SerialPort disconnect events
             this.port.on('disconnect', err => {
                 this.statusCode=3;
-                this._updateStatus(this.statusCode);
+                this._updateStatus();
                 this.ready = false;
                 if (err) return debug('ERR on disconnect:' + err.message);
                 debug('port disconnect:', this.portParam);
@@ -243,7 +243,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             //handle the SerialPort close events and destruct the SerialQueue manager
             this.port.on('close', err => {
                 this.statusCode=4;
-                this._updateStatus(this.statusCode);
+                this._updateStatus();
                 if (err) return this.debug('ERR on closing:' + err.message);
                 debug('closed port:', this.portParam);
                 delete this.port;
@@ -258,7 +258,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             });
         }, (err)=> {
             this.statusCode=5;
-            this._updateStatus(this.statusCode);
+            this._updateStatus();
             this._tryLater();
         });
 
