@@ -3,10 +3,7 @@
  */
 "use strict";
 
-process.on('unhandledRejection', e => {
-    throw e
-});
-
+process.on('unhandledRejection', e => {throw e});
 const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:OpenBio');
 const pouchDB = require("./../pouch");

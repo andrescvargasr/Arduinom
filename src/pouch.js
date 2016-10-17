@@ -61,6 +61,7 @@ function getPouchEntries(db, options) {
 
 // document that tells PouchDB/CouchDB
 // to build up an index on doc.$modificationDate for bioreactor devices
+/*
 var ddocBioreactor = {
     _id: '_design/multilogs',
     views: {
@@ -97,7 +98,7 @@ pouch.put(ddocSpectro).then(function () {
 }).catch(function (err) {
     // some error (maybe a 409, because it already exists?)
 });
-
+*/
 
 //function exports
 exports.parseAndSave = parseAndSave;

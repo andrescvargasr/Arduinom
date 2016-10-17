@@ -4,6 +4,7 @@
 "use strict";
 
 process.on('unhandledRejection', e => {throw e});
+const AbstractDevice = require("./AbstractDevice");
 const debug = require("debug")('main:openspectro');
 const pouchDB = require("./../pouch");
 const paramConfig = require("./../config/paramInfo/spectroParam");
