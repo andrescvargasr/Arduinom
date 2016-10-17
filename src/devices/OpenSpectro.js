@@ -6,10 +6,12 @@
 process.on('unhandledRejection', e => {throw e});
 const debug = require("debug")('main:openspectro');
 const pouchDB = require("./../pouch");
+const paramConfig = require("./../config/paramInfo/spectroParam");
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
+        this.paramInfo = paramConfig;
     }
     
     _notReady() {
