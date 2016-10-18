@@ -102,7 +102,7 @@ function serialDevices(options, initialize, dboptions) {
                                 serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
                                 resolve();
                             });
-                            serialQManagers[port.comName].port.on('idchange', err => {
+                            serialQManagers[port.comName].on('idchange', err => {
                                 if (err) {
                                     debug('device id changed, deleting serial queue manager' + port.comName); //seems it is not doing the proper job
                                     delete serialQManagers[port.comName];
