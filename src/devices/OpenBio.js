@@ -42,7 +42,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var that=this;
         return this.getCompactLog()
             .then((buff)=>{
-                return parser.parse('c',buff,{devicetype:'bioreactor', nbParamCompact: that.nbParamCompact});
+                return parser.parse('c',buff,{devicetype:'bioreactor', nbParamCompact: that.maxParam});
             })
     }
 
