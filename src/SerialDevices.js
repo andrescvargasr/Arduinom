@@ -14,7 +14,7 @@ var serialQManagers = {};
 var serialDBList = {};
 var serialDB = new pouchDB('serialData');
 var ready;
-var serialQListener = {};
+var seriagit gitlQListener = {};
 
 
 //return promise of a serialQ object with given id
