@@ -42,8 +42,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 }  else if (!buffer.match(/^\d{1,5}\r\n\r\n$/)){
                     throw new Error('invalid qualifier');
                 } else if (that.deviceId &&(that.deviceId !== parseInt(buffer))) {
-                    that.emit('idchange');
-                    throw new Error('Device Id changed to:' + buffer);
+                    that.deviceId=parseInt(buffer);
+                    debug('Device Id changed to:' + buffer);
+                    that.emit('idchange',  parseInt(buffer), that.deviceId);
+                    that.statusCode=2;
+                    that._updateStatus();
                 } else if (!that.deviceId){
                     that.deviceId = parseInt(buffer);
                     that.statusCode=2;
@@ -62,13 +65,17 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
             })
             .catch(function (err) {
-                //debug('serial init failed');
+                debug('serial init failed');
                 debug(err);
                 that._scheduleInit();
-
             });
     }
 
+    destroy(){
+        if(this.initTimeout){
+            clearTimeout(this.initTimeout) //core of the solution
+        }
+    }
     //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
     _scheduleInit(){
         if(this.initTimeout){

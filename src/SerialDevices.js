@@ -91,7 +91,7 @@ function serialDevices(options, initialize, dboptions) {
                                 //create a db linked to the deviceId if not existing
                                 serialDBList[serialQManagers[port.comName].deviceId] = {
                                     q: serialQManagers[port.comName].deviceId,
-                                    db: serialDB,
+                                    db: serialDB, //--> same db for all
                                     serialQ: serialQManagers[port.comName]
                                 };
                                 debug('linking database to device:' + serialQManagers[port.comName].deviceId);
@@ -102,11 +102,17 @@ function serialDevices(options, initialize, dboptions) {
                                 serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
                                 resolve();
                             });
-                            serialQManagers[port.comName].on('idchange', () => {
-                                    debug('device id changed, deleting serial queue manager' + port.comName); //seems it is not doing the proper job
-                                    delete serialQManagers[port.comName];
-                                    serialQListener[port.comName] = false;
-                                    return debug('ERR on idchange event:' + err.message);
+                            serialQManagers[port.comName].on('idchange', (newId, oldId) => {
+                                    debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
+                                    delete serialDBList[oldId];
+                                    debug('now DBlist is '+serialDBList);
+                                    serialDBList[newId] = {
+                                        q: newId,
+                                        db: serialDB, //--> same db for all
+                                        serialQ: serialQManagers[port.comName]
+                                    };
+
+
                             });
                         }
                     }))
