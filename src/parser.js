@@ -30,7 +30,7 @@ exports = module.exports = {
                 case 'c':
                     // If c was specify without the number of params to retrieve
                     // We use the parameter in the device config file
-                    nbParam = m[3] || options.nbParamCompact;
+                    nbParam = m[2] || options.nbParamCompact;
                     var reqLength = nbParam * 4 + 14;
                     var lines = result.split(/[\r\n]+/);
                     // We are ready to process the next request
@@ -42,7 +42,7 @@ exports = module.exports = {
                     return entries;
                 case 'm':
                     // m require an argument which is the log position
-                    if (!m[3]) return result;
+                    if (!m[2]) return result;
                     // The nb of parameters is specified in the config file
                     var nbParam = options.nbParam;
                     var hasEventHexas = options.hasEvent ? 8 : 0;
@@ -119,7 +119,7 @@ function processStatusLine(line, reqLength, nbParam) {
         parseParameters(line, 8, nbParam, entry);
         entry.deviceId = convertSignedIntHexa(line.substring(8 + (nbParam * 4), 12 + (nbParam * 4)));
         if (!entry.deviceId) {
-            throw new Error('Could not parse device id');
+            throw new Error('Could not parse device id in process StatusLine');
         }
         entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
     }
@@ -147,7 +147,7 @@ function processStatusLineM(line, reqLength, nbParam, hasEvent) {
         var eventHexaChars = hasEvent ? 8 : 0;
         entry.deviceId = convertSignedIntHexa(line.substring(16 + (nbParam * 4) + eventHexaChars, 16 + (nbParam * 4) + eventHexaChars + 4));
         if (!entry.deviceId) {
-            throw new Error('Could not parse device id');
+            throw new Error('Could not parse device id in processStatusLineM');
         }
         entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
     }

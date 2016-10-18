@@ -27,7 +27,7 @@
                 []
               ],
               "script": [
-                "const Serial = require.node(\"./../SerialDevices\");\r\nvar OpenBio=require.node('./../devices/OpenBio');\r\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\r\nvar util=require.node('./../util');\r\n\r\nvar bioList={};\r\nvar spectroList={};\r\nvar deviceArray;\r\nvar qualifierReg = /^([\\x21-\\x7A])([\\x21-\\x7A])$/;\r\n\r\nvar intervalId = API.cache('intervalId');\r\nif(intervalId) {\r\n    clearInterval(intervalId);\r\n    console.log('clear interval', intervalId);\r\n}\r\n\r\nintervalId = setInterval(function(){\r\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\r\n            init: 'q',\r\n            endString: '\\r\\n\\r\\n'\r\n        }).then((dbList)=>{\r\n            console.log('devices refreshed');\r\n            if(dbList){\r\n            for(var key in dbList){\r\n                var id_value=dbList[key].q;\r\n                var id= util.deviceIdNumberToString(dbList[key].q);\r\n                var m = qualifierReg.exec(id);\r\n                switch(m[1]){\r\n                    case '$':\r\n                    console.log('detected bioreactor with id:', id); //then create a filter fo spectro objects\r\n                    if(!bioList[key]){\r\n                        bioList[key]=new OpenBio(id_value);\r\n                        bioList[key].on('open', updateArray);\r\n                        bioList[key].on('close',updateArray);\r\n                        bioList[key].on('ready',updateArray);\r\n                        bioList[key].on('reinitialized',updateArray);\r\n                        bioList[key].on('disconnect', updateArray);\r\n                        bioList[key].on('error', updateArray);\r\n                    }\r\n                        break;\r\n                        \r\n                    case 'S':\r\n                    console.log('detected spectrophotometer with id:', id); //then create a filter fo spectro objects\r\n                    if(!spectroList[key]){\r\n                        spectroList[key]=new OpenSpectro(id_value);\r\n                        spectroList[key].on('open', updateArray);\r\n                        spectroList[key].on('close',updateArray);\r\n                        spectroList[key].on('ready',updateArray);\r\n                        spectroList[key].on('reinitialized',updateArray);\r\n                        spectroList[key].on('disconnect',updateArray);\r\n                        spectroList[key].on('error', updateArray);\r\n                    } \r\n                            break;\r\n                    \r\n                    default:\r\n                    console.log('detected unknown device with id:', id);\r\n                    break; \r\n                }\r\n\r\n                }\r\n            }\r\n        });\r\n}, 15000);\r\n\r\n\r\nfunction updateArray(){\r\n    deviceArray=[];\r\n    var counter=0; //need to add bioreactors too in the same array !\r\n    for(var key in spectroList){\r\n        deviceArray[counter]={\r\n                                kind:'openspectro',\r\n                                id: util.deviceIdNumberToString(spectroList[key].id),\r\n                               idValue: spectroList[key].id,\r\n                               status: spectroList[key].serialQ.status,\r\n                               statusColor:spectroList[key].serialQ.statusColor,\r\n                               paramInfo: spectroList[key].paramInfo\r\n        };\r\n        counter++;\r\n    }\r\n        for(var key in bioList){\r\n        deviceArray[counter]={\r\n              kind:'bioreactor v4',\r\n              id: util.deviceIdNumberToString(spectroList[key].id),\r\n                               idValue: spectroList[key].id,\r\n                               status: spectroList[key].serialQ.status,\r\n                               statusColor:spectroList[key].serialQ.statusColor,\r\n                               paramInfo: spectroList[key].paramInfo\r\n        };\r\n        counter++;\r\n    }\r\n    API.createData(\"deviceArray\",deviceArray);\r\n}\r\n\r\nAPI.cache('intervalId', intervalId);\r\nAPI.cache('bioList',bioList); \r\nAPI.cache('spectroList',spectroList); \r\nAPI.cache('deviceArray',spectroArray);"
+                "const Serial = require.node(\"./../SerialDevices\");\nvar OpenBio=require.node('./../devices/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\nvar util=require.node('./../util');\n\nvar deviceList={};\nvar deviceArray;\nvar qualifierReg = /^([\\x21-\\x7A])([\\x21-\\x7A])$/;\n\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\n\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n        init: 'q',\n        endString: '\\r\\n\\r\\n'\n    }).then((dbList)=>{\n        console.log('devices refreshed');\n        if(dbList){\n            for(var key in dbList){\n                console.log('key is:' +key);\n                var id_value=dbList[key].q;\n                var id= util.deviceIdNumberToString(dbList[key].q);\n                var m = qualifierReg.exec(id);\n                switch(m[1]){\n                    case '$':\n                        console.log('detected bioreactor with id:', id); //then create a filter fo device objects\n                        if(!deviceList[key]){\n                            deviceList[key]=new OpenBio(id_value);\n                            initListeners(key);\n                        }\n                        break;\n\n                    case 'S':\n                        console.log('detected spectrophotometer with id:', id); //then create a filter fo device objects\n                        if(!deviceList[key]){\n                            deviceList[key]=new OpenSpectro(id_value);\n                            initListeners(key);\n                        }\n                        break;\n\n                    default:\n                        console.log('detected unknown device with id:', id);\n                        break;\n                }\n\n            }\n        }\n    });\n}, 15000);\n\n\nfunction initListeners(key){\n    deviceList[key].on('open', updateArray);\n    deviceList[key].on('close',updateArray);\n    deviceList[key].on('ready',updateArray);\n    deviceList[key].on('reinitialized',updateArray);\n    deviceList[key].on('disconnect', updateArray);\n    deviceList[key].on('error', updateArray);\n}\n\nfunction updateArray(){\n    deviceArray=[];\n    var counter=0; //need to add devicereactors too in the same array !\n    for(let key in deviceList){\n        deviceArray[counter]={\n            //add device type from factory sttings here\n            id: util.deviceIdNumberToString(deviceList[key].id),\n            idValue: deviceList[key].id,\n            status: deviceList[key].serialQ.status,\n            statusColor:deviceList[key].serialQ.statusColor,\n            paramInfo: deviceList[key].paramInfo\n        };\n        counter++;\n    }\n    API.createData(\"deviceArray\",deviceArray);\n}\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('deviceList',deviceList);\nAPI.cache('deviceArray',deviceArray);\n"
               ]
             }
           ],
@@ -241,7 +241,7 @@
           },
           "size": {
             "width": 37,
-            "height": 23
+            "height": 50
           },
           "zIndex": 0,
           "display": true,
@@ -261,7 +261,7 @@
       "vars_in": [
         {
           "rel": "list",
-          "name": "spectroArray"
+          "name": "deviceArray"
         }
       ],
       "actions_in": [
@@ -278,9 +278,9 @@
           "event": "onSelect",
           "rel": "row",
           "jpath": [
-            "paramInfo"
+            "idValue"
           ],
-          "name": "paramInfo"
+          "name": "devicekey"
         }
       ],
       "toolbar": {
@@ -452,7 +452,7 @@
           "name": "Default layer"
         }
       },
-      "id": 4,
+      "id": 3,
       "vars_in": [
         {
           "rel": "list",
@@ -522,7 +522,7 @@
                 []
               ],
               "script": [
-                "var device= get('device');\nvar id= String(device.id); //String to prevent it from being a data object\n\nvar spectroList= API.cache('spectroList');\nvar spectro=spectroList[id];\nvar arrayInfo=device.paramInfo;\n\nspectro.getSettings().then((parsedBuff)=>{\n    //get paramInfo array \n});"
+                "var OpenBio=require.node('./../devices/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro');\n\nvar deviceArray= API.cache('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nif(devicekey){\n    var device=deviceList[devicekey];\n    var deviceInfo=device.paramInfo;\n    console.log(device);\n    device.getParsedCompactLog().then((value)=> console.log(value));\n}\n"
               ]
             }
           ],
@@ -546,7 +546,7 @@
         "Default layer": {
           "position": {
             "left": 102,
-            "top": 4
+            "top": 1
           },
           "size": {
             "width": 65,
@@ -566,9 +566,12 @@
           "name": "Default layer"
         }
       },
-      "id": 5,
+      "id": 4,
       "vars_in": [
-        {}
+        {
+          "rel": "inputValue",
+          "name": "devicekey"
+        }
       ],
       "actions_in": [
         {}
