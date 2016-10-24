@@ -80,7 +80,7 @@ class AbstractDevice extends EventEmitter {
 
 
     /*******************************************
-     * Enable or Disable Listeners
+     *      Enable or Disable Listeners
      ******************************************/
     resurrectDevice(db) {
         var id = this.id;
@@ -99,7 +99,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     disableDevice() {
-        var id = this.id;
+        this.serialQ={} //removing reference to serialQ
         this._ready = false;
         this.serialQ.off('close', this._closeListener);
         this.serialQ.off('reinitialized', this._reinitListener);

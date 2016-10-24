@@ -94,7 +94,7 @@ function serialDevices(options, initialize, dboptions) {
                                     q: serialQManagers[port.comName].deviceId,
                                     db: serialDB, //--> same db for all
                                     serialQ: serialQManagers[port.comName],
-                                    //device: createOrBindDevice()
+                                    device: createOrBindDevice()
                                 };
                                 debug('linking database to device:' + serialQManagers[port.comName].deviceId);
                                 resolve();
@@ -107,20 +107,13 @@ function serialDevices(options, initialize, dboptions) {
                             });
                             serialQManagers[port.comName].on('idchange', (newId, oldId) => {
                                 debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
-                                serialDBList[oldId]={
-                                    //removing reference to serialQ, now reallocated to another device
-                                    serialQ:{}
-                                };
-                                debug('old DBlist is ' + serialDBList[oldId]);
+                                serialDBList[oldId].device.disableDevice(); //disable listeners on old deviceId device class
                                 serialDBList[newId] = {
                                     q: newId,
                                     db: serialDB, //--> same db for all
                                     serialQ: serialQManagers[port.comName],
-                                    //device: createOrBindDevice()
+                                    device: createOrBindDevice(newId)
                                 };
-                                debug('new DBlist is ' + serialDBList[newId]);
-
-
                             });
                         }
                     }))
@@ -136,11 +129,17 @@ function serialDevices(options, initialize, dboptions) {
     });
 }
 
-//To be written
-function createOrBindDevice(){
+
+//create a class for the correct device or link a serialQ back to its corresponding device
+function createOrBindDevice(id){
+    if(serialDBList[id].device){
+        serialDBList[id].device.disableDevice(); //just for safety, might be removed
+        serialDBList[id].device.resurrectDevice(serialDBList[id].db); //reinit listeners
+        return serialDBList[id].device;
+    }
+    else{}
     //check regEx for arduino device,
-    //check if a device with the same Id exists in DBLIST already
-    //if not create a device with the correct type
+    //create a device with the correct type
     //return corresponding device
 }
 
