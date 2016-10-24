@@ -6,6 +6,7 @@
 const SerialPort = require("serialport"); //constructor for serial port objects
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
 const pouchDB = require("pouchdb");
+const Device=require("./devices/AbstractDevice");
 const debug = require("debug")('main:serialdevices');
 
 //polls the serial ports in search for an specific serial device every 3sec
@@ -92,7 +93,8 @@ function serialDevices(options, initialize, dboptions) {
                                 serialDBList[serialQManagers[port.comName].deviceId] = {
                                     q: serialQManagers[port.comName].deviceId,
                                     db: serialDB, //--> same db for all
-                                    serialQ: serialQManagers[port.comName]
+                                    serialQ: serialQManagers[port.comName],
+                                    //device: createOrBindDevice()
                                 };
                                 debug('linking database to device:' + serialQManagers[port.comName].deviceId);
                                 resolve();
@@ -105,12 +107,16 @@ function serialDevices(options, initialize, dboptions) {
                             });
                             serialQManagers[port.comName].on('idchange', (newId, oldId) => {
                                 debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
-                                delete serialDBList[oldId];
+                                serialDBList[oldId]={
+                                    //removing reference to serialQ, now reallocated to another device
+                                    serialQ:{}
+                                };
                                 debug('old DBlist is ' + serialDBList[oldId]);
                                 serialDBList[newId] = {
                                     q: newId,
                                     db: serialDB, //--> same db for all
-                                    serialQ: serialQManagers[port.comName]
+                                    serialQ: serialQManagers[port.comName],
+                                    //device: createOrBindDevice()
                                 };
                                 debug('new DBlist is ' + serialDBList[newId]);
 
@@ -128,6 +134,14 @@ function serialDevices(options, initialize, dboptions) {
 
         });
     });
+}
+
+//To be written
+function createOrBindDevice(){
+    //check regEx for arduino device,
+    //check if a device with the same Id exists in DBLIST already
+    //if not create a device with the correct type
+    //return corresponding device
 }
 
 

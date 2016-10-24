@@ -12,7 +12,7 @@ class AbstractDevice extends EventEmitter {
     constructor(id) {
         super();
         this._init(id)
-        this.id=id;
+        this.id = id;
     }
 
     _init(id) {
@@ -32,43 +32,7 @@ class AbstractDevice extends EventEmitter {
                 return Serial.getDB(id);
             })
             .then(db => {
-
-
-                if (db) {
-                    this.db = db;
-                    this._ready = true;
-                    this.emit('ready', id);
-                    debug('device ready');
-
-
-                    this.serialQ.on('close', ()=> {
-                        this._ready = false;
-                        this.pending = false;
-                        debug('disconnected device, experiment interrupted');
-                        this.emit('close', id);
-                    });
-
-
-                    this.serialQ.on('reinitialized', ()=> {
-                        debug('device reinitialized');
-                        this._ready = true;
-                        this.emit('reinitialized', id);
-                    });
-
-                    this.serialQ.on('disconnect', ()=> {
-                        this.emit('disconnect', id);
-                    });
-
-                    this.serialQ.on('error', (err)=> {
-                        this.emit('error', err);
-                    });
-
-                    this.serialQ.on('open', (err)=> {
-                        this.emit('open', id);
-                    });
-
-                }
-                else throw new Error('no db for device ', id);
+                this.resurrectDevice(db);
             })
             .catch((err)=> {
                 debug(err);
@@ -84,6 +48,64 @@ class AbstractDevice extends EventEmitter {
         this.initTimeout = setTimeout(()=> {
             this._init(id)
         }, 5000);
+    }
+
+    /**********************************
+     *          Listeners
+     **********************************/
+    _closeListener() {
+        this._ready = false;
+        this.pending = false;
+        debug('disconnected device, experiment interrupted');
+        this.emit('close', this.id);
+    }
+
+    _reinitListener() {
+        debug('device reinitialized');
+        this._ready = true;
+        this.emit('reinitialized', this.id);
+    }
+
+    _disconnectListener() {
+        this.emit('disconnect', this.id);
+    }
+
+    _errorListener(err) {
+        this.emit('error', err);
+    }
+
+    _openListener() {
+        this.emit('open', this.id);
+    }
+
+
+    /*******************************************
+     * Enable or Disable Listeners
+     ******************************************/
+    resurrectDevice(db) {
+        var id = this.id;
+        if (db) {
+            this.db = db;
+            this._ready = true;
+            this.emit('ready', id);
+            debug('device ready');
+            this.serialQ.on('close', this._closeListener);
+            this.serialQ.on('reinitialized', this._reinitListener);
+            this.serialQ.on('disconnect', this._disconnectListener);
+            this.serialQ.on('error', this._errorListener);
+            this.serialQ.on('open', this._openListener);
+        }
+        else throw new Error('no db for device ', id);
+    }
+
+    disableDevice() {
+        var id = this.id;
+        this._ready = false;
+        this.serialQ.off('close', this._closeListener);
+        this.serialQ.off('reinitialized', this._reinitListener);
+        this.serialQ.off('disconnect', this._disconnectListener);
+        this.serialQ.off('error', this._errorListener);
+        this.serialQ.off('open', this._openListener);
     }
 
 }
