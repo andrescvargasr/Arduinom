@@ -6,7 +6,6 @@ const SerialQueueManager = require("./SerialQueueManager"); //constructor for se
 const pouchDB = require("pouchdb");
 //user developed code
 var util = require("./util");
-//const Device = require("./devices/AbstractDevice");
 const OpenBio = require("./devices/OpenBio");
 const OpenSpectro = require("./devices/OpenSpectro");
 //debug messages
@@ -16,6 +15,7 @@ const debug = require("debug")('main:serialdevices');
 var selectedPorts;
 var serialQManagers = {};
 var serialDBList = {};
+var serialArray=[];
 var serialDB = new pouchDB('serialData');
 var ready;
 var serialQListener = {};
@@ -109,6 +109,7 @@ function serialDevices(options, initialize, dboptions) {
                             });
                             serialQManagers[port.comName].on('idchange', (newId, oldId) => {
                                 debug('device id changed, on port' + port.comName);
+                                _disableListeners(oldId);
                                 serialDBList[oldId].device.disableDevice(); //disable listeners on old deviceId device class
                                 serialDBList[newId] = {
                                     q: newId,
@@ -146,11 +147,15 @@ function createOrBindDevice(id) {
         switch (m[1]) {
             case '$':
                 console.log('detected bioreactor with id:', id_string); //then create a filter fo device objects
-                return new OpenBio(id);
+                var bio = new OpenBio(id);
+                _initListeners(id);
+                return bio;
                 break;
             case 'S':
                 console.log('detected spectrophotometer with id:', id_string); //then create a filter fo device objects
-                return new OpenSpectro(id);
+                var spectro = new OpenSpectro(id);
+                _initListeners(id);
+                return spectro;
                 break;
             default:
                 console.log('detected unknown device with id:', id);
@@ -161,8 +166,59 @@ function createOrBindDevice(id) {
     }
 }
 
-//function exports
 
-exports.getSerialQ = getSerialQ;
-exports.getDB = getDB;
-exports.refreshDevices = refreshDevices;
+function _initListeners(key){
+    serialDBList[key].on('open', updateDevicesArray);
+    serialDBList[key].on('close',updateDevicesArray);
+    serialDBList[key].on('ready',updateDevicesArray);
+    serialDBList[key].on('reinitialized',updateDevicesArray);
+    serialDBList[key].on('disconnect', updateDevicesArray);
+    serialDBList[key].on('error', updateDevicesArray);
+}
+
+function _disableListeners(key){
+    serialDBList[key].off('open', updateDevicesArray);
+    serialDBList[key].off('close',updateDevicesArray);
+    serialDBList[key].off('ready',updateDevicesArray);
+    serialDBList[key].off('reinitialized',updateDevicesArray);
+    serialDBList[key].off('disconnect', updateDevicesArray);
+    serialDBList[key].off('error', updateDevicesArray);
+}
+
+
+function getDevicesArray(){
+    return serialArray;
+}
+
+
+//send an array of all the devices
+function updateDevicesArray() {
+    refreshDevices({manufacturer: 'Arduino_LLC'}, {
+        init: 'q',
+        endString: '\r\n\r\n'
+    }).then(()=> {
+        var counter = 0;
+        for (let key in serialDBList) {
+            serialArray[counter] = {
+                //add device type from factory sttings here
+                id: util.deviceIdNumberToString(serialDBList[key].q),
+                idValue: serialDBList[key].q,
+                status: serialDBList[key].serialQ.status,
+                statusColor: serialDBList[key].serialQ.statusColor,
+            };
+            counter++;
+        }
+        debug('devices array updated');
+        return true;
+    });
+    debug('issue updating the devices array');
+    return false;
+}
+
+
+//function exports
+exports.getDB = getDB; //-> unused, only one global db is more suited
+exports.getDevicesArray = getDevicesArray; //return the array of all the connected devices
+exports.updateDevicesArray = updateDevicesArray; //return the array of all the connected devices
+exports.getSerialQ = getSerialQ; // get serialQ linked to a specific device ID
+exports.refreshDevices = refreshDevices; //refresh device List (serialDBList)
