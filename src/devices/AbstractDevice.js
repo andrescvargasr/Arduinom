@@ -32,6 +32,8 @@ class AbstractDevice extends EventEmitter {
                 return Serial.getDB(id);
             })
             .then(db => {
+
+
                 if (db) {
                     this.db = db;
                     this._ready = true;

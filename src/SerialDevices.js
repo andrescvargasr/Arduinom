@@ -14,7 +14,7 @@ var serialQManagers = {};
 var serialDBList = {};
 var serialDB = new pouchDB('serialData');
 var ready;
-var seriagit gitlQListener = {};
+var serialQListener = {};
 
 
 //return promise of a serialQ object with given id
@@ -22,15 +22,15 @@ function getDB(id) {
     debug('getting serialDB for device', id);
     return ready.then(()=> {
         debug('resolved getDB');
-        if (serialDBList[id]){
+        if (serialDBList[id]) {
             return serialDBList[id].db;
         }
-        else throw new Error('no existing db for device with ID:'+ id);
+        else throw new Error('no existing db for device with ID:' + id);
     })
 }
 
 
-//return promise of q serialDB object with fiven ID
+//return promise of q serialDB object with given ID
 function getSerialQ(id) {
     debug('getting serialQ for device', id);
     return ready.then(()=> {
@@ -38,7 +38,7 @@ function getSerialQ(id) {
         if (serialDBList[id]) {
             return serialDBList[id].serialQ;
         }
-        else throw new Error('no existing device with ID: '+ id);
+        else throw new Error('no existing device with ID: ' + id);
     })
 }
 
@@ -101,16 +101,18 @@ function serialDevices(options, initialize, dboptions) {
                                 debug('rematching the database with the queue manager for device:' + serialQManagers[port.comName].deviceId);
                                 serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
                                 resolve();
+
                             });
                             serialQManagers[port.comName].on('idchange', (newId, oldId) => {
-                                    debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
-                                    delete serialDBList[oldId];
-                                    debug('now DBlist is '+serialDBList);
-                                    serialDBList[newId] = {
-                                        q: newId,
-                                        db: serialDB, //--> same db for all
-                                        serialQ: serialQManagers[port.comName]
-                                    };
+                                debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
+                                delete serialDBList[oldId];
+                                debug('old DBlist is ' + serialDBList[oldId]);
+                                serialDBList[newId] = {
+                                    q: newId,
+                                    db: serialDB, //--> same db for all
+                                    serialQ: serialQManagers[port.comName]
+                                };
+                                debug('new DBlist is ' + serialDBList[newId]);
 
 
                             });
@@ -118,10 +120,9 @@ function serialDevices(options, initialize, dboptions) {
                     }))
 
 
-
                 }
             });
-            Promise.all(arr).then(()=>{
+            Promise.all(arr).then(()=> {
                 resolve(serialDBList);
             });
 
