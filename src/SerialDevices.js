@@ -1,12 +1,15 @@
 "use strict"
-//usermod -a -G dialout quentin + newgrp dialout ---> for serial port access rights
-//exports = fonction / objet / class etc... --> permet de faire un require du fichier
-//ctrl alt + l  for auto indent
 
-const SerialPort = require("serialport"); //constructor for serial port objects
+//imported
+const SerialPort = require("serialport");
 const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
 const pouchDB = require("pouchdb");
-const Device=require("./devices/AbstractDevice");
+//user developed code
+var util = require("./util");
+//const Device = require("./devices/AbstractDevice");
+const OpenBio = require("./devices/OpenBio");
+const OpenSpectro = require("./devices/OpenSpectro");
+//debug messages
 const debug = require("debug")('main:serialdevices');
 
 //polls the serial ports in search for an specific serial device every 3sec
@@ -99,14 +102,13 @@ function serialDevices(options, initialize, dboptions) {
                                 debug('linking database to device:' + serialQManagers[port.comName].deviceId);
                                 resolve();
                             });
-                            serialQManagers[port.comName].on('reinitialized', () => {
+                            serialQManagers[port.comName].on('reinitialized', (id) => {
                                 debug('rematching the database with the queue manager for device:' + serialQManagers[port.comName].deviceId);
-                                serialDBList[serialQManagers[port.comName].deviceId].serialQ = serialQManagers[port.comName];
+                                serialDBList[id].serialQ = serialQManagers[port.comName];
                                 resolve();
-
                             });
                             serialQManagers[port.comName].on('idchange', (newId, oldId) => {
-                                debug('device id changed, on port' + port.comName); //seems it is not doing the proper job
+                                debug('device id changed, on port' + port.comName);
                                 serialDBList[oldId].device.disableDevice(); //disable listeners on old deviceId device class
                                 serialDBList[newId] = {
                                     q: newId,
@@ -114,6 +116,7 @@ function serialDevices(options, initialize, dboptions) {
                                     serialQ: serialQManagers[port.comName],
                                     device: createOrBindDevice(newId)
                                 };
+                                resolve();
                             });
                         }
                     }))
@@ -131,20 +134,35 @@ function serialDevices(options, initialize, dboptions) {
 
 
 //create a class for the correct device or link a serialQ back to its corresponding device
-function createOrBindDevice(id){
-    if(serialDBList[id].device){
-        serialDBList[id].device.disableDevice(); //just for safety, might be removed
+function createOrBindDevice(id) {
+    if (serialDBList[id].device) {
         serialDBList[id].device.resurrectDevice(serialDBList[id].db); //reinit listeners
         return serialDBList[id].device;
     }
-    else{}
-    //check regEx for arduino device,
-    //create a device with the correct type
-    //return corresponding device
+    else {
+        var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
+        var id_string = util.deviceIdNumberToString(id);
+        var m = qualifierReg.exec(id);
+        switch (m[1]) {
+            case '$':
+                console.log('detected bioreactor with id:', id_string); //then create a filter fo device objects
+                return new OpenBio(id);
+                break;
+            case 'S':
+                console.log('detected spectrophotometer with id:', id_string); //then create a filter fo device objects
+                return new OpenSpectro(id);
+                break;
+            default:
+                console.log('detected unknown device with id:', id);
+                return {};
+                break;
+        }
+
+    }
 }
 
-
 //function exports
+
 exports.getSerialQ = getSerialQ;
 exports.getDB = getDB;
 exports.refreshDevices = refreshDevices;
