@@ -27,7 +27,7 @@
                 []
               ],
               "script": [
-                "const Serial = require.node(\"./../SerialDevices\");\n\nvar deviceArr=[];\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\n\nintervalId = setInterval(function(){\n    Serial.updateDevicesArray();\n    deviceArr= Serial.getDevicesArray();\n    API.createData(\"deviceArray\",deviceArr);\n}, 5000);\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('deviceArray',deviceArray);\n"
+                "const Serial = require.node(\"./../SerialDevices\");\n\nvar deviceArr=[];\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\n\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n        init: 'q',\n        endString: '\\r\\n\\r\\n'\n    });\n\n//    deviceArr= Serial.getDevicesArray();\n//    API.createData(\"deviceArray\",deviceArr);\n}, 15000);\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('deviceArray',deviceArray);\n"
               ]
             }
           ],

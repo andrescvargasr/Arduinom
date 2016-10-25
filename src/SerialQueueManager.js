@@ -52,7 +52,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     that.statusCode=2;
                     that._updateStatus();
                     that.ready = true;
-                    that.emit('ready');
+                    that.emit('ready',that.deviceId);
                     debug('Serial port initialized:' + parseInt(buffer));
                 } else {
                     that.deviceId = parseInt(buffer);

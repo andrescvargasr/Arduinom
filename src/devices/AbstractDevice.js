@@ -1,11 +1,8 @@
 'use strict';
 
 const EventEmitter = require("events");
-const Serial = require("./../SerialDevices");
-//const SerialQManager = require("./../SerialQueueManager");
+const device = require("./../DeviceHandler");
 const debug = require("debug")('main:abstractDevice');
-//const pouchDB = require("./../pouch");
-//const util = require("./../util");
 
 class AbstractDevice extends EventEmitter {
 
@@ -16,26 +13,24 @@ class AbstractDevice extends EventEmitter {
     }
 
     _init(id) {
-        Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {
+        device.Handler.refreshDevices({manufacturer: 'Arduino_LLC'}, {
             init: 'q',
             endString: '\r\n\r\n'
         })
             .then(() => {
                 debug('devices refreshed');
-                return Serial.getSerialQ(id);
+                return device.Handler.getSerialQ(id);
             })
             .then(Q => {
-                if (Q) this.serialQ = Q;
+                if (Q!=={}) this.serialQ = Q;
                 else throw new Error('no serialQ for device ', id);
             })
             .then(() => {
-                return Serial.getDB(id);
-            })
-            .then(db => {
-                this.resurrectDevice(db);
+                this.initDeviceListeners();
             })
             .catch((err)=> {
                 debug(err);
+                if(this.serialQ!=={})this.disableDeviceListeners();
                 this._scheduleInit(id);
             });
     }
@@ -82,24 +77,19 @@ class AbstractDevice extends EventEmitter {
     /*******************************************
      *      Enable or Disable Listeners
      ******************************************/
-    resurrectDevice(db) {
+    initDeviceListeners() {
         var id = this.id;
-        if (db) {
-            this.db = db;
-            this._ready = true;
-            this.emit('ready', id);
-            debug('device ready');
-            this.serialQ.on('close', this._closeListener);
-            this.serialQ.on('reinitialized', this._reinitListener);
-            this.serialQ.on('disconnect', this._disconnectListener);
-            this.serialQ.on('error', this._errorListener);
-            this.serialQ.on('open', this._openListener);
-        }
-        else throw new Error('no db for device ', id);
+        this._ready = true;
+        this.emit('ready', id);
+        debug('device ready');
+        this.serialQ.on('close', this._closeListener);
+        this.serialQ.on('reinitialized', this._reinitListener);
+        this.serialQ.on('disconnect', this._disconnectListener);
+        this.serialQ.on('error', this._errorListener);
+        this.serialQ.on('open', this._openListener);
     }
 
-    disableDevice() {
-        this.serialQ={} //removing reference to serialQ
+    disableDeviceListeners() {
         this._ready = false;
         this.serialQ.off('close', this._closeListener);
         this.serialQ.off('reinitialized', this._reinitListener);
