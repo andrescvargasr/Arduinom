@@ -27,7 +27,7 @@
                 []
               ],
               "script": [
-                "const Serial = require.node(\"./../SerialDevices\");\n\nvar deviceArr=[];\nvar intervalId = API.cache('intervalId');\nif(intervalId) {\n    clearInterval(intervalId);\n    console.log('clear interval', intervalId);\n}\n\nintervalId = setInterval(function(){\n    Serial.refreshDevices({manufacturer: 'Arduino_LLC'}, {\n        init: 'q',\n        endString: '\\r\\n\\r\\n'\n    });\n\n//    deviceArr= Serial.getDevicesArray();\n//    API.createData(\"deviceArray\",deviceArr);\n}, 15000);\n\nAPI.cache('intervalId', intervalId);\nAPI.cache('deviceArray',deviceArray);\n"
+                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('new',(device)=> {\n    deviceList[device.id]=device;\n    device.on('connect',()=>{});\n    device.on('disconnect',()=>{});\n});"
               ]
             }
           ],
@@ -626,4 +626,4 @@
     "title": "No title"
   },
   "aliases": []
-}
+git
