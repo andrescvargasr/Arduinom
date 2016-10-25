@@ -10,68 +10,73 @@ const debug = require("debug")('main:device handler');
 
 
 class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
-    constructor() {
+    constructor(interval) {
         super();
         this.devices = [];
         this.serialQManagers = {};
+        this.setInterval(this._serialDevices({manufacturer: 'Arduino_LLC'}, { //--> to be removed
+                init: 'q',
+                endString: '\r\n\r\n'
+            }),
+            interval); //optionnal : implement a clear method for the setinterval
     }
 
     /****************************************************
      *   Internal management of the SerialQ Lookup
      ****************************************************/
-    serialDevices(options, initialize) {
+    _serialDevices(options, initialize) {
         var that = this;
         //find all serial devices connected
-        return new Promise(function (resolve, reject) {
-            SerialPort.list(function (err, ports) {
-                if (err) return reject(err);
-                var arr = [];
-                this.selectedPorts = ports.filter(function (port) {
-                    for (var key in options) {
-                        if (port[key] !== options[key])
-                            return false
-                    }
-                    return true; //return port infos if true (boolean for filter method)
-                });
+        SerialPort.list(function (err, ports) {
+            if (err) {
+                debug('Port List failed : ' + err);
+                return;
+            }
+            this.selectedPorts = ports.filter(function (port) {
+                for (var key in options) {
+                    if (port[key] !== options[key])
+                        return false
+                }
+                return true; //return port infos if true (boolean for filter method)
+            });
 
-                this.selectedPorts.forEach(function (port) {
-                    debug('device with desired specs on port :', port.comName);
-                    if (!this.serialQManagers[port.comName]) {
-                        //create new serial Queue manager if a new serial device was connected
-                        this.serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
-                                baudRate: 38400,
-                                parser: SerialPort.parsers.raw
-                            },
-                            {
-                                init: initialize.init,
-                                endString: initialize.endString
-                            });
-                        debug('instantiate new SerialQ');
-
-                        //on ready event
-                        this.serialQManagers[port.comName].on('ready', (id) => {
-                            debug('serialQManager ready event, instantiating Device entry');
-                            that.devices[id] = that.serialQManagers[port.comName];
-                            if(!that.devices[id])that.emit('new ', id);
-                            that.emit('connect', id);
+            this.selectedPorts.forEach(function (port) {
+                debug('device with desired specs on port :', port.comName);
+                if (!this.serialQManagers[port.comName]) {
+                    //create new serial Queue manager if a new serial device was connected
+                    this.serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
+                            baudRate: 38400,
+                            parser: SerialPort.parsers.raw
+                        },
+                        {
+                            init: initialize.init,
+                            endString: initialize.endString
                         });
+                    debug('instantiate new SerialQ');
 
-                        //on reinit event
-                        this.serialQManagers[port.comName].on('reinitialized', (id) => {
-                            debug('rematching port and device id on reinitialisation:' + id);
-                            that.devices[id] = that.serialQManagers[port.comName];
-                            if(!that.devices[id])that.emit('new', id);
-                            that.emit('connect', id);
-                        });
+                    //on ready event
+                    this.serialQManagers[port.comName].on('ready', (id) => {
+                        debug('serialQManager ready event, instantiating Device entry');
+                        that.devices[id] = that.serialQManagers[port.comName];
+                        if (!that.devices[id])that.emit('new ', id);
+                        that.emit('connect', id);
+                    });
 
-                        //on idchange event
-                        this.serialQManagers[port.comName].on('disconnect', (id) => {
-                            debug('device disconnected on port' + port.comName);
-                            if (id) that.devices[id] = {};
-                            that.emit('disconnect', id);
-                        });
-                    }
-                });
+                    //on reinit event
+                    this.serialQManagers[port.comName].on('reinitialized', (id) => {
+                        debug('rematching port and device id on reinitialisation:' + id);
+                        that.devices[id] = that.serialQManagers[port.comName];
+                        if (!that.devices[id])that.emit('new', id);
+                        that.emit('connect', id);
+                    });
+
+                    //on idchange event
+                    this.serialQManagers[port.comName].on('disconnect', (id) => {
+                        debug('device disconnected on port' + port.comName);
+                        if (id) that.devices[id] = {};
+                        that.emit('disconnect', id);
+                    });
+                }
             });
         });
     }
@@ -90,6 +95,6 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
     }
 }
 
-exports.Handler = new DeviceHandler(); //-> unused, only one global db is more suited
+module.exports = new DeviceHandler(); //-> unused, only one global db is more suited
 
 
