@@ -45,6 +45,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     that.deviceId=parseInt(buffer);
                     debug('Device Id changed to:' + buffer);
                     that.emit('idchange',  parseInt(buffer), that.deviceId);
+                    //to do if device id changed --> reject all promises related to serialQ  --> reinit promise promiseQ
                     that.statusCode=2;
                     that._updateStatus();
                 } else if (!that.deviceId){
@@ -244,7 +245,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.ready = false;
                 if (err) return debug('ERR on disconnect:' + err.message);
                 debug('port disconnect:', this.portParam);
-                this.emit('disconnect', err);
+                this.emit('disconnect', this.id);
             });
 
             //handle the SerialPort close events and destruct the SerialQueue manager

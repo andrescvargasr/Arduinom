@@ -13,7 +13,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     _init(id) {
-        device.Handler.refreshDevices({manufacturer: 'Arduino_LLC'}, {
+        device.Handler.refreshDevices({manufacturer: 'Arduino_LLC'}, { //--> to be removed
             init: 'q',
             endString: '\r\n\r\n'
         })
@@ -45,58 +45,6 @@ class AbstractDevice extends EventEmitter {
         }, 5000);
     }
 
-    /**********************************
-     *          Listeners
-     **********************************/
-    _closeListener() {
-        this._ready = false;
-        this.pending = false;
-        debug('disconnected device, experiment interrupted');
-        this.emit('close', this.id);
-    }
-
-    _reinitListener() {
-        debug('device reinitialized');
-        this._ready = true;
-        this.emit('reinitialized', this.id);
-    }
-
-    _disconnectListener() {
-        this.emit('disconnect', this.id);
-    }
-
-    _errorListener(err) {
-        this.emit('error', err);
-    }
-
-    _openListener() {
-        this.emit('open', this.id);
-    }
-
-
-    /*******************************************
-     *      Enable or Disable Listeners
-     ******************************************/
-    initDeviceListeners() {
-        var id = this.id;
-        this._ready = true;
-        this.emit('ready', id);
-        debug('device ready');
-        this.serialQ.on('close', this._closeListener);
-        this.serialQ.on('reinitialized', this._reinitListener);
-        this.serialQ.on('disconnect', this._disconnectListener);
-        this.serialQ.on('error', this._errorListener);
-        this.serialQ.on('open', this._openListener);
-    }
-
-    disableDeviceListeners() {
-        this._ready = false;
-        this.serialQ.off('close', this._closeListener);
-        this.serialQ.off('reinitialized', this._reinitListener);
-        this.serialQ.off('disconnect', this._disconnectListener);
-        this.serialQ.off('error', this._errorListener);
-        this.serialQ.off('open', this._openListener);
-    }
 
 }
 

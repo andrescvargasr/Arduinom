@@ -19,7 +19,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
     /****************************************************
      *   Internal management of the SerialQ Lookup
      ****************************************************/
-    _serialDevices(options, initialize) {
+    serialDevices(options, initialize) {
         var that = this;
         //find all serial devices connected
         return new Promise(function (resolve, reject) {
@@ -48,59 +48,40 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                             });
                         debug('instantiate new SerialQ');
 
-                        arr.push(new Promise(function (resolve) {
-                            if (!this.serialQListener[port.comName]) {
-                                this.serialQListener[port.comName] = true;
-                                debug('Declared listeners for port', port.comName);
+                        //on ready event
+                        this.serialQManagers[port.comName].on('ready', (id) => {
+                            debug('serialQManager ready event, instantiating Device entry');
+                            that.devices[id] = that.serialQManagers[port.comName];
+                            if(!that.devices[id])that.emit('new ', id);
+                            that.emit('connect', id);
+                        });
 
-                                //on ready event
-                                this.serialQManagers[port.comName].on('ready', (id) => {
-                                    debug('serialQManager ready event, instantiating Device entry');
-                                    that.devices[id] = that.serialQManagers[port.comName];
-                                    that.emit('newDevice', id);
-                                    resolve();
-                                });
+                        //on reinit event
+                        this.serialQManagers[port.comName].on('reinitialized', (id) => {
+                            debug('rematching port and device id on reinitialisation:' + id);
+                            that.devices[id] = that.serialQManagers[port.comName];
+                            if(!that.devices[id])that.emit('new', id);
+                            that.emit('connect', id);
+                        });
 
-                                //on reinit event
-                                this.serialQManagers[port.comName].on('reinitialized', (id) => {
-                                    debug('rematching port and device id on reinitialisation:' + id);
-                                    that.devices[id] = that.serialQManagers[port.comName];
-                                    resolve();
-                                });
-
-                                //on idchange event
-                                this.serialQManagers[port.comName].on('idchange', (newId, oldId) => {
-                                    debug('device id changed, on port' + port.comName);
-                                    //_disableListeners(oldId);
-                                    that.devices[oldId] = {}; //disable listeners on old deviceId device class
-                                    that.devices[newId] = that.serialQManagers[port.comName];
-                                    this.emit('newDevice', newId);
-                                    resolve();
-                                });
-                            }
-                        }))
+                        //on idchange event
+                        this.serialQManagers[port.comName].on('disconnect', (id) => {
+                            debug('device disconnected on port' + port.comName);
+                            if (id) that.devices[id] = {};
+                            that.emit('disconnect', id);
+                        });
                     }
-                });
-                Promise.all(arr).then(()=> {
-                    resolve(that.devices);
                 });
             });
         });
     }
-
-
-    refreshDevices(options, initialize) {
-        this.ready = this._serialDevices(options, initialize);
-        return this.ready;
-    }
-
 
     /**************************************************
      *         Functions To be Called Outside
      **************************************************/
     //return promise of q serialQ object with given ID
     getSerialQ(id) {
-        var that=this;
+        var that = this;
         debug('getting serialQ for device', id);
         return this.ready.then(()=> {
             if (that.devices[id]) return that.devices[id];
