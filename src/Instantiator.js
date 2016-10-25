@@ -1,7 +1,7 @@
 "use strict"
 var util = require("./util");
-const OpenBio = require("./devices/OpenBio");
-const OpenSpectro = require("./devices/OpenSpectro");
+const OpenBio = require("./devices/OpenBio/OpenBio");
+const OpenSpectro = require("./devices/OpenSpectro/OpenSpectro");
 const Handler = require("./DeviceHandler");
 const debug = require("debug")('main:Instantiator');
 const EventEmitter = require("events");

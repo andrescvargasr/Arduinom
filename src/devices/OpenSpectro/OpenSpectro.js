@@ -1,9 +1,9 @@
 "use strict";
 process.on('unhandledRejection', e => {throw e});
-const AbstractDevice = require("./AbstractDevice");
+const AbstractDevice = require("./../../AbstractDevice");
 const debug = require("debug")('main:openspectro');
-const pouchDB = require("./../pouch");
-const paramConfig = require("./../config/paramInfo/spectroParam");
+const pouchDB = require("./../../../pouch");
+const paramConfig = require("./spectroParam");
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {

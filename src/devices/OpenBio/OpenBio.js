@@ -2,11 +2,11 @@
 process.on('unhandledRejection', e => {
     throw e
 });
-const AbstractDevice = require("./AbstractDevice");
+const AbstractDevice = require("./../../AbstractDevice");
 const debug = require("debug")('main:OpenBio');
-const pouchDB = require("./../pouch");
-const paramConfig = require("./../config/paramInfo/bioParam");
-const parser = require("./../parser");
+const pouchDB = require("./../../../pouch");
+const paramConfig = require("./bioParam");
+const parser = require("./../../../parser");
 
 
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
