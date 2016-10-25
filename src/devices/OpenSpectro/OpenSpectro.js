@@ -1,5 +1,7 @@
 "use strict";
-process.on('unhandledRejection', e => {throw e});
+process.on('unhandledRejection', e => {
+    throw e
+});
 const AbstractDevice = require("./../../AbstractDevice");
 const debug = require("debug")('main:openspectro');
 const pouchDB = require("./../../../pouch");
@@ -10,15 +12,15 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         super(id);
         this.paramInfo = paramConfig;
     }
-    
+
     _notReady() {
         debug('openspectro not ready or not existing device :', this.id);
-        return Promise.reject(new Error('openspectro not ready or not existing device :'+ this.id));
+        return Promise.reject(new Error('openspectro not ready or not existing device :' + this.id));
     }
 
     _pendingExperiment() {
         debug('rejected request, wait for completion of the experiment running on openspectro :', this.id);
-        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :'+ this.id));
+        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
     }
 
     /********************************
@@ -32,7 +34,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getSettings() {
-        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=>{
+        if (this._ready && !this.pending) this.serialQ.addRequest('s').then((buff)=> {
             debug(buff);
         });
         else if (this.pending) return this._pendingExperiment();
@@ -97,9 +99,9 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     runExperiment(title, description) {
-        if (this.pending) return  this._pendingExperiment();
-        else if(!this._ready) return this._notReady();
-        else{
+        if (this.pending) return this._pendingExperiment();
+        else if (!this._ready) return this._notReady();
+        else {
             this.pending = true;
             return this.serialQ.addRequest('I', {timeout: 500})
                 .then((delay)=> {
@@ -109,16 +111,21 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
                 .then((buff)=> {
                     this.pending = false;
                     debug('openspectro experiment results received');
-                    return pouchDB.parseAndSave(this.db, buff, 'r', {devicetype: 'openspectro' , deviceID: this.id, title: title, description : description});
+                    return pouchDB.parseAndSaveToSerialData(buff, 'r', {
+                        devicetype: 'openspectro',
+                        deviceID: this.id,
+                        title: title,
+                        description: description
+                    });
                 });
         }
 
     }
-
-    getExperimentResults(){
-        return pouchDB.getPouchEntries(this.db, {devicetype: 'openspectro', deviceID: this.id});
+/*
+    getExperimentResults() {
+        return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
     }
-
+*/
     calibrate() {
         if (this._ready && !this.pending) this.serialQ.addRequest('c', {timeout: 500}).then((buff)=>debug(buff));
         else if (this.pending) return this._pendingExperiment();

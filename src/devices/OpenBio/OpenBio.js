@@ -59,7 +59,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
 
-
+/*
     getMultiLog(entry) {
         var cmd = 'm' + entry;
         if (this._ready) this.serialQ.addRequest(cmd).then(
@@ -75,7 +75,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             });
         else return this._notReady();
     }
-
+*/
     getI2C() {
         if (this._ready) return this.serialQ.addRequest('i').then((buff)=>debug(buff));
         else return this._notReady();

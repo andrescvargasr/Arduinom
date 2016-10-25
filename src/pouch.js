@@ -6,10 +6,17 @@ const pouch = require("pouchdb");
 pouch.plugin(require("pouchdb-find"));
 const debug = require("debug")('main:pouchDB');
 const parser = require("./parser");
+var DB= new PouchDB('Serial Data');
+
 
 /********************************************************
  PouchDB related functions for DB entries
  *******************************************************/
+function parseAndSaveToSerialData(data,cmd, options){
+    return parseAndSave(DB, data,cmd, options);
+}
+
+
 function parseAndSave(db, data, cmd, options) {
 
     var parsedData = parser.parse(cmd, data, options);
@@ -44,6 +51,9 @@ function parseAndSave(db, data, cmd, options) {
     }
 }
 
+function getPouchEntriesSerialData(options){
+    return getPouchEntries(DB,options);
+}
 
 //get all entries related to one given device
 function getPouchEntries(db, options) {
@@ -101,5 +111,7 @@ pouch.put(ddocSpectro).then(function () {
 */
 
 //function exports
+exports.parseAndSaveToSerialData = parseAndSaveToSerialData;
 exports.parseAndSave = parseAndSave;
+exports.getPouchEntriesSerialData = getPouchEntriesSerialData;
 exports.getPouchEntries = getPouchEntries;

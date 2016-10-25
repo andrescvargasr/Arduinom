@@ -1,23 +1,23 @@
 "use strict"
 const EventEmitter = require("events");
 const SerialPort = require("serialport");
-const debug= require("debug")('main:serialqmanager');
+const debug = require("debug")('main:serialqmanager');
 
 class SerialQueueManager extends EventEmitter { //issue with extends EventEmitter
     constructor(port, options, initialize) {
         super(); // 'this' not defined if constructor super class not called);
         this.portOptions = options;
         this.portParam = port;
-        this.initCommand=(initialize.init || 'q');
-        this.endString=(initialize.endString || '\n\n');
+        this.initCommand = (initialize.init || 'q');
+        this.endString = (initialize.endString || '\n\n');
         this.queueLength = 0;
-        this.maxQLength=(initialize.maxQLength || 30);
+        this.maxQLength = (initialize.maxQLength || 30);
         this.buffer = "";
         this.lastRequest = Promise.resolve('');      // The Last received request
         this.currentRequest = Promise.resolve(''); // The current request being executed
         this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
         //this.ready = false; // True if ready to accept new requests into the queue
-        this.statusCode=0;
+        this.statusCode = 0;
         this._updateStatus(0);
         this._reconnectionAttempt(port, options);
     }
@@ -30,7 +30,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
     serialPortInit() {
         var that = this;
-        that.statusCode=1;
+        that.statusCode = 1;
         that._updateStatus();
         that.addRequest(that.initCommand, {timeout: 200})
             .then(function (buffer) {
@@ -39,28 +39,28 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 //listener should be defined on other js file to destroy the object in this case
                 if (!buffer) {
                     throw new Error('Empty buffer when reading qualifier');
-                }  else if (!buffer.match(/^\d{1,5}\r\n\r\n$/)){
+                } else if (!buffer.match(/^\d{1,5}\r\n\r\n$/)) {
                     throw new Error('invalid qualifier');
-                } else if (that.deviceId &&(that.deviceId !== parseInt(buffer))) {
-                    that.deviceId=parseInt(buffer);
-                    debug('Device Id changed to:' + buffer);
-                    that.emit('idchange',  parseInt(buffer), that.deviceId);
-                    //to do if device id changed --> reject all promises related to serialQ  --> reinit promise promiseQ
-                    that.statusCode=2;
-                    that._updateStatus();
-                } else if (!that.deviceId){
+                } else if (that.deviceId && (that.deviceId !== parseInt(buffer))) {
                     that.deviceId = parseInt(buffer);
-                    that.statusCode=2;
+                    debug('Device Id changed to:' + buffer);
+                    that.emit('idchange', parseInt(buffer), that.deviceId);
+                    //to do if device id changed --> reject all promises related to serialQ  --> reinit promise promiseQ
+                    that.statusCode = 2;
+                    that._updateStatus();
+                } else if (!that.deviceId) {
+                    that.deviceId = parseInt(buffer);
+                    that.statusCode = 2;
                     that._updateStatus();
                     that.ready = true;
-                    that.emit('ready',that.deviceId);
+                    that.emit('ready', that.deviceId);
                     debug('Serial port initialized:' + parseInt(buffer));
                 } else {
                     that.deviceId = parseInt(buffer);
-                    that.statusCode=2;
+                    that.statusCode = 2;
                     that._updateStatus();
                     that.ready = true;
-                    that.emit('reinitialized',that.deviceId);
+                    that.emit('reinitialized', that.deviceId);
                     debug('Serial port re-initialized:' + parseInt(buffer));
                 }
 
@@ -72,17 +72,18 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             });
     }
 
-    destroy(){
-        if(this.initTimeout){
+    destroy() {
+        if (this.initTimeout) {
             clearTimeout(this.initTimeout) //core of the solution
         }
     }
+
     //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
-    _scheduleInit(){
-        if(this.initTimeout){
+    _scheduleInit() {
+        if (this.initTimeout) {
             clearTimeout(this.initTimeout) //core of the solution
         }
-        this.initTimeout= setTimeout(()=> {
+        this.initTimeout = setTimeout(()=> {
             this.serialPortInit()
         }, 2000);
     }
@@ -90,8 +91,8 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
     addRequest(cmd, options) {
         var that = this;
         options = options || {};
-        if (!that.ready && (cmd!== that.initCommand)) return Promise.reject(new Error('Device is not ready yet', that.status)); //new error is better practice
-        if (that.queueLength>that.maxQLength) {
+        if (!that.ready && (cmd !== that.initCommand)) return Promise.reject(new Error('Device is not ready yet', that.status)); //new error is better practice
+        if (that.queueLength > that.maxQLength) {
             debug('max Queue length reached for device :', that.deviceId);
             return Promise.reject(new Error('Maximum Queue size exceeded, wait for commands to be processed'));
         }
@@ -107,46 +108,47 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
      Main Utility function, adds a Request
      To the Serial Queue and return a Promise
      ************************************************/
-    _updateStatus(){
-        var that=this;
-        switch (that.statusCode){
+    _updateStatus() {
+        var that = this;
+        switch (that.statusCode) {
 
             case -1:
-                that.statusColor='Fuchsia ';
+                that.statusColor = 'Fuchsia ';
                 that.status = 'Serial port Error';
                 break;
             case 0:
                 that.status = 'Serial port not initialized';
-                that.statusColor='LightGrey';
+                that.statusColor = 'LightGrey';
                 break;
             case 1:
-                that.statusColor='Yellow';
+                that.statusColor = 'Yellow';
                 that.status = 'Serial port initializing';
                 break;
             case 2:
-                that.statusColor='SpringGreen';
+                that.statusColor = 'SpringGreen';
                 that.status = 'Serial port initialized';
                 break;
             case 3:
-                that.statusColor='Orange';
+                that.statusColor = 'Orange';
                 that.status = 'Serial port disconnected';
                 break;
             case 4:
-                that.statusColor='Tomato';
+                that.statusColor = 'Tomato';
                 that.status = 'Serial port closed';
                 break;
             case 5:
-                that.statusColor='Red';
+                that.statusColor = 'Red';
                 that.status = 'Unable to find the port.';
                 break;
             default:
                 that.status = 'Undefined State';
-                that.statusColor='LightGrey';
+                that.statusColor = 'LightGrey';
                 break;
         }
     }
-    
+
     _appendRequest(cmd, timeout) {
+        var callId = this.id;
         var that = this;
         timeout = timeout || this.serialResponseTimeout;
         return function () {
@@ -155,6 +157,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 that.resolveRequest = resolve;
                 that.rejectRequest = reject;
                 var bufferSize = 0;
+                if (callId !== this.id && cmd !== this.initCommand) return reject(new Error('invalid id'));
                 doTimeout(true);
                 debug('Sending command:' + cmd)
                 that.port.write(cmd + '\n', function (err) {
@@ -179,7 +182,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                         return;
                     }
                     //debug('command served:' + that.buffer);
-                    if(!that.buffer.endsWith(that.endString)) reject(new Error('buffer not ending properly'));
+                    if (!that.buffer.endsWith(that.endString)) reject(new Error('buffer not ending properly'));
                     that._resolve(that.buffer);
                     that.buffer = ""; //empty the buffer
                 }
@@ -219,17 +222,17 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
              propagate SerialPort events + handle messages (listeners)
              ****************************************************************/
             //handle the SerialPort open events
-            this.port.on('open',() => {
+            this.port.on('open', () => {
                 debug('opened port:', this.portParam);
                 this.emit('open');
-                this.statusCode=0;
+                this.statusCode = 0;
                 this._updateStatus();
                 this._scheduleInit();
             });
 
             //handle the SerialPort error events
             this.port.on('error', err => {
-                this.statusCode=-1;
+                this.statusCode = -1;
                 this._updateStatus();
                 this.ready = false;
                 debugger;
@@ -240,7 +243,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
             //handle the SerialPort disconnect events
             this.port.on('disconnect', err => {
-                this.statusCode=3;
+                this.statusCode = 3;
                 this._updateStatus();
                 this.ready = false;
                 if (err) return debug('ERR on disconnect:' + err.message);
@@ -250,7 +253,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
             //handle the SerialPort close events and destruct the SerialQueue manager
             this.port.on('close', err => {
-                this.statusCode=4;
+                this.statusCode = 4;
                 this._updateStatus();
                 if (err) return this.debug('ERR on closing:' + err.message);
                 debug('closed port:', this.portParam);
@@ -265,7 +268,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.emit('data', data);
             });
         }, (err)=> {
-            this.statusCode=5;
+            this.statusCode = 5;
             this._updateStatus();
             this._tryLater();
         });
@@ -295,7 +298,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.ready = false;
         if (!this.isWarned) debug('Unable to connect to port ', this.portParam, '. Please check if your device is connected or your device configuration. We will retry connecting every 2 seconds');
         this.isWarned = true;
-        setTimeout( ()=> {
+        setTimeout(()=> {
             this._reconnectionAttempt();
         }, 2000);
     }

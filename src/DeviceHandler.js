@@ -88,10 +88,8 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
     getSerialQ(id) {
         var that = this;
         debug('getting serialQ for device', id);
-        return this.ready.then(()=> {
-            if (that.devices[id]) return that.devices[id];
-            else throw new Error('no existing device with ID: ' + id);
-        })
+        if (that.devices[id]) return that.devices[id];
+        else throw new Error('no existing device with ID: ' + id);
     }
 }
 
