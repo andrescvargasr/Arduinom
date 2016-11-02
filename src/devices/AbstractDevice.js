@@ -10,21 +10,27 @@ class AbstractDevice extends EventEmitter {
         super();
         this._init()
         this.id = id;
-        this.enabled=true;
     }
 
     _init() {
         Handler.on('connect', ()=> {
-            debug('Device disconnected, disabling methods: ' + this.id);
-            this.emit('connect')
-            this.enabled=true;
+            debug('Device connected, enabling methods: ' + this.id);
+            this.emit('connect');
+
         });
 
         Handler.on('disconnect', ()=> {
             debug('Device disconnected, disabling methods: ' + this.id);
             this.emit('disconnect');
-            this.enabled=false;
         });
+    }
+
+    addRequest(cmd, options) {
+        debug('adding a new request to queue via abstract device class, port for device is :' + Handler.devices[this.id].portParam);
+        return Promise.resolve().then(()=> {
+            var serialQ = Handler.getSerialQ(this.id);
+            return serialQ.addRequest(cmd, options);
+        })
     }
 }
 

@@ -17,98 +17,85 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
 
-    _notReady() {
-        debug('OpenBio not ready or not existing device :', this.id);
-        return Promise.reject(new Error('OpenBio not ready or not existing device :' + this.id));
-    }
-
     /********************************
      *      User utililties
      ********************************/
 
 
     getCompactLog() {
-        if (this._ready) {
-            return this.serialQ.addRequest('c').then((buff)=> {
-                debug(buff);
-                return buff;
-            });
-        }
-        else return this._notReady();
+        return this.addRequest('c').then((buff)=> {
+            debug('getting compact Log');
+            return buff;
+        });
     }
 
 
-    getParsedCompactLog(){
-        var that=this;
+    getParsedCompactLog() {
+        var that = this;
         return this.getCompactLog()
-            .then((buff)=>{
-                return parser.parse('c',buff,{devicetype:'bioreactor', nbParamCompact: that.maxParam});
+            .then((buff)=> {
+                debug('parsing compact log');
+                return parser.parse('c', buff, {devicetype: 'bioreactor', nbParamCompact: that.maxParam})[0];
             })
     }
 
 
     getHelp() {
-        if (this._ready) this.serialQ.addRequest('h')
+        this.addRequest('h')
             .then((buff)=>debug(buff));
-        else return this._notReady();
     }
 
     getLastLog() {
-        if (this._ready) this.serialQ.addRequest('l').then((buff)=>debug(buff));
-        else return this._notReady();
+        this.addRequest('l')
+            .then((buff)=>debug(buff));
     }
 
-
-/*
-    getMultiLog(entry) {
-        var cmd = 'm' + entry;
-        if (this._ready) this.serialQ.addRequest(cmd).then(
-            (buff)=> {
-                debug('openspectro experiment results received');
-                debug(buff);
-                return pouchDB.addPouchEntry(this.db, buff, cmd, {
-                    devicetype: 'bioreactor',
-                    deviceID: this.id,
-                    nbParamCompact: this.maxParam,
-                    nbParam: this.maxParam
-                });
-            });
-        else return this._notReady();
-    }
-*/
+    /*
+     getMultiLog(entry) {
+     var cmd = 'm' + entry;
+     if (this._ready) this.addRequest(cmd).then(
+     (buff)=> {
+     debug('openspectro experiment results received');
+     debug(buff);
+     return pouchDB.addPouchEntry(this.db, buff, cmd, {
+     devicetype: 'bioreactor',
+     deviceID: this.id,
+     nbParamCompact: this.maxParam,
+     nbParam: this.maxParam
+     });
+     });
+     else return this._notReady();
+     }
+     */
     getI2C() {
-        if (this._ready) return this.serialQ.addRequest('i').then((buff)=>debug(buff));
-        else return this._notReady();
+        return this.addRequest('i').then((buff)=>debug(buff));
+
     }
 
     getOneWire() {
-        if (this._ready) this.serialQ.addRequest('o').then((buff)=>debug(buff));
-        else return this._notReady();
+        this.addRequest('o').then((buff)=>debug(buff));
+
     }
 
     getSettings() {
-        if (this._ready) this.serialQ.addRequest('s').then((buff)=>debug(buff));
-        else return this._notReady();
+        this.addRequest('s').then((buff)=>debug(buff));
+
     }
 
     getEpoch() {
-        if (this._ready) this.serialQ.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
-        else return this._notReady();
+        this.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
     }
 
     getFreeMem() {
-        if (this._ready) this.serialQ.addRequest('f').then((buff)=>debug(buff));
-        else return this._notReady();
+        this.addRequest('f').then((buff)=>debug(buff));
     }
 
     getQualifier() {
-        if (this._ready) this.serialQ.addRequest('q').then((buff)=>debug('qualifier :', buff));
-        else return this._notReady();
+        this.addRequest('q').then((buff)=>debug('qualifier :', buff));
     }
 
     getEEPROM() {
-        if (this._ready) this.serialQ.addRequest('z').then((buff)=>debug('eeprom :', buff));
-        else return this._notReady();
+        this.addRequest('z').then((buff)=>debug('eeprom :', buff));
     }
 
     setParameter(param, value) {
@@ -118,7 +105,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             debug('command does not match expected format A-AZ + value, no parameter set');
             return false;
         }
-        if (this._ready) this.serialQ.addRequest(param + value).then((buff)=> {
+        this.addRequest(param + value).then((buff)=> {
             if (buff === value.toString()) {
                 debug('written:', buff);
                 return true
@@ -128,14 +115,11 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                 return false
             } //throw an error here ?
         });
-        else return this._notReady();
     }
 
     setEpoch(epoch) {
-        if (this._ready) this.serialQ.addRequest('e' + epoch).then((buff)=>debug('eeprom :', buff));
-        else return this._notReady();
+        this.addRequest('e' + epoch).then((buff)=>debug('eeprom :', buff));
     }
-
 
     setEpochNow() {
         this.setEpoch(Date.now());

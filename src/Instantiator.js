@@ -10,7 +10,9 @@ const EventEmitter = require("events");
 class Instantiator extends EventEmitter {
     constructor() {
         super();
-        Handler.on('new', createDevice);
+        Handler.on('new', createDevice.bind(this));
+        Handler.on('disconnect', (id)=>this.emit('disconnect',id));
+        Handler.on('connect', (id)=>this.emit('connect',id));
     }
 }
 
@@ -18,15 +20,19 @@ function createDevice(id) {
     debug('new device was connected, calling instantiator createDevice()');
     var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
     var id_string = util.deviceIdNumberToString(id);
-    var m = qualifierReg.exec(id);
+    var m = qualifierReg.exec(id_string);
+    if (!m) {
+        debug('The id did not match the regex. Id was: ' + id_string);
+        return false;
+    }
     switch (m[1]) {
         case '$':
             debug('detected bioreactor with id:', id_string); //then create a filter fo device objects
-            this.emit('new', new OpenBio(id));
+            this.emit('newDevice', new OpenBio(id));
             break;
         case 'S':
             debug('detected spectrophotometer with id:', id_string); //then create a filter fo device objects
-            this.emit('new', new OpenSpectro(id));
+            this.emit('newDevice', new OpenSpectro(id));
             break;
         default:
             debug('detected unknown device with id:', id);

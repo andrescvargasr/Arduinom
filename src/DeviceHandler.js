@@ -57,10 +57,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                     //on ready event
                     that.serialQManagers[port.comName].on('ready', (id) => {
                         debug('serialQManager ready event, instantiating Device entry');
-                        if (!that.devices[id]){
-                            that.emit('new', id);
-                            debug('new device detected by handler');
-                        }
+                        if (!that.devices[id]) that.emit('new', id);
                         that.devices[id] = that.serialQManagers[port.comName];
                         that.emit('connect', id);
                     });
@@ -68,13 +65,13 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                     //on reinit event
                     that.serialQManagers[port.comName].on('reinitialized', (id) => {
                         debug('rematching port and device id on reinitialisation:' + id);
-                        that.devices[id] = that.serialQManagers[port.comName];
                         if (!that.devices[id])that.emit('new', id);
+                        that.devices[id] = that.serialQManagers[port.comName];
                         that.emit('connect', id);
                     });
 
                     //on idchange event
-                    that.serialQManagers[port.comName].on('disconnect', (id) => {
+                    that.serialQManagers[port.comName].on('close', (id) => {
                         debug('device disconnected on port' + port.comName);
                         if (id) that.devices[id] = {};
                         that.emit('disconnect', id);
