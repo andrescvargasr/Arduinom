@@ -8,7 +8,7 @@
     "xWidth": 10,
     "yHeight": 10
   },
-  "version": "2.70.0",
+  "version": "2.71.1",
   "modules": [
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -27,7 +27,10 @@
                 []
               ],
               "script": [
-                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('new',(device)=> {\n    deviceList[device.id]=device;\n    device.on('connect',()=>{});\n    device.on('disconnect',()=>{});\n});"
+                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('new',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    device.on('connect',updateArray);\n    device.on('disconnect',updateArray);\n    updateArray();\n});\n\nfunction updateArray(){\n    var count=0;\n    for(let key in deviceList){\n        console.log('device counter is: ' + count)\n        deviceArr[count]=deviceList[key];\n        if(deviceList[key].enable){\n            deviceArr[count].status='enable';\n            deviceArr[count].statusColor='green';\n        }\n        else{\n            deviceArr[count].status='disable';\n            deviceArr[count].statusColor='red';\n        }\n        count ++;\n    }\n    API.createData('deviceArray',deviceArr);\n    \n}\n"
+              ],
+              "asyncAwait": [
+                null
               ]
             }
           ],
@@ -618,6 +621,120 @@
           ]
         }
       ]
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "searchBox": [
+                [
+                  "search"
+                ]
+              ],
+              "sendButton": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 110,
+            "top": 40
+          },
+          "size": {
+            "width": 25,
+            "height": 26
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "deviceArray"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
     }
   ],
   "variables": [],
@@ -626,4 +743,4 @@
     "title": "No title"
   },
   "aliases": []
-git
+}

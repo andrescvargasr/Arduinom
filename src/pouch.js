@@ -6,7 +6,7 @@ const pouch = require("pouchdb");
 pouch.plugin(require("pouchdb-find"));
 const debug = require("debug")('main:pouchDB');
 const parser = require("./parser");
-var DB= new PouchDB('Serial Data');
+var DB= new pouch('Serial Data');
 
 
 /********************************************************

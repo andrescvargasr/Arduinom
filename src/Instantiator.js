@@ -7,13 +7,15 @@ const debug = require("debug")('main:Instantiator');
 const EventEmitter = require("events");
 
 
-class Instantiator extends EventEmitter() {
+class Instantiator extends EventEmitter {
     constructor() {
+        super();
         Handler.on('new', createDevice);
     }
 }
 
 function createDevice(id) {
+    debug('new device was connected, calling instantiator createDevice()');
     var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
     var id_string = util.deviceIdNumberToString(id);
     var m = qualifierReg.exec(id);

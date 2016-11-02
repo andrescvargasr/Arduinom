@@ -157,7 +157,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 that.resolveRequest = resolve;
                 that.rejectRequest = reject;
                 var bufferSize = 0;
-                if (callId !== this.id && cmd !== this.initCommand) return reject(new Error('invalid id'));
+                if(that.id !==null && cmd !== that.initCommand) {
+                    if (callId !== that.id ) return reject(new Error('invalid id'));
+                }
                 doTimeout(true);
                 debug('Sending command:' + cmd)
                 that.port.write(cmd + '\n', function (err) {

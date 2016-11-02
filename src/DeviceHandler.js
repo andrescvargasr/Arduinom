@@ -14,7 +14,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
         super();
         this.devices = [];
         this.serialQManagers = {};
-        this.setInterval(this._serialDevices({manufacturer: 'Arduino_LLC'}, { //--> to be removed
+        setInterval(this._serialDevices({manufacturer: 'Arduino_LLC'}, { //--> to be removed
                 init: 'q',
                 endString: '\r\n\r\n'
             }),
@@ -32,7 +32,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                 debug('Port List failed : ' + err);
                 return;
             }
-            this.selectedPorts = ports.filter(function (port) {
+            that.selectedPorts = ports.filter(function (port) {
                 for (var key in options) {
                     if (port[key] !== options[key])
                         return false
@@ -40,11 +40,11 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                 return true; //return port infos if true (boolean for filter method)
             });
 
-            this.selectedPorts.forEach(function (port) {
+            that.selectedPorts.forEach(function (port) {
                 debug('device with desired specs on port :', port.comName);
-                if (!this.serialQManagers[port.comName]) {
+                if (!that.serialQManagers[port.comName]) {
                     //create new serial Queue manager if a new serial device was connected
-                    this.serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
+                    that.serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
                             baudRate: 38400,
                             parser: SerialPort.parsers.raw
                         },
@@ -52,18 +52,21 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                             init: initialize.init,
                             endString: initialize.endString
                         });
-                    debug('instantiate new SerialQ');
+                    debug('instantiated new SerialQ');
 
                     //on ready event
-                    this.serialQManagers[port.comName].on('ready', (id) => {
+                    that.serialQManagers[port.comName].on('ready', (id) => {
                         debug('serialQManager ready event, instantiating Device entry');
+                        if (!that.devices[id]){
+                            that.emit('new', id);
+                            debug('new device detected by handler');
+                        }
                         that.devices[id] = that.serialQManagers[port.comName];
-                        if (!that.devices[id])that.emit('new ', id);
                         that.emit('connect', id);
                     });
 
                     //on reinit event
-                    this.serialQManagers[port.comName].on('reinitialized', (id) => {
+                    that.serialQManagers[port.comName].on('reinitialized', (id) => {
                         debug('rematching port and device id on reinitialisation:' + id);
                         that.devices[id] = that.serialQManagers[port.comName];
                         if (!that.devices[id])that.emit('new', id);
@@ -71,7 +74,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                     });
 
                     //on idchange event
-                    this.serialQManagers[port.comName].on('disconnect', (id) => {
+                    that.serialQManagers[port.comName].on('disconnect', (id) => {
                         debug('device disconnected on port' + port.comName);
                         if (id) that.devices[id] = {};
                         that.emit('disconnect', id);
