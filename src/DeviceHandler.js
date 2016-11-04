@@ -14,7 +14,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
         super();
         this.devices = [];
         this.serialQManagers = {};
-        setInterval(this._serialDevices({manufacturer: 'Arduino_LLC'}, { //--> to be removed
+        this.intervalId= setInterval(()=>this._serialDevices({manufacturer: 'Arduino_LLC'}, {//--> to be removed
                 init: 'q',
                 endString: '\r\n\r\n'
             }),
@@ -25,6 +25,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
      *   Internal management of the SerialQ Lookup
      ****************************************************/
     _serialDevices(options, initialize) {
+        debug('call to _serialDevices method');
         var that = this;
         //find all serial devices connected
         SerialPort.list(function (err, ports) {
@@ -56,7 +57,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
 
                     //on ready event
                     that.serialQManagers[port.comName].on('ready', (id) => {
-                        debug('serialQManager ready event, instantiating Device entry');
+                        debug('serialQManager ready event, instantiating Device entry:' + id);
                         if (!that.devices[id]) that.emit('new', id);
                         that.devices[id] = that.serialQManagers[port.comName];
                         that.emit('connect', id);
@@ -71,8 +72,17 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                     });
 
                     //on idchange event
-                    that.serialQManagers[port.comName].on('close', (id) => {
+                    that.serialQManagers[port.comName].on('idchange', (id) => {
+                        debug('on deviceId change for port' + port.comName);
+                        debug('serialQManager idchangevent event, instantiating Device entry:' + id);
+                        if (!that.devices[id]) that.emit('new', id);
+                        that.devices[id] = that.serialQManagers[port.comName];
+                        that.emit('connect', id);
+                    });
+
+                    that.serialQManagers[port.comName].on('disconnect', (id) => {
                         debug('device disconnected on port' + port.comName);
+                        debug('closed port for device : ' + id);
                         if (id) that.devices[id] = {};
                         that.emit('disconnect', id);
                     });
@@ -93,6 +103,6 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
     }
 }
 
-module.exports = new DeviceHandler(); //-> unused, only one global db is more suited
+module.exports = new DeviceHandler(8000); //-> unused, only one global db is more suited
 
 

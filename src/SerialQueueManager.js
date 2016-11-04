@@ -44,7 +44,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 } else if (that.deviceId && (that.deviceId !== parseInt(buffer))) {
                     that.deviceId = parseInt(buffer);
                     debug('Device Id changed to:' + buffer);
-                    that.emit('idchange', parseInt(buffer), that.deviceId);
+                    that.emit('idchange', that.deviceId);
                     //to do if device id changed --> reject all promises related to serialQ  --> reinit promise promiseQ
                     that.statusCode = 2;
                     that._updateStatus();
@@ -148,7 +148,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
     }
 
     _appendRequest(cmd, timeout) {
-        var callId = this.id;
+        var callId=this.deviceId;
         var that = this;
         timeout = timeout || this.serialResponseTimeout;
         return function () {
@@ -157,8 +157,8 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 that.resolveRequest = resolve;
                 that.rejectRequest = reject;
                 var bufferSize = 0;
-                if(that.id !==null && cmd !== that.initCommand) {
-                    if (callId !== that.id ) return reject(new Error('invalid id'));
+                if(that.deviceId !==null && cmd !== that.initCommand) {
+                    if (callId !== that.deviceId ) return reject(new Error('invalid id'));
                 }
                 doTimeout(true);
                 debug('Sending command:' + cmd)
@@ -248,9 +248,9 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.statusCode = 3;
                 this._updateStatus();
                 this.ready = false;
+                this.emit('disconnect', this.deviceId);
                 if (err) return debug('ERR on disconnect:' + err.message);
                 debug('port disconnect:', this.portParam);
-                this.emit('disconnect', this.id);
             });
 
             //handle the SerialPort close events and destruct the SerialQueue manager

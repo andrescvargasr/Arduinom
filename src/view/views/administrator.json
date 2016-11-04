@@ -8,7 +8,7 @@
     "xWidth": 10,
     "yHeight": 10
   },
-  "version": "2.71.2",
+  "version": "2.71.4",
   "modules": [
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -27,7 +27,7 @@
                 []
               ],
               "script": [
-                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    device.on('connect',()=>updateArray(true));\n    device.on('disconnect',()=>updateArray(false));\n    updateArray();\n});\n\nfunction updateArray(stat){\n    var count=0;\n    for(let key in deviceList){\n        deviceArr[count]=deviceList[key];\n        if(stat===true) deviceArr[count].statusColor='PaleGreen';\n        else deviceArr[count].statusColor='Tomato';\n            count ++;\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
+                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    Instantiator.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    Instantiator.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
               ],
               "asyncAwait": [
                 null
@@ -807,7 +807,7 @@
           "name": "Default layer"
         }
       },
-      "id": 6,
+      "id": 5,
       "vars_in": [
         {}
       ],
