@@ -52,11 +52,11 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 1,
-            "top": 1
+            "left": 0,
+            "top": 35
           },
           "size": {
-            "width": 62,
+            "width": 61,
             "height": 34
           },
           "zIndex": 0,
@@ -191,6 +191,19 @@
                 "hideColumn": []
               },
               {
+                "name": "device Type",
+                "jpath": [
+                  "deviceType"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
                 "name": "Param Table size",
                 "jpath": [
                   "maxParam"
@@ -255,8 +268,8 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 64,
-            "top": 1
+            "left": 0,
+            "top": 0
           },
           "size": {
             "width": 37,
@@ -545,8 +558,8 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 1,
-            "top": 36
+            "left": 62,
+            "top": 0
           },
           "size": {
             "width": 100,
@@ -643,7 +656,7 @@
                 []
               ],
               "script": [
-                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nif(devicekey){\n    var device=deviceList[String(devicekey)];\n    var deviceInfo=device.paramInfo;\n    device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            //console.log(value[0].parameters[deviceInfo[key].parameter]);\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    });\n}\n"
+                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nrequire( ['src/util/ui'], (ui)=>{if(devicekey){\n    var device=deviceList[String(devicekey)];\n    var deviceInfo=device.paramInfo;\n    device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            //console.log(value[0].parameters[deviceInfo[key].parameter]);\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    }).catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });\n        \n}\n    device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n    \n});\n"
               ]
             }
           ],
@@ -666,16 +679,16 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 102,
-            "top": 1
+            "left": 0,
+            "top": 70
           },
           "size": {
-            "width": 65,
-            "height": 36
+            "width": 61,
+            "height": 32
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Device Selector",
           "bgColor": [
             255,
             255,
@@ -700,7 +713,7 @@
           "name": "getParams"
         }
       ],
-      "title": "",
+      "title": "Device Selector",
       "actions_out": [
         {
           "jpath": []
@@ -802,16 +815,16 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 102,
-            "top": 38
+            "left": 0,
+            "top": 103
           },
           "size": {
-            "width": 51,
-            "height": 47
+            "width": 61,
+            "height": 26
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Parameter Editor",
           "bgColor": [
             255,
             255,
@@ -838,7 +851,138 @@
           "name": "slickScript"
         }
       ],
-      "title": "",
+      "title": "Parameter Editor",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                []
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "(c)ompact settings\r\n(d)elete flash\r\n(e)poch\r\n(f)ree\r\n(h)elp\r\n(i)2c\r\n(l)og\r\n(m)ultiple log\r\n(o)ne-wire\r\n(p)aram\r\n(q)ualifier\r\n(r)eset\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 38,
+            "top": 0
+          },
+          "size": {
+            "width": 23,
+            "height": 34
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Help Menu",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": "helpMenu"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Help Menu",
       "actions_out": [
         {
           "jpath": []

@@ -11,6 +11,7 @@ const parser = require("./../../parser");
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
+        this.deviceType='openspectro'
         this.maxParam = 26;
         this.paramInfo = paramConfig;
     }
@@ -19,11 +20,10 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
      *    Device specific utilities
      *********************************/
     getParsedCompactLog() {
-        if (this.pending) return this._pendingExperiment();
         var that = this;
         return this.getCompactLog()
             .then((buff)=> {
-                return parser.parse('c', buff, {devicetype: 'openspectro', nbParamCompact: that.maxParam})[0];
+                return parser.parse('c', buff, {devicetype: this.deviceType, nbParamCompact: that.maxParam})[0];
             })
     }
 
@@ -34,7 +34,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     initializeParameters() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('i').then((buff)=> {
             return buff;
         });
@@ -43,7 +42,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded
     getRGB() {
-        if (this.pending) return this._pendingExperiment();
         this.pending = true;
         return this.addRequest('a', {timeout: 5000}).then((buff)=> {
             this.pending = false;
@@ -53,8 +51,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
 
     testAll() {
-        if (this.pending) return this._pendingExperiment();
-        if (this.pending) return this._pendingExperiment();
         this.pending = true;
         return this.addRequest('t', {timeout: 5000}).then((buff)=> {
             this.pending = false;
@@ -63,7 +59,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     runExperiment(title, description) {
-        if (this.pending) return this._pendingExperiment();
         this.pending = true;
         return this.addRequest('I', {timeout: 500})
             .then((delay)=> {

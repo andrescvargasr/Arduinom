@@ -12,6 +12,7 @@ const parser = require("./../../parser");
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
+        this.deviceType='bioreactor';
         this.maxParam = 52;
         this.paramInfo = paramConfig;
     }
@@ -24,7 +25,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: 'bioreactor', nbParamCompact: that.maxParam})[0];
+                return parser.parse('c', buff, {devicetype: this.deviceType, nbParamCompact: that.maxParam})[0];
             })
     }
 

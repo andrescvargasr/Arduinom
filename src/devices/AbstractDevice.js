@@ -27,6 +27,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     addRequest(cmd, options) {
+        if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
             var serialQ = Handler.getSerialQ(this.id);
@@ -44,7 +45,6 @@ class AbstractDevice extends EventEmitter {
      *      Device utilities
      ********************************/
     getHelp() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('h')
             .then((buff)=> {
                 return buff;
@@ -52,35 +52,30 @@ class AbstractDevice extends EventEmitter {
     }
 
     getFreeMem() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('f').then((buff)=> {
             return buff;
         });
     }
 
     getQualifier() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('q').then((buff)=> {
             return buff;
         });
     }
 
     getEEPROM() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('z', {timeout: 500}).then((buff)=> {
             return buff;
         });
     }
 
     getSettings() {
-        if (this.pending) return this._pendingExperiment();
         this.addRequest('s').then((buff)=> {
             return buff;
         });
     }
 
     getCompactLog() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('c').then((buff)=> {
             return buff;
         });
@@ -90,14 +85,12 @@ class AbstractDevice extends EventEmitter {
      *      Time utilities
      ********************************/
     getEpoch() {
-        if (this.pending) return this._pendingExperiment();
         return this.addRequest('e', time).then((buff)=> {
             return buff;
         }); //buffer is accessible here
     }
 
     setEpoch(time) {
-        if (this.pending) return this._pendingExperiment();
         var cmd = 'e' + time;
         return this.addRequest(cmd).then((buff)=> {
             return buff;
@@ -105,7 +98,6 @@ class AbstractDevice extends EventEmitter {
     }
 
     setEpochNow() {
-        if (this.pending) return this._pendingExperiment();
         var time = (new Date).getTime();
         return this.setEpoch(time); //buffer is accessible here
     }
