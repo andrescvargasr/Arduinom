@@ -83,7 +83,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                     that.serialQManagers[port.comName].on('disconnect', (id) => {
                         debug('device disconnected on port' + port.comName);
                         debug('closed port for device : ' + id);
-                        if (id) that.devices[id] = {};
+                        if (id) delete that.devices[id];
                         that.emit('disconnect', id);
                     });
                 }
@@ -99,7 +99,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
         var that = this;
         debug('getting serialQ for device', id);
         if (that.devices[id]) return that.devices[id];
-        else throw new Error('no existing device with ID: ' + id);
+        else throw new Error(`device with ID ${id} is not connected`);
     }
 }
 

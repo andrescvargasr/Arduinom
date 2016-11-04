@@ -27,7 +27,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     addRequest(cmd, options) {
-        debug('adding a new request to queue via abstract device class, port for device is :' + Handler.devices[this.id].portParam);
+        debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
             var serialQ = Handler.getSerialQ(this.id);
             return serialQ.addRequest(cmd, options);

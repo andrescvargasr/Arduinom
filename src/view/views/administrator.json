@@ -781,7 +781,7 @@
                 0
               ],
               "script": [
-                "var device=require.node('./../devices/AbstractDevice');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nif(this.event=='cellChanged'){\n    console.log(this);\n    if(DataBoolean.cast(this.row.item.writable)){\n        var cmd=String(this.row.item.parameter);\n        cmd=cmd+String(this.row.item.val);\n        deviceList[devicekey].addRequest(cmd);   \n    }\n    else console.log('this parameter cannot be edited');\n    API.doAction('getParams');\n}"
+                "var device=require.node('./../devices/AbstractDevice');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\nrequire( ['src/util/ui'], (ui)=>{if(this.event=='cellChanged'){\n    console.log(this);\n    if(DataBoolean.cast(this.row.item.writable)){\n        var cmd=String(this.row.item.parameter);\n        cmd=cmd+String(this.row.item.val);\n        deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            this.row.item.val=this.previous;\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   \n    }\n    else console.log('this parameter cannot be edited');\n    API.doAction('getParams');\n}});\n\n"
               ]
             }
           ],
@@ -806,8 +806,8 @@
             "top": 38
           },
           "size": {
-            "width": 36,
-            "height": 34
+            "width": 51,
+            "height": 47
           },
           "zIndex": 0,
           "display": true,
