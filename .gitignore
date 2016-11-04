@@ -2,3 +2,5 @@ node_modules/*
 Serial Data/*
 .idea/*
 Serial Data
+.idea/workspace.xml
+

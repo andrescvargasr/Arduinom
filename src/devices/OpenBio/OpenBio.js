@@ -20,15 +20,12 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     /********************************
      *      User utililties
      ********************************/
-
-
     getCompactLog() {
         return this.addRequest('c').then((buff)=> {
             debug('getting compact Log');
             return buff;
         });
     }
-
 
     getParsedCompactLog() {
         var that = this;
@@ -38,7 +35,6 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                 return parser.parse('c', buff, {devicetype: 'bioreactor', nbParamCompact: that.maxParam})[0];
             })
     }
-
 
     getHelp() {
         this.addRequest('h')

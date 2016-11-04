@@ -6,15 +6,30 @@ var opSpectro=require('open-spectro');
 exports = module.exports = {
     parse: function (cmd, result, options) {
         options = options || {};
-        //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
-        var commandReg = /^([A-Z]{1,2}|[a-z])(\d+)?$/;
+        var commandReg = /^([A-Z]{1,2}|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
         var m = commandReg.exec(cmd);
-
         if (!m) {
             debug('The command did not match the regex. Send a correct command.');
             return false;
         }
 
+        //compact log parsing is the same for all the device types
+        if(m[1]==='c') {
+            // If c was specify without the number of params to retrieve
+            // We use the parameter in the device config file
+            nbParam = m[2] || options.nbParamCompact;
+            var reqLength = nbParam * 4 + 14;
+            var lines = result.split(/[\r\n]+/);
+            // We are ready to process the next request
+            var entries = [];
+            if (lines.length >= 2) {
+                debug('process lines');
+                entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
+            }
+            return entries;
+        }
+
+        //openspectro specific parsing
         if (options.devicetype === 'openspectro') {
             switch (m[1]) {
                 case 'r':
@@ -25,21 +40,9 @@ exports = module.exports = {
             }
         }
 
+        //bioreactor specific parsing
         else if (options.devicetype === 'bioreactor') {
             switch (m[1]) {
-                case 'c':
-                    // If c was specify without the number of params to retrieve
-                    // We use the parameter in the device config file
-                    nbParam = m[2] || options.nbParamCompact;
-                    var reqLength = nbParam * 4 + 14;
-                    var lines = result.split(/[\r\n]+/);
-                    // We are ready to process the next request
-                    var entries = [];
-                    if (lines.length >= 2) {
-                        debug('process lines');
-                        entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
-                    }
-                    return entries;
                 case 'm':
                     // m require an argument which is the log position
                     if (!m[2]) return result;

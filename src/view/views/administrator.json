@@ -178,7 +178,23 @@
           "cols": [
             [
               {
-                "jpath": [],
+                "name": "device ID",
+                "jpath": [
+                  "id"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Param Table size",
+                "jpath": [
+                  "maxParam"
+                ],
                 "editor": "none",
                 "forceType": "",
                 "formatter": "typerenderer",
