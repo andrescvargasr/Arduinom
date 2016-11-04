@@ -16,17 +16,9 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         this.paramInfo = paramConfig;
     }
 
-
     /********************************
-     *      User utililties
+     *   Device specific utililties
      ********************************/
-    getCompactLog() {
-        return this.addRequest('c').then((buff)=> {
-            debug('getting compact Log');
-            return buff;
-        });
-    }
-
     getParsedCompactLog() {
         var that = this;
         return this.getCompactLog()
@@ -36,15 +28,19 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             })
     }
 
-    getHelp() {
-        this.addRequest('h')
-            .then((buff)=>debug(buff));
-    }
-
     getLastLog() {
         this.addRequest('l')
-            .then((buff)=>debug(buff));
+            .then((buff)=>{return buff;});
     }
+
+    getI2C() {
+        return this.addRequest('i').then((buff)=>{return buff;});
+    }
+
+    getOneWire() {
+        this.addRequest('o').then((buff)=>{return buff;});
+    }
+
 
     /*
      getMultiLog(entry) {
@@ -63,36 +59,6 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
      else return this._notReady();
      }
      */
-    getI2C() {
-        return this.addRequest('i').then((buff)=>debug(buff));
-
-    }
-
-    getOneWire() {
-        this.addRequest('o').then((buff)=>debug(buff));
-
-    }
-
-    getSettings() {
-        this.addRequest('s').then((buff)=>debug(buff));
-
-    }
-
-    getEpoch() {
-        this.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
-    }
-
-    getFreeMem() {
-        this.addRequest('f').then((buff)=>debug(buff));
-    }
-
-    getQualifier() {
-        this.addRequest('q').then((buff)=>debug('qualifier :', buff));
-    }
-
-    getEEPROM() {
-        this.addRequest('z').then((buff)=>debug('eeprom :', buff));
-    }
 
     setParameter(param, value) {
         var commandReg = /^([A-Z]{1,2})(\d+)?$/;
@@ -104,24 +70,15 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         this.addRequest(param + value).then((buff)=> {
             if (buff === value.toString()) {
                 debug('written:', buff);
-                return true
+                return buff;
             }
             else {
-                debug('error writing buffer:', buff);
-                return false
-            } //throw an error here ?
+                debug('error writing to param:', buff);
+                return buff; //throw an error here ?
+            }
+
         });
     }
-
-    setEpoch(epoch) {
-        this.addRequest('e' + epoch).then((buff)=>debug('eeprom :', buff));
-    }
-
-    setEpochNow() {
-        this.setEpoch(Date.now());
-    }
-
 }
-
 
 module.exports = OpenBio;

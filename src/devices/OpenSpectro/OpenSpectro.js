@@ -15,69 +15,29 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         this.paramInfo = paramConfig;
     }
 
-    _pendingExperiment() {
-        debug('rejected request, wait for completion of the experiment running on openspectro :', this.id);
-        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
-    }
-
-    /********************************
-     *      User utililties
-     ********************************/
-    getCompactLog() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('c').then((buff)=> {
-            debug('getting compact Log');
-            return buff;
-        });
-    }
-
+    /*********************************
+     *    Device specific utilities
+     *********************************/
     getParsedCompactLog() {
         if (this.pending) return this._pendingExperiment();
         var that = this;
         return this.getCompactLog()
             .then((buff)=> {
-                debug('parsing compact log');
                 return parser.parse('c', buff, {devicetype: 'openspectro', nbParamCompact: that.maxParam})[0];
             })
     }
 
-    getHelp() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('h')
-            .then((buff)=>debug(buff));
-    }
-
-
-    getSettings() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('s').then((buff)=> {
-            debug(buff);
+    calibrate() {
+        return this.addRequest('k', {timeout: 500}).then((buff)=> {
+            return buff;
         });
-    }
-
-    getEpoch() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('e').then((buff)=>debug(buff)); //buffer is accessible here
-    }
-
-    getFreeMem() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('f').then((buff)=>debug(buff));
-    }
-
-    getQualifier() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('q').then((buff)=>debug('qualifier :', buff));
-    }
-
-    getEEPROM() {
-        if (this.pending) return this._pendingExperiment();
-        return this.addRequest('z', {timeout: 3000}).then((buff)=>debug('eeprom :', buff));
     }
 
     initializeParameters() {
         if (this.pending) return this._pendingExperiment();
-        return this.addRequest('i').then((buff)=>debug(buff));
+        return this.addRequest('i').then((buff)=> {
+            return buff;
+        });
     }
 
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
@@ -122,15 +82,23 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
             });
     }
 
-    /*
-     getExperimentResults() {
+    /* TO BE IMPLEMENTED
+     getLastExperimentResults() {
+     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
+     }
+
+     getExperimentResults(name) {
+     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
+     }
+
+     getAllExperimentResults() {
+     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
+     }
+
+     renameExperiment(oldName, newName) {
      return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
      }
      */
-    calibrate() {
-        return this.addRequest('k', {timeout: 500}).then((buff)=>debug(buff));
-    }
 }
-
 
 module.exports = OpenSpectro;
