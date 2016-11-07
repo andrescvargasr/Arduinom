@@ -101,6 +101,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     setEpochNow() {
+        debug('setting epoch to unix time');
         var time = (new Date).getTime();
         return this.setEpoch(time); //buffer is accessible here
     }

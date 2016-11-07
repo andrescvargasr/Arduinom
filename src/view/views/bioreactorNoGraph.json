@@ -34,7 +34,7 @@
                 []
               ],
               "script": [
-                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    Instantiator.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    Instantiator.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
+                "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    Instantiator.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    Instantiator.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n    if(deviceList[key].deviceType=='bioreactor'){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n            }\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
               ]
             }
           ],
@@ -1039,7 +1039,7 @@
                 0
               ],
               "script": [
-                "(a)ll rgb\r\n(c)ompact settings\r\n(g)reen intensity test\r\n(r)un experiment\r\n(t)est all colors\r\n(e)poch\r\n(f)ree mem\r\n(h)elp\r\n(i)nitialize parameters\r\nle(v)el\r\n(q)ualifier\r\n(k) calibration\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
+                "(c)ompact settings\r\n(d)elete flash\r\n(e)poch\r\n(f)ree\r\n(h)elp\r\n(i)2c\r\n(l)og\r\n(m)ultiple log\r\n(o)ne-wire\r\n(p)aram\r\n(q)ualifier\r\n(r)eset\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
               ]
             }
           ],
@@ -1194,7 +1194,7 @@
                 0
               ],
               "script": [
-                "g"
+                "m0"
               ]
             }
           ],
@@ -1241,7 +1241,7 @@
             "top": 35
           },
           "size": {
-            "width": 37,
+            "width": 61,
             "height": 10
           },
           "zIndex": 0,
@@ -1333,7 +1333,7 @@
                 []
               ],
               "script": [
-                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).\n    then((val)=>{\n        var message = 'Command executed correctly, returned: '+val;\n        ui.showNotification(message, 'success');\n        \n    }).\n    catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            //rerender();\n        });   \n    API.doAction('getParams');\n});"
+                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).\n    then((val)=>{\n        var message = 'Command executed correctly';\n        ui.showNotification(message, 'success');\n        API.createData('lastCmdExec',val);\n        \n    }).\n    catch((err)=>{\n            ui.showNotification(err.message, 'error');\n        });   \n    API.doAction('getParams');\n});"
               ]
             }
           ],
@@ -1356,8 +1356,8 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 62,
-            "top": 79
+            "left": 101,
+            "top": 70
           },
           "size": {
             "width": 57,
@@ -1413,6 +1413,296 @@
         }
       ],
       "title": "Command Executor",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                []
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "0000000000000002FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFC00320000243024\r\n000000010000000180000A410DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430C3\r\n000000020000001B80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430C8\r\n000000030000002580000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430F7\r\n000000040000002F80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430FA\r\n000000050000003980000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430ED\r\n000000060000004380000A4D0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC0000000024308B\r\n000000070000004D80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC0000000024309A\r\n000000080000005780000A4D0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC00000000243091\r\n000000090000006180000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC000000002430B8\r\n\r\n"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 62,
+            "top": 79
+          },
+          "size": {
+            "width": 37,
+            "height": 17
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Last Exec Result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 46
+          },
+          "size": {
+            "width": 61,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Last Exec Result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "GUI"
+        }
+      },
+      "id": 9,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": "lastCmdExec"
+        }
+      ],
+      "actions_in": [
+        {
+          "rel": "_editPreferences"
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Last Exec Result",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                []
+              ],
+              "script": [
+                "var openBio=require.node('./../devices/OpenBio/OpenBio');\nvar deviceList=API.cache('deviceList');\nvar devicekey=API.getData('devicekey');\n\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    deviceList[devicekey].setEpochNow().\n    then((val)=>{\n        var message = 'time set correctly';\n        ui.showNotification(message, 'success');\n        API.createData('lastCmdExec',val);\n        \n    }).\n    catch((err)=>{\n            ui.showNotification(err.message, 'error');\n        });   \n});"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Set Time to Unix Epoch",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 18,
+            "top": -2
+          },
+          "size": {
+            "width": 61,
+            "height": 36
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
+          "created": true,
+          "name": "GUI"
+        }
+      },
+      "id": 10,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "",
       "actions_out": [
         {
           "jpath": []
