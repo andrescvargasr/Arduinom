@@ -805,7 +805,7 @@
           "name": "getParams"
         }
       ],
-      "title": "",
+      "title": "Device Selector",
       "actions_out": [
         {
           "jpath": []
@@ -1194,7 +1194,7 @@
                 0
               ],
               "script": [
-                ""
+                "AA"
               ]
             }
           ],
@@ -1333,7 +1333,7 @@
                 []
               ],
               "script": [
-                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   ;\n    API.doAction('getParams');\n});"
+                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   \n    API.doAction('getParams');\n});"
               ]
             }
           ],
