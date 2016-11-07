@@ -6,13 +6,8 @@ var opSpectro=require('open-spectro');
 exports = module.exports = {
     parse: function (cmd, result, options) {
         options = options || {};
-        var commandReg = /^([A-Z]{1,2}|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
-        var m = commandReg.exec(cmd);
-        if (!m) {
-            debug('The command did not match the regex. Send a correct command.');
-            return false;
-        }
-
+        var m=validateCommand(cmd);
+        if(m==false) return false;
         //compact log parsing is the same for all the device types
         if(m[1]==='c') {
             // If c was specify without the number of params to retrieve
@@ -70,8 +65,22 @@ exports = module.exports = {
             return false;
         }
 
-    }
+    },
+
+    validateCommand : validateCommand
+
 };
+
+function validateCommand(cmd){
+    var commandReg = /^(A?[A-Z]|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
+    var m = commandReg.exec(cmd);
+    debug('Checking the command, regex is :' + m);
+    if (!m) {
+        debug('The command did not match the regex. Send a correct command.');
+        return false;
+    }
+    else return m;
+}
 
 function processLinesM(lines, reqLength, nbParam, hasEvent) {
     var entries = [];

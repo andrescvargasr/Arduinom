@@ -3,6 +3,7 @@
 const EventEmitter = require("events");
 const Handler = require("./../DeviceHandler");
 const debug = require("debug")('main:abstractDevice');
+const parser= require("./../parser");
 
 class AbstractDevice extends EventEmitter {
 
@@ -27,6 +28,8 @@ class AbstractDevice extends EventEmitter {
     }
 
     addRequest(cmd, options) {
+        //check here that the command does match the expected standard
+        if(!parser.validateCommand(cmd)) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + cmd));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
