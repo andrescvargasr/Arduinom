@@ -148,7 +148,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -394,7 +395,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -705,7 +707,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -716,7 +719,8 @@
             {
               "display": [
                 [
-                  "buttons"
+                  "buttons",
+                  "editor"
                 ]
               ],
               "execOnLoad": [
@@ -726,20 +730,43 @@
                 []
               ],
               "script": [
-                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nrequire( ['src/util/ui'], (ui)=>{if(devicekey){\n    var device=deviceList[String(devicekey)];\n    var deviceInfo=device.paramInfo;\n    device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            //console.log(value[0].parameters[deviceInfo[key].parameter]);\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    }).catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });\n        \n}\n    device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n    \n});\n"
+                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nvar device\n\nif(devicekey){\n    device=deviceList[String(devicekey)];\n    \n    switch(this.button){\n        case 'reload':\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n        case 'setTime':\n            setTimeNow().catch(errorHandler);\n            break;\n        case 'entryID':\n            lastEntry().catch(errorHandler);\n            break;\n        case 'last':\n            lastLog().catch(errorHandler);\n            break;\n        case 'lasts':\n            lastLogs().catch(errorHandler);\n            break;\n        default:\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n            \n        \n    }\n        \n}\n\n\n//Utilities\nfunction lastLogs(){\n    return device.getLastEntryID().then((val)=> {\n        return device.getMultiLog(val).then((buff)=>{\n                    ui.showNotification('got Last Logs', 'success');\n         API.createData(\"lastCmdExec\",buff);\n        })\n\n    })\n}\n\nfunction lastLog(){\n    return device.getLastLog().then((val)=> {\n        ui.showNotification('got Last Log: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction lastEntry(){\n    return device.getLastEntryID().then((val)=> {\n        ui.showNotification('got Last EntryID: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction setTimeNow(){\n    return device.setEpochNow().then((val)=> {\n        ui.showNotification('Time was set to Unix epoch', 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction reload(){\n    var deviceInfo=device.paramInfo;\n    return device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    })\n    \n}\n\nfunction errorHandler(err){\n    ui.showNotification(err.message, 'error');\n}\n\n\n\n\n"
               ]
             }
           ],
           "libs": [
             [
-              {}
+              {
+                "lib": "src/util/ui",
+                "alias": "ui"
+              }
             ]
           ],
           "buttons": [
             [
               {
-                "name": "button1",
-                "label": "Reload Device Parameters",
+                "name": "reload",
+                "label": "Reload Parameters",
+                "hide": []
+              },
+              {
+                "name": "setTime",
+                "label": "Set Time To Unix Epoch",
+                "hide": []
+              },
+              {
+                "name": "entryID",
+                "label": "Last EntryID",
+                "hide": []
+              },
+              {
+                "name": "last",
+                "label": "Last Log",
+                "hide": []
+              },
+              {
+                "name": "lasts",
+                "label": "Last Logs",
                 "hide": []
               }
             ]
@@ -750,11 +777,11 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 27
+            "top": 97
           },
           "size": {
-            "width": 19,
-            "height": 7
+            "width": 81,
+            "height": 39
           },
           "zIndex": 0,
           "display": true,
@@ -765,18 +792,18 @@
             255,
             0
           ],
-          "wrapper": false,
+          "wrapper": true,
           "created": true,
           "name": "Default layer"
         },
         "GUI": {
           "position": {
             "left": 0,
-            "top": 27
+            "top": 35
           },
           "size": {
-            "width": 19,
-            "height": 7
+            "width": 37,
+            "height": 10
           },
           "zIndex": 0,
           "display": true,
@@ -787,7 +814,7 @@
             255,
             0
           ],
-          "wrapper": false,
+          "wrapper": true,
           "created": true,
           "name": "Default layer"
         }
@@ -805,7 +832,7 @@
           "name": "getParams"
         }
       ],
-      "title": "Device Selector",
+      "title": "",
       "actions_out": [
         {
           "jpath": []
@@ -846,7 +873,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1001,7 +1029,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1154,7 +1183,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1237,11 +1267,11 @@
         },
         "GUI": {
           "position": {
-            "left": 0,
+            "left": 38,
             "top": 35
           },
           "size": {
-            "width": 61,
+            "width": 23,
             "height": 10
           },
           "zIndex": 0,
@@ -1312,7 +1342,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -1453,7 +1484,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1491,7 +1523,7 @@
                 0
               ],
               "script": [
-                "0000000000000002FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFC00320000243024\r\n000000010000000180000A410DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430C3\r\n000000020000001B80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430C8\r\n000000030000002580000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430F7\r\n000000040000002F80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430FA\r\n000000050000003980000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE000FFFFFCFC000000002430ED\r\n000000060000004380000A4D0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC0000000024308B\r\n000000070000004D80000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC0000000024309A\r\n000000080000005780000A4D0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC00000000243091\r\n000000090000006180000A530DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE001FFFFFCFC000000002430B8\r\n\r\n"
+                "00002B083F351CE580000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70EFFFF000C00000000243087\r\n00002B093F351CEF80000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70EFFFF000C0000000024308C\r\n00002B0A3F351CF980000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70EFFFF000C00000000243099\r\n00002B0B3F351D0380000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70EFFFF000C00000000243063\r\n00002B0C3F351D0D80000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70EFFFF000C0000000024306A\r\n00002B0D3F351D1780000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70FFFFF000C00000000243070\r\n00002B0E3F351D2180000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70FFFFF000C00000000243045\r\n00002B0F3F351D2B80000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70FFFFF000C0000000024304E\r\n00002B103F351D3580000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70FFFFF000C0000000024304F\r\n00002B113F351D3F80000A1B0DF1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF13880000FFFF0050FFFFFFFFFFFFFFFFE70FFFFF000C00000000243044\r\n\r\n"
               ]
             }
           ],
@@ -1608,142 +1640,8 @@
             ""
           ]
         }
-      ]
-    },
-    {
-      "url": "modules/types/client_interaction/code_executor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "display": [
-                [
-                  "buttons"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                []
-              ],
-              "script": [
-                "var openBio=require.node('./../devices/OpenBio/OpenBio');\nvar deviceList=API.cache('deviceList');\nvar devicekey=API.getData('devicekey');\n\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    deviceList[devicekey].setEpochNow().\n    then((val)=>{\n        var message = 'time set correctly';\n        ui.showNotification(message, 'success');\n        API.createData('lastCmdExec',val);\n        \n    }).\n    catch((err)=>{\n            ui.showNotification(err.message, 'error');\n        });   \n});"
-              ]
-            }
-          ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
-          "buttons": [
-            [
-              {
-                "name": "button1",
-                "label": "Set Time to Unix Epoch",
-                "hide": []
-              }
-            ]
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 18,
-            "top": -2
-          },
-          "size": {
-            "width": 61,
-            "height": 36
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": false,
-          "created": true,
-          "name": "Default layer"
-        },
-        "GUI": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": false,
-          "created": true,
-          "name": "GUI"
-        }
-      },
-      "id": 10,
-      "vars_in": [
-        {}
       ],
-      "actions_in": [
-        {}
-      ],
-      "title": "",
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "vars_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ]
+      "zindex": 2
     }
   ],
   "variables": [

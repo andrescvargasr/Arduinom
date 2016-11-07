@@ -12,7 +12,7 @@ const parser = require("./../../parser");
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.deviceType='bioreactor';
+        this.deviceType = 'bioreactor';
         this.maxParam = 52;
         this.paramInfo = paramConfig;
     }
@@ -30,26 +30,42 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getLastLog() {
-        this.addRequest('l')
-            .then((buff)=>{return buff;});
+        return this.addRequest('l')
+            .then((buff)=> {
+                return buff;
+            });
+    }
+
+    getLastEntryID() {
+        return this.addRequest('m').then((buff)=> {
+            return buff;
+        });
     }
 
     getI2C() {
-        return this.addRequest('i').then((buff)=>{return buff;});
+        return this.addRequest('i').then((buff)=> {
+            return buff;
+        });
     }
 
     getOneWire() {
-        this.addRequest('o').then((buff)=>{return buff;});
+        return this.addRequest('o').then((buff)=> {
+            return buff;
+        });
+    }
+
+    getMultiLog(entry){
+        var commandReg = /^(\d+)?\s*$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
+        var m = commandReg.exec(entry);
+        var cmd = 'm' + (m[1]-10);
+        return this.addRequest(cmd).then((buff)=> {
+            return buff;
+        });
     }
 
 
     /*
      getMultiLog(entry) {
-     var cmd = 'm' + entry;
-     if (this._ready) this.addRequest(cmd).then(
-     (buff)=> {
-     debug('openspectro experiment results received');
-     debug(buff);
      return pouchDB.addPouchEntry(this.db, buff, cmd, {
      devicetype: 'bioreactor',
      deviceID: this.id,

@@ -29,7 +29,7 @@ class AbstractDevice extends EventEmitter {
 
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if(!parser.validateCommand(cmd)) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + cmd));
+        if(parser.validateCommand(cmd)==false) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
