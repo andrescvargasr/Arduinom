@@ -3,6 +3,9 @@
     "layers": {
       "Default layer": {
         "name": "Default layer"
+      },
+      "GUI": {
+        "name": "GUI"
       }
     },
     "xWidth": 10,
@@ -19,18 +22,19 @@
             {
               "display": [
                 [
-                  "editor",
-                  "buttons"
+                  "editor"
                 ]
               ],
               "execOnLoad": [
+                [
+                  "yes"
+                ]
+              ],
+              "asyncAwait": [
                 []
               ],
               "script": [
                 "const Instantiator = require.node(\"./../Instantiator\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nInstantiator.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    Instantiator.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    Instantiator.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
-              ],
-              "asyncAwait": [
-                null
               ]
             }
           ],
@@ -43,7 +47,8 @@
             [
               {
                 "name": "button1",
-                "label": "Execute"
+                "label": "Execute",
+                "hide": []
               }
             ]
           ]
@@ -61,6 +66,28 @@
           },
           "zIndex": 0,
           "display": true,
+          "title": "Devices List Updater",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 35
+          },
+          "size": {
+            "width": 61,
+            "height": 34
+          },
+          "zIndex": 0,
+          "display": false,
           "title": "Devices List Updater",
           "bgColor": [
             255,
@@ -267,6 +294,28 @@
       },
       "layers": {
         "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 37,
+            "height": 34
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Devices",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
           "position": {
             "left": 0,
             "top": 0
@@ -563,6 +612,28 @@
           },
           "size": {
             "width": 100,
+            "height": 69
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Parameters Infos",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 62,
+            "top": 0
+          },
+          "size": {
+            "width": 100,
             "height": 79
           },
           "zIndex": 0,
@@ -645,7 +716,6 @@
             {
               "display": [
                 [
-                  "editor",
                   "buttons"
                 ]
               ],
@@ -669,7 +739,7 @@
             [
               {
                 "name": "button1",
-                "label": "Execute",
+                "label": "Reload Device Parameters",
                 "hide": []
               }
             ]
@@ -680,11 +750,11 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 70
+            "top": 27
           },
           "size": {
-            "width": 61,
-            "height": 32
+            "width": 19,
+            "height": 7
           },
           "zIndex": 0,
           "display": true,
@@ -695,7 +765,29 @@
             255,
             0
           ],
-          "wrapper": true,
+          "wrapper": false,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 27
+          },
+          "size": {
+            "width": 19,
+            "height": 7
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": false,
           "created": true,
           "name": "Default layer"
         }
@@ -713,7 +805,7 @@
           "name": "getParams"
         }
       ],
-      "title": "Device Selector",
+      "title": "",
       "actions_out": [
         {
           "jpath": []
@@ -816,7 +908,7 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 103
+            "top": 70
           },
           "size": {
             "width": 61,
@@ -824,6 +916,28 @@
           },
           "zIndex": 0,
           "display": true,
+          "title": "Parameter Editor",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 103
+          },
+          "size": {
+            "width": 61,
+            "height": 26
+          },
+          "zIndex": 0,
+          "display": false,
           "title": "Parameter Editor",
           "bgColor": [
             255,
@@ -965,6 +1079,28 @@
           "wrapper": true,
           "created": true,
           "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 38,
+            "top": 0
+          },
+          "size": {
+            "width": 23,
+            "height": 34
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Help Menu",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
         }
       },
       "id": 6,
@@ -1019,9 +1155,339 @@
           ]
         }
       ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Execute Command"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                ""
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 62,
+            "top": 70
+          },
+          "size": {
+            "width": 37,
+            "height": 8
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Command to Execute",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 35
+          },
+          "size": {
+            "width": 37,
+            "height": 10
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Command to Execute",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "GUI"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onButtonClick",
+          "rel": "data",
+          "jpath": [],
+          "name": "sentCommand"
+        }
+      ],
+      "title": "Command to Execute",
+      "actions_out": [
+        {
+          "event": "_onVarUpdated",
+          "rel": "_varName",
+          "jpath": [],
+          "name": "ExecCommand"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                []
+              ],
+              "script": [
+                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   ;\n    API.doAction('getParams');\n});"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 62,
+            "top": 79
+          },
+          "size": {
+            "width": 57,
+            "height": 32
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Command Executor",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "GUI"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "sentCommand"
+        }
+      ],
+      "actions_in": [
+        {
+          "rel": "execute",
+          "name": "ExecCommand"
+        }
+      ],
+      "title": "Command Executor",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
     }
   ],
-  "variables": [],
+  "variables": [
+    {
+      "varname": "slickScript",
+      "jpath": [
+        "slickScript"
+      ]
+    },
+    {
+      "varname": "deviceArray",
+      "jpath": [
+        "deviceArray"
+      ]
+    },
+    {
+      "varname": "deviceInfo",
+      "jpath": [
+        "deviceInfo"
+      ]
+    },
+    {
+      "varname": "helpMenu",
+      "jpath": [
+        "helpMenu"
+      ]
+    },
+    {
+      "varname": "sentCommand",
+      "jpath": [
+        "sentCommand"
+      ]
+    }
+  ],
   "pouchvariables": [],
   "configuration": {
     "title": "No title"
