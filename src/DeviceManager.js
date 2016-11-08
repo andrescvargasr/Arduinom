@@ -6,7 +6,7 @@ const SerialPort = require('serialport');
 const SerialQueueManager = require('./SerialQueueManager'); //constructor for serial port objects
 const EventEmitter = require('events');
 const debug = require('debug')('main:device handler');
-
+const haveConnectedIds = [];
 
 class DeviceManager extends EventEmitter { //issue with extends EventEmitter
     constructor(interval) {
@@ -40,7 +40,7 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
                 debug('Port List failed : ' + err);
                 return;
             }
-            that.selectedPorts = ports.filter(function (port) {
+            var selectedPorts = ports.filter(function (port) {
                 for (var key in options) {
                     if (port[key] !== options[key])                        {
                         return false;
@@ -49,7 +49,7 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
                 return true; //return port infos if true (boolean for filter method)
             });
 
-            that.selectedPorts.forEach(function (port) {
+            selectedPorts.forEach(function (port) {
                 debug('device with desired specs on port :', port.comName);
                 if (!that.serialQManagers[port.comName]) {
                     //create new serial Queue manager if a new serial device was connected
@@ -66,26 +66,20 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
                     //on ready event
                     that.serialQManagers[port.comName].on('ready', (id) => {
                         debug('serialQManager ready event, instantiating Device entry:' + id);
-                        if (!that.devices[id]) that.emit('new', id);
-                        that.devices[id] = that.serialQManagers[port.comName];
-                        that.emit('connect', id);
+                        that._deviceConnected(id, port.comName);
                     });
 
                     //on reinit event
                     that.serialQManagers[port.comName].on('reinitialized', (id) => {
                         debug('rematching port and device id on reinitialisation:' + id);
-                        if (!that.devices[id])that.emit('new', id);
-                        that.devices[id] = that.serialQManagers[port.comName];
-                        that.emit('connect', id);
+                        this._deviceConnected(id, port.comName);
                     });
 
                     //on idchange event
                     that.serialQManagers[port.comName].on('idchange', (id) => {
                         debug('on deviceId change for port' + port.comName);
                         debug('serialQManager idchangevent event, instantiating Device entry:' + id);
-                        if (!that.devices[id]) that.emit('new', id);
-                        that.devices[id] = that.serialQManagers[port.comName];
-                        that.emit('connect', id);
+                        this._deviceConnected(id, port.comName);
                     });
 
                     that.serialQManagers[port.comName].on('disconnect', (id) => {
@@ -97,6 +91,17 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
                 }
             });
         });
+    }
+
+    _deviceConnected(id, comName) {
+        var hasPreviouslyConnected = haveConnectedIds.includes(id);
+        this.devices[id] = this.serialQManagers[comName];
+        if(hasPreviouslyConnected) {
+            this.emit('connect', id);
+        } else {
+            haveConnectedIds.push(id);
+            this.emit('new', id);
+        }
     }
 
     /**************************************************
