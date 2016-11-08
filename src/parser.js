@@ -76,7 +76,7 @@ function parseCommand(cmd) {
         debug('The command did not match the regex. Send a correct command.');
         return false;
     }    else {
-        return m;
+        return {command: m[1], value: m[2]};
     }
 }
 

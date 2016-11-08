@@ -9,6 +9,13 @@ class AbstractDevice extends EventEmitter {
 
     constructor(id) {
         super();
+        var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
+        var idString = util.deviceIdNumberToString(id);
+        var m = qualifierReg.exec(idString);
+        if (!m) {
+            debug('The id did not match the regex. Id was: ' + idString);
+            throw new Error('Invalid device id');
+        }
         this._init();
         this.id = id;
         this.pending = false; //flag to check if an experiment is currently running
