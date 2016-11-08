@@ -1,6 +1,4 @@
-node_modules/*
-Serial Data/*
-.idea/*
+node_modules
 Serial Data
-.idea/workspace.xml
+.idea
 
