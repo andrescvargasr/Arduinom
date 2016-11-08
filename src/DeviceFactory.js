@@ -3,11 +3,11 @@ var util = require('./util');
 const OpenBio = require('./devices/OpenBio/OpenBio');
 const OpenSpectro = require('./devices/OpenSpectro/OpenSpectro');
 const DeviceManager = require('./DeviceManager');
-const debug = require('debug')('main:Instantiator');
+const debug = require('debug')('main:DeviceFactory');
 const EventEmitter = require('events');
 
 
-class Instantiator extends EventEmitter {
+class DeviceFactory extends EventEmitter {
     constructor() {
         super();
         DeviceManager.on('new', createDevice.bind(this));
@@ -40,4 +40,4 @@ function createDevice(id) {
     }
 }
 
-module.exports = new Instantiator(); //-> unused, only one global db is more suited
+module.exports = new DeviceFactory(); //-> unused, only one global db is more suited
