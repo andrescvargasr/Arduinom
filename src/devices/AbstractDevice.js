@@ -14,6 +14,10 @@ class AbstractDevice extends EventEmitter {
         this.pending = false; //flag to check if an experiment is currently running
     }
 
+    static getParamConfig() {
+        throw new Error('getParamConfig not implemented');
+    }
+
     _init() {
         Handler.on('connect', id => {
             if(this.id === id) {

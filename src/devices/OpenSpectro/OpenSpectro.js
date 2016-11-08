@@ -7,13 +7,18 @@ const debug = require('debug')('main:openspectro');
 const pouchDB = require('./../../pouch');
 const paramConfig = require('./spectroParam');
 const parser = require('./../../parser');
+const deepcopy = require('deepcopy');
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
         this.deviceType = 'openspectro';
         this.maxParam = 26;
-        this.paramInfo = paramConfig;
+        this.paramConfig = deepcopy(paramConfig);
+    }
+
+    static getParamConfig() {
+        return deepcopy(paramConfig);
     }
 
     // Device specific utilities
@@ -26,15 +31,11 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     calibrate() {
-        return this.addRequest('k', {timeout: 500}).then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('k', {timeout: 500});
     }
 
     initializeParameters() {
-        return this.addRequest('i').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('i');
     }
 
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue

@@ -1,8 +1,6 @@
 'use strict';
 
 module.exports = [
-
-
     {
         parameter: 'A', label: 'Red point', description: 'which point of the linear detector is the maximum for red',
         factor: 1, unit: 'pixel#',

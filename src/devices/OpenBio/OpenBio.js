@@ -6,6 +6,7 @@ const AbstractDevice = require('./../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
 const paramConfig = require('./bioParam');
 const parser = require('./../../parser');
+const deepcopy = require('deepcopy');
 
 
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
@@ -13,7 +14,11 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         super(id);
         this.deviceType = 'bioreactor';
         this.maxParam = 52;
-        this.paramInfo = paramConfig;
+        this.paramInfo = deepcopy(paramConfig);
+    }
+
+    static getParamConfig() {
+        return deepcopy(paramConfig);
     }
 
     // Device specific utililties
@@ -27,37 +32,31 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getLastLog() {
-        return this.addRequest('l')
-            .then((buff)=> {
-                return buff;
-            });
+        return this.addRequest('l');
     }
 
     getLastEntryID() {
-        return this.addRequest('m').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('m');
     }
 
     getI2C() {
-        return this.addRequest('i').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('i');
     }
 
     getOneWire() {
-        return this.addRequest('o').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('o');
     }
 
     getMultiLog(entry) {
-        var commandReg = /^(\d+)?\s*$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
-        var m = commandReg.exec(entry);
-        var cmd = 'm' + (m[1] - 10);
-        return this.addRequest(cmd).then((buff)=> {
-            return buff;
-        });
+        if(entry === undefined) {
+            var cmd = 'm';
+        } else {
+            cmd = 'm' + entry;
+        }
+        if(!parser.parseCommand(cmd)) {
+            throw new Error('Invalid entry');
+        }
+        return this.addRequest(cmd);
     }
 
 
@@ -84,11 +83,10 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                 if (buff === value.toString()) {
                     debug('written:', buff);
                     return buff;
-                }            else {
+                } else {
                     debug('error writing to param:', buff);
-                    return buff; //throw an error here ?
+                    return Promise.reject('Param may not have been written');
                 }
-
             });
         }
     }

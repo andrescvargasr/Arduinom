@@ -5,6 +5,7 @@
   "main": "src/",
   "dependencies": {
     "debug": "^2.2.0",
+    "deepcopy": "^0.6.3",
     "open-spectro": "0.0.7",
     "pouchdb": "^6.0.5",
     "pouchdb-find": "^0.10.3",
