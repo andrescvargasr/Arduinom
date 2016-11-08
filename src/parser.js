@@ -1,15 +1,15 @@
 var debug = require('debug')('main: parser');
-var util = require("./util");
-var opSpectro=require('open-spectro');
+var util = require('./util');
+var opSpectro = require('open-spectro');
 
 
 exports = module.exports = {
     parse: function (cmd, result, options) {
         options = options || {};
-        var m=validateCommand(cmd);
-        if(m==false) return false;
+        var m = validateCommand(cmd);
+        if (m == false) return false;
         //compact log parsing is the same for all the device types
-        if(m[1]==='c') {
+        if (m[1] === 'c') {
             // If c was specify without the number of params to retrieve
             // We use the parameter in the device config file
             nbParam = m[2] || options.nbParamCompact;
@@ -57,29 +57,27 @@ exports = module.exports = {
                     debug('Error while parsing bioreactor, undefined command');
                     return false;
             }
-        }
-
-
-        else {
+        }        else {
             debug('Error while parsing, device type undefined');
             return false;
         }
 
     },
 
-    validateCommand : validateCommand
+    validateCommand: validateCommand
 
 };
 
-function validateCommand(cmd){
+function validateCommand(cmd) {
     var commandReg = /^(A?[A-Z]|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
     var m = commandReg.exec(cmd);
     debug('Checking the command, regex is :' + m);
     if (!m) {
         debug('The command did not match the regex. Send a correct command.');
         return false;
+    }    else {
+        return m;
     }
-    else return m;
 }
 
 function processLinesM(lines, reqLength, nbParam, hasEvent) {
@@ -122,20 +120,19 @@ function processStatusLine(line, reqLength, nbParam) {
 
     var entry = {};
     if (reqLength && line.length != reqLength) {
-        debug("Unexpected response length: ", line.length, 'instead of ', reqLength);
+        debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
         throw new Error('Unexpected response length');
     }
 
     if (checkDigit(line)) {
-        entry.epoch = parseInt("0x" + line.substring(0, 8));
+        entry.epoch = parseInt('0x' + line.substring(0, 8));
         parseParameters(line, 8, nbParam, entry);
         entry.deviceId = convertSignedIntHexa(line.substring(8 + (nbParam * 4), 12 + (nbParam * 4)));
         if (!entry.deviceId) {
             throw new Error('Could not parse device id in process StatusLine');
         }
         entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
-    }
-    else {
+    }    else {
         debug('Check digit error', line);
         throw new Error('Check digit error');
     }
@@ -147,13 +144,13 @@ function processStatusLine(line, reqLength, nbParam) {
 function processStatusLineM(line, reqLength, nbParam, hasEvent) {
     var entry = {};
     if (reqLength && line.length != reqLength) {
-        debug("Unexpected response length: ", line.length, 'instead of ', reqLength);
+        debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
         throw new Error('Unexpected response length');
     }
 
     if (checkDigit(line)) {
-        entry.id = parseInt("0x" + line.substring(0, 8));
-        entry.epoch = parseInt("0x" + line.substring(8, 16));
+        entry.id = parseInt('0x' + line.substring(0, 8));
+        entry.epoch = parseInt('0x' + line.substring(8, 16));
         parseParameters(line, 16, nbParam, entry);
         // We skip the events for now
         var eventHexaChars = hasEvent ? 8 : 0;
@@ -162,8 +159,7 @@ function processStatusLineM(line, reqLength, nbParam, hasEvent) {
             throw new Error('Could not parse device id in processStatusLineM');
         }
         entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
-    }
-    else {
+    }    else {
         debug('Check digit error', line);
         throw new Error('Check digit error');
     }
@@ -186,14 +182,14 @@ function parseParameters(line, start, nbParam, entry) {
 function checkDigit(line) {
     var checkDigit = 0;
     for (var i = 0; i < line.length; i = i + 2) {
-        checkDigit ^= parseInt("0x" + line[i] + line[i + 1]);
+        checkDigit ^= parseInt('0x' + line[i] + line[i + 1]);
     }
     if (checkDigit == 0) return true;
     return false;
 }
 
 function convertSignedIntHexa(hexa) {
-    var value = parseInt("0x" + hexa);
+    var value = parseInt('0x' + hexa);
     if (value > 32767) {
         return (65536 - value) * -1;
     }

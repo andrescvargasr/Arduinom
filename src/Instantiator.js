@@ -1,18 +1,18 @@
-"use strict"
-var util = require("./util");
-const OpenBio = require("./devices/OpenBio/OpenBio");
-const OpenSpectro = require("./devices/OpenSpectro/OpenSpectro");
-const Handler = require("./DeviceHandler");
-const debug = require("debug")('main:Instantiator');
-const EventEmitter = require("events");
+'use strict';
+var util = require('./util');
+const OpenBio = require('./devices/OpenBio/OpenBio');
+const OpenSpectro = require('./devices/OpenSpectro/OpenSpectro');
+const Handler = require('./DeviceHandler');
+const debug = require('debug')('main:Instantiator');
+const EventEmitter = require('events');
 
 
 class Instantiator extends EventEmitter {
     constructor() {
         super();
         Handler.on('new', createDevice.bind(this));
-        Handler.on('disconnect', (id)=>this.emit('disconnect',id));
-        Handler.on('connect', (id)=>this.emit('connect',id));
+        Handler.on('disconnect', (id)=>this.emit('disconnect', id));
+        Handler.on('connect', (id)=>this.emit('connect', id));
     }
 }
 

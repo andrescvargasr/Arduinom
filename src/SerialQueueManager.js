@@ -1,7 +1,7 @@
-"use strict"
-const EventEmitter = require("events");
-const SerialPort = require("serialport");
-const debug = require("debug")('main:serialqmanager');
+'use strict';
+const EventEmitter = require('events');
+const SerialPort = require('serialport');
+const debug = require('debug')('main:serialqmanager');
 
 class SerialQueueManager extends EventEmitter { //issue with extends EventEmitter
     constructor(port, options, initialize) {
@@ -12,7 +12,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.endString = (initialize.endString || '\n\n');
         this.queueLength = 0;
         this.maxQLength = (initialize.maxQLength || 30);
-        this.buffer = "";
+        this.buffer = '';
         this.lastRequest = Promise.resolve('');      // The Last received request
         this.currentRequest = Promise.resolve(''); // The current request being executed
         this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
@@ -25,7 +25,6 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
     /*****************************************************
      Queue Management Functions
      *****************************************************/
-
 
 
     serialPortInit() {
@@ -74,17 +73,17 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
 
     destroy() {
         if (this.initTimeout) {
-            clearTimeout(this.initTimeout) //core of the solution
+            clearTimeout(this.initTimeout); //core of the solution
         }
     }
 
     //here we clear the timeout if already existing, avoid multiple instances of serialportinit running in parallel
     _scheduleInit() {
         if (this.initTimeout) {
-            clearTimeout(this.initTimeout) //core of the solution
+            clearTimeout(this.initTimeout); //core of the solution
         }
         this.initTimeout = setTimeout(()=> {
-            this.serialPortInit()
+            this.serialPortInit();
         }, 2000);
     }
 
@@ -148,7 +147,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
     }
 
     _appendRequest(cmd, timeout) {
-        var callId=this.deviceId;
+        var callId = this.deviceId;
         var that = this;
         timeout = timeout || this.serialResponseTimeout;
         return function () {
@@ -157,11 +156,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 that.resolveRequest = resolve;
                 that.rejectRequest = reject;
                 var bufferSize = 0;
-                if(that.deviceId !==null && cmd !== that.initCommand) {
-                    if (callId !== that.deviceId ) return reject(new Error('invalid id'));
+                if (that.deviceId !== null && cmd !== that.initCommand) {
+                    if (callId !== that.deviceId) return reject(new Error('invalid id'));
                 }
                 doTimeout(true);
-                debug('Sending command:' + cmd)
+                debug('Sending command:' + cmd);
                 that.port.write(cmd + '\n', function (err) {
                     if (err) {
                         that._handleError(err);
@@ -186,11 +185,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     //debug('command served:' + that.buffer);
                     if (!that.buffer.endsWith(that.endString)) reject(new Error('buffer not ending properly, possibly invalid command sent: ' + that.buffer));
                     that._resolve(that.buffer);
-                    that.buffer = ""; //empty the buffer
+                    that.buffer = ''; //empty the buffer
                 }
             });
             return that.currentRequest;
-        }
+        };
     }
 
     //reduce the queue once one request was solved, then set the promise as solved

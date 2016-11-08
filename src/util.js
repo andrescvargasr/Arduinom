@@ -1,11 +1,11 @@
 function idStringToNumber(idString) {
-    if(idString === undefined) return;
+    if (idString === undefined) return;
 
     if (idString.length === 2) {
         return idString.charCodeAt(0) * 256 + idString.charCodeAt(1);
+    }    else {
+        throw new Error('Id does not have the expected 2 char format');
     }
-
-    else throw new Error('Id does not have the expected 2 char format');
     //return idString;
 }
 
@@ -20,7 +20,7 @@ exports = module.exports = {
 };
 
 function addCheckDigit(str) {
-    if(!(typeof str === 'string')) throw new TypeError('addCheckDigit expects a string');
+    if (!(typeof str === 'string')) throw new TypeError('addCheckDigit expects a string');
     var checkDigit = 0;
     for (var i = 0; i < str.length; i++) {
         checkDigit ^= str.charCodeAt(i);

@@ -1,17 +1,17 @@
-"use strict";
+'use strict';
 process.on('unhandledRejection', e => {
-    throw e
+    throw e;
 });
-const AbstractDevice = require("./../AbstractDevice");
-const debug = require("debug")('main:openspectro');
-const pouchDB = require("./../../pouch");
-const paramConfig = require("./spectroParam");
-const parser = require("./../../parser");
+const AbstractDevice = require('./../AbstractDevice');
+const debug = require('debug')('main:openspectro');
+const pouchDB = require('./../../pouch');
+const paramConfig = require('./spectroParam');
+const parser = require('./../../parser');
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.deviceType='openspectro'
+        this.deviceType = 'openspectro';
         this.maxParam = 26;
         this.paramInfo = paramConfig;
     }
@@ -24,7 +24,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return this.getCompactLog()
             .then((buff)=> {
                 return parser.parse('c', buff, {devicetype: this.deviceType, nbParamCompact: that.maxParam})[0];
-            })
+            });
     }
 
     calibrate() {
@@ -45,7 +45,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         this.pending = true;
         return this.addRequest('a', {timeout: 5000}).then((buff)=> {
             this.pending = false;
-            debug('rgb data: ', buff)
+            debug('rgb data: ', buff);
         });
     }
 

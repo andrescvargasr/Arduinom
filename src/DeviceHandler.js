@@ -1,12 +1,12 @@
 /**
  * Created by qcabrol on 10/25/16.
  */
-"use strict"
+'use strict';
 //imported
-const SerialPort = require("serialport");
-const SerialQueueManager = require("./SerialQueueManager"); //constructor for serial port objects
-const EventEmitter = require("events");
-const debug = require("debug")('main:device handler');
+const SerialPort = require('serialport');
+const SerialQueueManager = require('./SerialQueueManager'); //constructor for serial port objects
+const EventEmitter = require('events');
+const debug = require('debug')('main:device handler');
 
 
 class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
@@ -14,10 +14,10 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
         super();
         this.devices = [];
         this.serialQManagers = {};
-        this.intervalId= setInterval(()=>this._serialDevices({manufacturer: 'Arduino_LLC'}, {//--> to be removed
-                init: 'q',
-                endString: '\r\n\r\n'
-            }),
+        this.intervalId = setInterval(()=>this._serialDevices({manufacturer: 'Arduino_LLC'}, {//--> to be removed
+            init: 'q',
+            endString: '\r\n\r\n'
+        }),
             interval); //optionnal : implement a clear method for the setinterval
     }
 
@@ -35,8 +35,9 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
             }
             that.selectedPorts = ports.filter(function (port) {
                 for (var key in options) {
-                    if (port[key] !== options[key])
-                        return false
+                    if (port[key] !== options[key])                        {
+                        return false;
+                    }
                 }
                 return true; //return port infos if true (boolean for filter method)
             });
@@ -46,9 +47,9 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
                 if (!that.serialQManagers[port.comName]) {
                     //create new serial Queue manager if a new serial device was connected
                     that.serialQManagers[port.comName] = new SerialQueueManager(port.comName, {
-                            baudRate: 38400,
-                            parser: SerialPort.parsers.raw
-                        },
+                        baudRate: 38400,
+                        parser: SerialPort.parsers.raw
+                    },
                         {
                             init: initialize.init,
                             endString: initialize.endString
@@ -104,5 +105,4 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
 }
 
 module.exports = new DeviceHandler(8000); //-> unused, only one global db is more suited
-
 

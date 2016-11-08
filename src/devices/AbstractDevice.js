@@ -1,17 +1,17 @@
 'use strict';
 
-const EventEmitter = require("events");
-const Handler = require("./../DeviceHandler");
-const debug = require("debug")('main:abstractDevice');
-const parser= require("./../parser");
+const EventEmitter = require('events');
+const Handler = require('./../DeviceHandler');
+const debug = require('debug')('main:abstractDevice');
+const parser = require('./../parser');
 
 class AbstractDevice extends EventEmitter {
 
     constructor(id) {
         super();
-        this._init()
+        this._init();
         this.id = id;
-        this.pending=false; //flag to check if an experiment is currently running
+        this.pending = false; //flag to check if an experiment is currently running
     }
 
     _init() {
@@ -29,13 +29,13 @@ class AbstractDevice extends EventEmitter {
 
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if(parser.validateCommand(cmd)==false) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
+        if (parser.validateCommand(cmd) == false) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
             var serialQ = Handler.getSerialQ(this.id);
             return serialQ.addRequest(cmd, options);
-        })
+        });
     }
 
     //safety to prevent command of being received while an slow experiment is running
@@ -102,7 +102,7 @@ class AbstractDevice extends EventEmitter {
 
     setEpochNow() {
         debug('setting epoch to unix time');
-        var time = (new Date).getTime();
+        var time = (new Date()).getTime();
         return this.setEpoch(time); //buffer is accessible here
     }
 

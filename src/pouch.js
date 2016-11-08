@@ -1,19 +1,19 @@
 /**
  * Created by qcabrol on 9/23/16.
  */
-"use strict"
-const pouch = require("pouchdb");
-pouch.plugin(require("pouchdb-find"));
-const debug = require("debug")('main:pouchDB');
-const parser = require("./parser");
-var DB= new pouch('Serial Data');
+'use strict';
+const pouch = require('pouchdb');
+pouch.plugin(require('pouchdb-find'));
+const debug = require('debug')('main:pouchDB');
+const parser = require('./parser');
+var DB = new pouch('Serial Data');
 
 
 /********************************************************
  PouchDB related functions for DB entries
  *******************************************************/
-function parseAndSaveToSerialData(data,cmd, options){
-    return parseAndSave(DB, data,cmd, options);
+function parseAndSaveToSerialData(data, cmd, options) {
+    return parseAndSave(DB, data, cmd, options);
 }
 
 
@@ -43,25 +43,25 @@ function parseAndSave(db, data, cmd, options) {
                     data: parsedData[i]
                 }
             }).then(function () { //define the response callback
-            debug('Entry written in PouchDB:');
-            return true;
-        }).catch(function (err) {
-            debug('Error on pouchDB write:' + err);
-        });
+                debug('Entry written in PouchDB:');
+                return true;
+            }).catch(function (err) {
+                debug('Error on pouchDB write:' + err);
+            });
     }
 }
 
-function getPouchEntriesSerialData(options){
-    return getPouchEntries(DB,options);
+function getPouchEntriesSerialData(options) {
+    return getPouchEntries(DB, options);
 }
 
 //get all entries related to one given device
 function getPouchEntries(db, options) {
     return db.find({
-            selector: {$kind: (options.devicetype || 'openspectro')},
+        selector: {$kind: (options.devicetype || 'openspectro')},
             //fields: ['$kind'],
-            limit: 15
-        }
+        limit: 15
+    }
     ).then(res => {
         debug('pouch getter executed', res);
         return res;
