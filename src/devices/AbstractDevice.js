@@ -32,7 +32,7 @@ class AbstractDevice extends EventEmitter {
 
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if (!parser.parseCommand(cmd)) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
+        if (!parser.parseCommand(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
@@ -49,59 +49,42 @@ class AbstractDevice extends EventEmitter {
 
     // Device utilities
     getHelp() {
-        return this.addRequest('h')
-            .then((buff)=> {
-                return buff;
-            });
+        return this.addRequest('h');
     }
 
     getFreeMem() {
-        return this.addRequest('f').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('f');
     }
 
     getQualifier() {
-        return this.addRequest('q').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('q');
     }
 
     getEEPROM() {
-        return this.addRequest('z', {timeout: 500}).then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('z', {timeout: 500});
     }
 
     getSettings() {
-        this.addRequest('s').then((buff)=> {
-            return buff;
-        });
+        this.addRequest('s');
     }
 
     getCompactLog() {
-        return this.addRequest('c').then((buff)=> {
-            return buff;
-        });
+        return this.addRequest('c');
     }
 
     // Time utilities
     getEpoch() {
-        return this.addRequest('e').then((buff)=> {
-            return buff;
-        }); //buffer is accessible here
+        return this.addRequest('e');
     }
 
     setEpoch(time) {
         var cmd = 'e' + time;
-        return this.addRequest(cmd).then((buff)=> {
-            return buff;
-        }); //buffer is accessible here
+        return this.addRequest(cmd);
     }
 
     setEpochNow() {
         debug('setting epoch to unix time');
-        var time = (new Date()).getTime();
+        var time = Date.now();
         return this.setEpoch(time); //buffer is accessible here
     }
 
