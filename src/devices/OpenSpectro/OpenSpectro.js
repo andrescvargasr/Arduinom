@@ -41,25 +41,26 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded
     getRGB() {
-        this.pending = true;
-        return this.addRequest('a', {timeout: 5000}).then((buff)=> {
+        var getRGB = this.addRequest('a', {timeout: 5000}).then((buff)=> {
             this.pending = false;
             debug('rgb data: ', buff);
         });
+        this.pending = true;
+        return getRGB;
     }
 
 
     testAll() {
-        this.pending = true;
-        return this.addRequest('t', {timeout: 5000}).then((buff)=> {
+        var testAll = this.addRequest('t', {timeout: 5000}).then((buff)=> {
             this.pending = false;
             debug('test all: ', buff);
         });
+        this.pending = true;
+        return testAll;
     }
 
     runExperiment(title, description) {
-        this.pending = true;
-        return this.addRequest('I', {timeout: 500})
+        var experiment = this.addRequest('I', {timeout: 500})
             .then((delay)=> {
                 debug('experiment delay in ms :', parseInt(delay));
                 return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
@@ -74,6 +75,8 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
                     description: description
                 });
             });
+        this.pending = true;
+        return experiment;
     }
 
     /* TO BE IMPLEMENTED

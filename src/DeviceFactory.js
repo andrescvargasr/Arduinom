@@ -39,7 +39,7 @@ function createDevice(id) {
             this._createDevice(id,OpenSpectro);
             break;
         default:
-            debug('detected unknown device with id:', id);
+            debug('detected unknown device with id:', idString);
             this.emit('error', new Error('Detected device of unknown type'))
             break;
     }

@@ -72,14 +72,14 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
                     //on reinit event
                     that.serialQManagers[port.comName].on('reinitialized', (id) => {
                         debug('rematching port and device id on reinitialisation:' + id);
-                        this._deviceConnected(id, port.comName);
+                        that._deviceConnected(id, port.comName);
                     });
 
                     //on idchange event
                     that.serialQManagers[port.comName].on('idchange', (id) => {
                         debug('on deviceId change for port' + port.comName);
                         debug('serialQManager idchangevent event, instantiating Device entry:' + id);
-                        this._deviceConnected(id, port.comName);
+                        that._deviceConnected(id, port.comName);
                     });
 
                     that.serialQManagers[port.comName].on('disconnect', (id) => {

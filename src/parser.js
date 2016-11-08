@@ -11,10 +11,10 @@ module.exports = {
         var m = parseCommand(cmd);
         if (!m) throw new Error('Invalid command');
         //compact log parsing is the same for all the device types
-        if (m[1] === 'c') {
+        if (m.command === 'c') {
             // If c was specify without the number of params to retrieve
             // We use the parameter in the device config file
-            nbParam = m[2] || options.nbParamCompact;
+            nbParam = m.value || options.nbParamCompact;
             var reqLength = nbParam * 4 + 14;
             var lines = result.split(/[\r\n]+/);
             // We are ready to process the next request
@@ -28,7 +28,7 @@ module.exports = {
 
         //openspectro specific parsing
         if (options.devicetype === 'openspectro') {
-            switch (m[1]) {
+            switch (m.command) {
                 case 'r':
                     return opSpectro.parse(result);
                 default:
@@ -37,10 +37,10 @@ module.exports = {
             }
         } else if (options.devicetype === 'bioreactor') {
             //bioreactor specific parsing
-            switch (m[1]) {
+            switch (m.command) {
                 case 'm':
                     // m require an argument which is the log position
-                    if (!m[2]) return result;
+                    if (!m.value) return result;
                     // The nb of parameters is specified in the config file
                     var nbParam = options.nbParam;
                     var hasEventHexas = options.hasEvent ? 8 : 0;
