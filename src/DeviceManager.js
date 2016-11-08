@@ -2,23 +2,32 @@
  * Created by qcabrol on 10/25/16.
  */
 'use strict';
-//imported
 const SerialPort = require('serialport');
 const SerialQueueManager = require('./SerialQueueManager'); //constructor for serial port objects
 const EventEmitter = require('events');
 const debug = require('debug')('main:device handler');
 
 
-class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
+class DeviceManager extends EventEmitter { //issue with extends EventEmitter
     constructor(interval) {
         super();
+        this.interval = interval;
         this.devices = [];
         this.serialQManagers = {};
-        this.intervalId = setInterval(()=>this._serialDevices({manufacturer: 'Arduino_LLC'}, {//--> to be removed
+        this.restart();
+    }
+
+    stop() {
+        clearInterval(this.intervalId);
+        this.intervalId = undefined;
+    }
+
+    restart() {
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(()=>this._serialDevices({manufacturer: 'Arduino_LLC'}, {
             init: 'q',
             endString: '\r\n\r\n'
-        }),
-            interval); //optionnal : implement a clear method for the setinterval
+        }), this.interval);
     }
 
     // Internal management of the SerialQ Lookup
@@ -102,5 +111,5 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
     }
 }
 
-module.exports = new DeviceHandler(8000); //-> unused, only one global db is more suited
+module.exports = new DeviceManager(8000); //-> unused, only one global db is more suited
 

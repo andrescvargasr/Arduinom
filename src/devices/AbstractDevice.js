@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const Handler = require('./../DeviceHandler');
+const Handler = require('./../DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('./../parser');
 
