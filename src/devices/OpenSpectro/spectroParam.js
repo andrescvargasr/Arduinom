@@ -1,4 +1,6 @@
-var table = [
+'use strict';
+
+module.exports = [
 
 
     {
@@ -104,5 +106,3 @@ var table = [
     },
 
 ];
-
-module.exports = table;

@@ -1,22 +1,21 @@
-var table = [
+'use strict';
+
+module.exports = [
     {
         parameter: 'A', label: 'T°LIQ', description: 'Temperature of the bioreactor solution',
         factor: 100, unit: '°C',
         writable: false
     },
-
     {
         parameter: 'B', label: 'T°PCB', description: 'Temperature of the bioreactor circuit',
         factor: 100, unit: '°C',
         writable: false
     },
-
     {
         parameter: 'C', label: 'Weight', description: 'Weight of the bioreactor tank, in gr if calibrated',
         factor: 1, unit: 'gr',
         writable: false
     },
-
     {
         parameter: 'X', label: 'Weight Status', description: 'Status of the Weight control finite states machine, ' +
     ' the format is 0b BBBAAAAA AAAAAAAA where BBB codes the state of the machine and AAAAA AAAAAAAA the waiting ' +
@@ -24,7 +23,6 @@ var table = [
         factor: 1, unit: '',
         writable: false
     },
-
     {
         parameter: 'Z',
         label: 'Bioreactor Status',
@@ -34,7 +32,6 @@ var table = [
         unit: '',
         writable: false
     },
-
     {
         parameter: 'AA',
         label: 'T°C Target',
@@ -45,7 +42,6 @@ var table = [
         unit: '°C',
         writable: true
     },
-
     {
         parameter: 'AB', label: 'MAX T°C', description: 'Maximum temperature for the liquid and the circuit, the PID' +
     'heating regulation loop will stop if this temperature is exceeded.',
@@ -53,7 +49,6 @@ var table = [
         factor: 100, unit: '°C',
         writable: true
     },
-
     {
         parameter: 'AC',
         label: 'T°C PID Time',
@@ -63,8 +58,6 @@ var table = [
         unit: 'ms',
         writable: true
     },
-
-
     {
         parameter: 'AD', label: 'Max Weight', description: 'Maximum tank Weight, the Weight state machine' +
     'will go in standby mod if exceeded (internal tolerance is  considered on the circuit). to be set to 0-1500 gr',
@@ -90,7 +83,6 @@ var table = [
         unit: 'min',
         writable: true
     },
-
     {
         parameter: 'AK', label: 'Filled Time', description: 'Filled time in min after Semi-batch operation,' +
     'corresponds to the total time with and without stirring before emptying the reactor to the minimum level' +
@@ -102,4 +94,3 @@ var table = [
 
 ];
 
-module.exports = table;

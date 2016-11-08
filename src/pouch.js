@@ -9,9 +9,7 @@ const parser = require('./parser');
 var DB = new pouch('Serial Data');
 
 
-/********************************************************
- PouchDB related functions for DB entries
- *******************************************************/
+// PouchDB related functions for DB entries
 function parseAndSaveToSerialData(data, cmd, options) {
     return parseAndSave(DB, data, cmd, options);
 }

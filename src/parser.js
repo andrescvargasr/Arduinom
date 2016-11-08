@@ -1,13 +1,15 @@
+'use strict';
+
 var debug = require('debug')('main: parser');
 var util = require('./util');
 var opSpectro = require('open-spectro');
 
 
-exports = module.exports = {
+module.exports = {
     parse: function (cmd, result, options) {
         options = options || {};
-        var m = validateCommand(cmd);
-        if (m == false) return false;
+        var m = parseCommand(cmd);
+        if (!m) throw new Error('Invalid command');
         //compact log parsing is the same for all the device types
         if (m[1] === 'c') {
             // If c was specify without the number of params to retrieve
@@ -33,10 +35,8 @@ exports = module.exports = {
                     debug('Error while parsing openspectro, undefined command');
                     return false;
             }
-        }
-
-        //bioreactor specific parsing
-        else if (options.devicetype === 'bioreactor') {
+        } else if (options.devicetype === 'bioreactor') {
+            //bioreactor specific parsing
             switch (m[1]) {
                 case 'm':
                     // m require an argument which is the log position
@@ -44,10 +44,10 @@ exports = module.exports = {
                     // The nb of parameters is specified in the config file
                     var nbParam = options.nbParam;
                     var hasEventHexas = options.hasEvent ? 8 : 0;
-                    var reqLength = nbParam * 4 + 22 + hasEventHexas;
-                    var lines = result.split(/[\r\n]+/);
+                    reqLength = nbParam * 4 + 22 + hasEventHexas;
+                    lines = result.split(/[\r\n]+/);
                     // We are ready to process the next request
-                    var entries = [];
+                    entries = [];
                     if (lines.length >= 2) {
                         debug('process lines');
                         entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
@@ -64,11 +64,11 @@ exports = module.exports = {
 
     },
 
-    validateCommand: validateCommand
+    parseCommand: parseCommand
 
 };
 
-function validateCommand(cmd) {
+function parseCommand(cmd) {
     var commandReg = /^(A?[A-Z]|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
     var m = commandReg.exec(cmd);
     debug('Checking the command, regex is :' + m);
@@ -119,7 +119,7 @@ function processStatusLine(line, reqLength, nbParam) {
     //console.log(line);
 
     var entry = {};
-    if (reqLength && line.length != reqLength) {
+    if (reqLength && line.length !== reqLength) {
         debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
         throw new Error('Unexpected response length');
     }
@@ -143,7 +143,7 @@ function processStatusLine(line, reqLength, nbParam) {
 
 function processStatusLineM(line, reqLength, nbParam, hasEvent) {
     var entry = {};
-    if (reqLength && line.length != reqLength) {
+    if (reqLength && line.length !== reqLength) {
         debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
         throw new Error('Unexpected response length');
     }
@@ -172,7 +172,7 @@ function parseParameters(line, start, nbParam, entry) {
     for (var j = 0; j < nbParam; j++) {
         if (j === 0) entry.parameters = {};
         var value = convertSignedIntHexa(line.substring(start + (j * 4), start + 4 + (j * 4)));
-        if (value == -32768) value = null;
+        if (value === -32768) value = null;
         if (j < 26) entry.parameters[String.fromCharCode(65 + j)] = value;
         else entry.parameters[String.fromCharCode(65, 65 + j - 26)] = value;
     }
@@ -184,7 +184,7 @@ function checkDigit(line) {
     for (var i = 0; i < line.length; i = i + 2) {
         checkDigit ^= parseInt('0x' + line[i] + line[i + 1]);
     }
-    if (checkDigit == 0) return true;
+    if (checkDigit === 0) return true;
     return false;
 }
 

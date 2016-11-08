@@ -1,4 +1,6 @@
-var table = [
+'use strict';
+
+module.exports = [
     {
         parameter: 'A', label: 'T°LIQ', description: 'Temperature of the bioreactor solution',
         factor: 100, unit: '°C',
@@ -101,5 +103,3 @@ var table = [
     },
 
 ];
-
-module.exports = table;

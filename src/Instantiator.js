@@ -19,19 +19,19 @@ class Instantiator extends EventEmitter {
 function createDevice(id) {
     debug('new device was connected, calling instantiator createDevice()');
     var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
-    var id_string = util.deviceIdNumberToString(id);
-    var m = qualifierReg.exec(id_string);
+    var idString = util.deviceIdNumberToString(id);
+    var m = qualifierReg.exec(idString);
     if (!m) {
-        debug('The id did not match the regex. Id was: ' + id_string);
-        return false;
+        debug('The id did not match the regex. Id was: ' + idString);
+        throw new Error('Invalid device id');
     }
     switch (m[1]) {
         case '$':
-            debug('detected bioreactor with id:', id_string); //then create a filter fo device objects
+            debug('detected bioreactor with id:', idString); //then create a filter fo device objects
             this.emit('newDevice', new OpenBio(id));
             break;
         case 'S':
-            debug('detected spectrophotometer with id:', id_string); //then create a filter fo device objects
+            debug('detected spectrophotometer with id:', idString); //then create a filter fo device objects
             this.emit('newDevice', new OpenSpectro(id));
             break;
         default:

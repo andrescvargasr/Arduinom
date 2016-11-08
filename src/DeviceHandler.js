@@ -21,9 +21,7 @@ class DeviceHandler extends EventEmitter { //issue with extends EventEmitter
             interval); //optionnal : implement a clear method for the setinterval
     }
 
-    /****************************************************
-     *   Internal management of the SerialQ Lookup
-     ****************************************************/
+    // Internal management of the SerialQ Lookup
     _serialDevices(options, initialize) {
         debug('call to _serialDevices method');
         var that = this;

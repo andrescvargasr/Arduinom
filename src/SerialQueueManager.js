@@ -157,7 +157,10 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 that.rejectRequest = reject;
                 var bufferSize = 0;
                 if (that.deviceId !== null && cmd !== that.initCommand) {
-                    if (callId !== that.deviceId) return reject(new Error('invalid id'));
+                    if (callId !== that.deviceId) {
+                        reject(new Error('invalid id'));
+                        return;
+                    }
                 }
                 doTimeout(true);
                 debug('Sending command:' + cmd);
@@ -166,9 +169,8 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                         that._handleError(err);
                         // Just go to the next request
                         debug('write error occurred: ', err);
-                        return reject(new Error('Error writing to serial port'));
+                        reject(new Error('Error writing to serial port'));
                     }
-
                 });
 
                 function doTimeout(force) {
@@ -180,12 +182,11 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                         that.timeout = setTimeout(function () {
                             doTimeout();
                         }, timeout);
-                        return;
+                    } else {
+                        if (!that.buffer.endsWith(that.endString)) reject(new Error('buffer not ending properly, possibly invalid command sent: ' + that.buffer));
+                        that._resolve(that.buffer);
+                        that.buffer = ''; //empty the buffer
                     }
-                    //debug('command served:' + that.buffer);
-                    if (!that.buffer.endsWith(that.endString)) reject(new Error('buffer not ending properly, possibly invalid command sent: ' + that.buffer));
-                    that._resolve(that.buffer);
-                    that.buffer = ''; //empty the buffer
                 }
             });
             return that.currentRequest;
@@ -209,19 +210,15 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         });
     }
 
-    /************************************************
-     Utilities, outside the constructor
-     Should not be called outside of here
-     They handle disconnect/reconnect events
-     ************************************************/
+     // Utilities, outside the constructor
+     // Should not be called outside of here
+     // They handle disconnect/reconnect events
     //reconnection handler
     _reconnectionAttempt() {
         debug('reconnection attempt: ' + this.portParam);
         this._hasPort().then(()=> {
             this.port = new SerialPort(this.portParam, this.portOptions);
-            /***************************************************************
-             propagate SerialPort events + handle messages (listeners)
-             ****************************************************************/
+             // propagate SerialPort events + handle messages (listeners)
             //handle the SerialPort open events
             this.port.on('open', () => {
                 debug('opened port:', this.portParam);
@@ -236,9 +233,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.statusCode = -1;
                 this._updateStatus();
                 this.ready = false;
-                debugger;
-                if (err) return debug('ERR event1:' + err);
-                debug('ERR event2: ', this.portParam);
+                debug(`serialport error on ${this.portParam}: ${err.message}`);
                 this.emit('error', err);
             });
 
@@ -247,18 +242,16 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.statusCode = 3;
                 this._updateStatus();
                 this.ready = false;
+                debug(`serialport disconnect on port ${this.portParam}: ${err.message}`);
                 this.emit('disconnect', this.deviceId);
-                if (err) return debug('ERR on disconnect:' + err.message);
-                debug('port disconnect:', this.portParam);
             });
 
             //handle the SerialPort close events and destruct the SerialQueue manager
             this.port.on('close', err => {
                 this.statusCode = 4;
                 this._updateStatus();
-                if (err) return this.debug('ERR on closing:' + err.message);
-                debug('closed port:', this.portParam);
-                delete this.port;
+                debug(`serialport close on port ${this.portParam}: ${err.message}`);
+                // delete this.port;
                 this.emit('close', err);
                 this._reconnectionAttempt();
             });
@@ -268,7 +261,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                 this.buffer += data.toString();     //that or this ???? not clear when using one or the other
                 this.emit('data', data);
             });
-        }, (err)=> {
+        }, ()=> {
             this.statusCode = 5;
             this._updateStatus();
             this._tryLater();
@@ -283,12 +276,18 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         var that = this;
         return new Promise(function (resolve, reject) {
             SerialPort.list(function (err, ports) {
-                if (err) return reject(err);
+                if (err) {
+                    reject(err);
+                    return;
+                }
                 var port = ports.find((port)=> {
                     return port.comName === that.portParam;
                 });
                 debug('found Port');
-                if (port) return resolve();
+                if (port) {
+                    resolve();
+                    return;
+                }
                 reject(new Error(`Port ${that.portParm} not found`));
             });
         });

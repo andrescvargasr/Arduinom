@@ -1,5 +1,7 @@
+'use strict';
+
 function idStringToNumber(idString) {
-    if (idString === undefined) return;
+    if (idString === undefined) return undefined;
 
     if (idString.length === 2) {
         return idString.charCodeAt(0) * 256 + idString.charCodeAt(1);
@@ -13,7 +15,7 @@ function idNumberToString(idNumber) {
     return String.fromCharCode(idNumber / 256 | 0) + String.fromCharCode(idNumber % 256);
 }
 
-exports = module.exports = {
+module.exports = {
     deviceIdStringToNumber: idStringToNumber,
     deviceIdNumberToString: idNumberToString,
     addCheckDigit: addCheckDigit

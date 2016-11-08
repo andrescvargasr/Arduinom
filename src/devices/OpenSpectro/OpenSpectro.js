@@ -16,9 +16,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         this.paramInfo = paramConfig;
     }
 
-    /*********************************
-     *    Device specific utilities
-     *********************************/
+    // Device specific utilities
     getParsedCompactLog() {
         var that = this;
         return this.getCompactLog()

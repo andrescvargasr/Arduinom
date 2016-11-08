@@ -4,7 +4,6 @@ process.on('unhandledRejection', e => {
 });
 const AbstractDevice = require('./../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
-const pouchDB = require('./../../pouch');
 const paramConfig = require('./bioParam');
 const parser = require('./../../parser');
 
@@ -17,9 +16,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         this.paramInfo = paramConfig;
     }
 
-    /********************************
-     *   Device specific utililties
-     ********************************/
+    // Device specific utililties
     getParsedCompactLog() {
         var that = this;
         return this.getCompactLog()
@@ -78,22 +75,22 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
      */
 
     setParameter(param, value) {
-        var commandReg = /^([A-Z]{1,2})(\d+)?$/;
-        var m = commandReg.exec(param + value);
-        if (!m) {
+        var command = param + value;
+        if (!parser.parseCommand(command)) {
             debug('command does not match expected format A-AZ + value, no parameter set');
-            return false;
-        }
-        this.addRequest(param + value).then((buff)=> {
-            if (buff === value.toString()) {
-                debug('written:', buff);
-                return buff;
-            }            else {
-                debug('error writing to param:', buff);
-                return buff; //throw an error here ?
-            }
+            return Promise.reject(new Error('Command does not match the expected format'));
+        } else {
+            return this.addRequest(param + value).then((buff)=> {
+                if (buff === value.toString()) {
+                    debug('written:', buff);
+                    return buff;
+                }            else {
+                    debug('error writing to param:', buff);
+                    return buff; //throw an error here ?
+                }
 
-        });
+            });
+        }
     }
 }
 

@@ -29,7 +29,7 @@ class AbstractDevice extends EventEmitter {
 
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if (parser.validateCommand(cmd) == false) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
+        if (!parser.parseCommand(cmd)) return Promise.reject(new Error('The command did not match the regex. Send a correct command. command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
         return Promise.resolve().then(()=> {
@@ -44,9 +44,7 @@ class AbstractDevice extends EventEmitter {
         return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
     }
 
-    /********************************
-     *      Device utilities
-     ********************************/
+    // Device utilities
     getHelp() {
         return this.addRequest('h')
             .then((buff)=> {
@@ -84,11 +82,9 @@ class AbstractDevice extends EventEmitter {
         });
     }
 
-    /********************************
-     *      Time utilities
-     ********************************/
+    // Time utilities
     getEpoch() {
-        return this.addRequest('e', time).then((buff)=> {
+        return this.addRequest('e').then((buff)=> {
             return buff;
         }); //buffer is accessible here
     }
