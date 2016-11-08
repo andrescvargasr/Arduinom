@@ -15,15 +15,18 @@ class AbstractDevice extends EventEmitter {
     }
 
     _init() {
-        Handler.on('connect', ()=> {
-            debug('Device connected, enabling methods: ' + this.id);
-            this.emit('connect');
-
+        Handler.on('connect', id => {
+            if(this.id === id) {
+                debug('Device connected, enabling methods: ' + this.id);
+                this.emit('connect');
+            }
         });
 
-        Handler.on('disconnect', ()=> {
-            debug('Device disconnected, disabling methods: ' + this.id);
-            this.emit('disconnect');
+        Handler.on('disconnect', id => {
+            if(this.id === id) {
+                debug('Device disconnected, disabling methods: ' + this.id);
+                this.emit('disconnect');
+            }
         });
     }
 
