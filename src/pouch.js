@@ -1,6 +1,3 @@
-/**
- * Created by qcabrol on 9/23/16.
- */
 'use strict';
 const pouch = require('pouchdb');
 pouch.plugin(require('pouchdb-find'));
@@ -13,7 +10,6 @@ var DB = new pouch('SerialData');
 function parseAndSaveToSerialData(data, cmd, options) {
     return parseAndSave(DB, data, cmd, options);
 }
-
 
 function parseAndSave(db, data, cmd, options) {
 
@@ -56,7 +52,8 @@ function getPouchEntriesSerialData(options) {
 //get all entries related to one given device
 function getPouchEntries(db, options) {
     return db.find({
-        selector: {$kind: (options.devicetype || 'openspectro')},
+        selector: {$kind: (options.devicetype || 'openspectro'),
+                    },
             //fields: ['$kind'],
         limit: 15
     }
@@ -65,48 +62,6 @@ function getPouchEntries(db, options) {
         return res;
     });
 }
-
-
-// document that tells PouchDB/CouchDB
-// to build up an index on doc.$modificationDate for bioreactor devices
-/*
-var ddocBioreactor = {
-    _id: '_design/multilogs',
-    views: {
-        by_name: {
-            map: function (doc) {
-                if(doc.$kind!='bioreactor') return;
-                emit(doc.$modificationDate); }.toString()
-        }
-    }
-};
-
-pouch.put(ddocBioreactor).then(function () {
-    // success!
-}).catch(function (err) {
-    // some error (maybe a 409, because it already exists?)
-});
-
-
-// document that tells PouchDB/CouchDB
-// to build up an index on doc.$modificationDate for openspectro
-var ddocSpectro = {
-    _id: '_design/multilogs',
-    views: {
-        by_name: {
-            map: function (doc) {
-                if(doc.$kind!='openspectro') return;
-                emit(doc.$content.general.title); }.toString()
-        }
-    }
-};
-
-pouch.put(ddocSpectro).then(function () {
-    // success!
-}).catch(function (err) {
-    // some error (maybe a 409, because it already exists?)
-});
-*/
 
 //function exports
 exports.parseAndSaveToSerialData = parseAndSaveToSerialData;

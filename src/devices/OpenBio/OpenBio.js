@@ -27,7 +27,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: this.deviceType, nbParamCompact: that.maxParam})[0];
+                return parser.parse('c', buff, {devicetype: that.deviceType, nbParamCompact: that.maxParam})[0];
             });
     }
 
@@ -59,19 +59,13 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return this.addRequest(cmd);
     }
 
-
-    /*
-     getMultiLog(entry) {
-     return pouchDB.addPouchEntry(this.db, buff, cmd, {
-     devicetype: 'bioreactor',
-     deviceID: this.id,
-     nbParamCompact: this.maxParam,
-     nbParam: this.maxParam
-     });
-     });
-     else return this._notReady();
-     }
-     */
+    getParsedMultiLog(entry){
+        var that=this;
+        return this.getMultiLog(entry).then((buff)=>{
+            var cmd = 'm' + entry
+            debug('Parsing MultiLog');
+            return parser.parse(cmd,buff,{deviceType:that.deviceType, nbParamCompact:that.maxParam})});
+    }
 
     setParameter(param, value) {
         var command = param + value;
