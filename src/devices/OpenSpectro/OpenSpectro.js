@@ -4,10 +4,11 @@ process.on('unhandledRejection', e => {
 });
 const AbstractDevice = require('./../AbstractDevice');
 const debug = require('debug')('main:openspectro');
-const pouchDB = require('./../../pouch');
 const paramConfig = require('./spectroParam');
 const parser = require('./../../parser');
 const deepcopy = require('deepcopy');
+const pouch = require('./../pouch');
+
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
@@ -99,15 +100,13 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         });
     }
 
-    /* TO BE IMPLEMENTED
-     getLastExperimentResults() {
-     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
-     }
 
      getAllExperimentResults() {
-     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
+        return pouch.getDeviceDB(pouch.mapSpectros,this.id);
      }
 
+
+    /* TO BE IMPLEMENTED
      renameExperiment(oldName, newName) {
      return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
      }

@@ -4,7 +4,7 @@ const EventEmitter = require('events');
 const Handler = require('./../DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('./../parser');
-const Pouch = require('./../pouch');
+const pouch = require('./../pouch');
 
 
 class AbstractDevice extends EventEmitter {
@@ -30,7 +30,7 @@ class AbstractDevice extends EventEmitter {
 
     logInPouch(data, options) {
             for (let i = 0; i < data.length; i++) {
-                Pouch.saveToSerialData(data[i],options)
+                pouch.saveToSerialData(data[i],options)
             }
    };
 
