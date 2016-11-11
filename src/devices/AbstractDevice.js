@@ -25,16 +25,33 @@ class AbstractDevice extends EventEmitter {
         throw new Error('getParamConfig not implemented');
     }
 
+
+    logInPouch(func, options) {
+
+        return func().then((buff)=> {
+          /*  return pouchDB.saveToSerialData(buff, {
+                devicetype: options.devicetype,
+                deviceID: this.id,
+                title: options.title,
+                description: options.description
+            });*/
+        }).catch((err)=> {
+            return Promise.reject(new Error('error logging data to DB' + err.message));
+        })
+
+
+    };
+
     _init() {
         Handler.on('connect', id => {
-            if(this.id === id) {
+            if (this.id === id) {
                 debug('Device connected, enabling methods: ' + this.id);
                 this.emit('connect');
             }
         });
 
         Handler.on('disconnect', id => {
-            if(this.id === id) {
+            if (this.id === id) {
                 debug('Device disconnected, disabling methods: ' + this.id);
                 this.emit('disconnect');
             }

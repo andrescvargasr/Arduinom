@@ -84,6 +84,17 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             });
         }
     }
+
+
+    logEntry(entry){
+
+    }
+
+
+    logEntries(){
+
+    }
+
 }
 
 module.exports = OpenBio;

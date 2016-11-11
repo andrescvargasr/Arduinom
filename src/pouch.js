@@ -7,44 +7,41 @@ var DB = new pouch('SerialData');
 
 
 // PouchDB related functions for DB entries
-function parseAndSaveToSerialData(data, cmd, options) {
-    return parseAndSave(DB, data, cmd, options);
+function saveToSerialData(data, options) {
+    return saveToDB(DB, data, options);
 }
 
-function parseAndSave(db, data, cmd, options) {
-
-    var parsedData = parser.parse(cmd, data, options);
-    for (let i = 0; i < parsedData.length; i++) {
+function saveToDB(db, data, options) {
+    for (let i = 0; i < data.length; i++) {
         //return
         db.post(
             {
                 $id: (options.id || Date.now()),
                 $kind: (options.devicetype || 'openspectro'),
                 $modificationDate: Date.now(),
-                //manually entered title as option
-
-                //output data of the experiment also containing device id
                 $content: {
                     general: {
                         title: options.title,
                         description: options.description
                     },
                     misc: {
-                        command: cmd,
+                        command: options.cmd,
                         qualifier: options.deviceId,
                         memEntry: options.memEntry,
                     },
-                    data: parsedData[i]
+                    data: data[i]
                 }
             }).then(function () { //define the response callback
-                debug('Entry written in PouchDB:');
-                return true;
-            }).catch(function (err) {
-                debug('Error on pouchDB write:' + err);
-            });
+            debug('Entry written in PouchDB:');
+            return true;
+        }).catch(function (err) {
+            debug('Error on pouchDB write:' + err);
+        });
     }
 }
 
+
+//getter
 function getPouchEntriesSerialData(options) {
     return getPouchEntries(DB, options);
 }
@@ -64,7 +61,7 @@ function getPouchEntries(db, options) {
 }
 
 //function exports
-exports.parseAndSaveToSerialData = parseAndSaveToSerialData;
-exports.parseAndSave = parseAndSave;
+exports.saveToSerialData = saveToSerialData;
+exports.saveToDB = saveToDB;
 exports.getPouchEntriesSerialData = getPouchEntriesSerialData;
 exports.getPouchEntries = getPouchEntries;
