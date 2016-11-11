@@ -25,7 +25,7 @@ function saveToDB(db, data, options) {
                 misc: {
                     command: options.cmd,
                     qualifier: options.deviceId,
-                    memEntry: options.memEntry + i,
+                    memEntry: options.memEntry,
                 },
                 data: data
             }
@@ -36,6 +36,7 @@ function saveToDB(db, data, options) {
         debug('Error on pouchDB write:' + err);
     });
 }
+
 
 //map functions for each device type
 function mapBioreactors(doc) {
@@ -67,6 +68,7 @@ function getDeviceDB(map, id) {
 //function exports
 exports.saveToSerialData = saveToSerialData;
 exports.saveToDB = saveToDB;
+
 exports.getDeviceDB = getDeviceDB;
 exports.mapSpectros = mapSpectros;
 exports.mapBioreactors = mapBioreactors;
