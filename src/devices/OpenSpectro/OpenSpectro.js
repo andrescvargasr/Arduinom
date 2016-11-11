@@ -79,12 +79,28 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return experiment;
     }
 
+    runAndParseExperiment() {
+        return this.runExperiment()
+            .then((experiment)=> {
+                return parser.parse('r', experiment, {decicetype: 'openspectro'});
+            });
+    }
+
+    runAndLogExperiment(title, description) {
+        var that = this;
+        return this.runAndParseExperiment().then((data)=>{
+            return this.logInPouch(data, {
+                devicetype: 'openspectro',
+                cmd: 'r',
+                title: title,
+                description: description,
+                deviceID: that.id
+            });
+        });
+    }
+
     /* TO BE IMPLEMENTED
      getLastExperimentResults() {
-     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
-     }
-
-     getExperimentResults(name) {
      return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
      }
 

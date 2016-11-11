@@ -2,7 +2,6 @@
 const pouch = require('pouchdb');
 pouch.plugin(require('pouchdb-find'));
 const debug = require('debug')('main:pouchDB');
-const parser = require('./parser');
 var DB = new pouch('SerialData');
 
 
@@ -12,7 +11,6 @@ function saveToSerialData(data, options) {
 }
 
 function saveToDB(db, data, options) {
-    for (let i = 0; i < data.length; i++) {
         //return
         db.post(
             {
@@ -27,9 +25,9 @@ function saveToDB(db, data, options) {
                     misc: {
                         command: options.cmd,
                         qualifier: options.deviceId,
-                        memEntry: options.memEntry,
+                        memEntry: options.memEntry+i,
                     },
-                    data: data[i]
+                    data: data
                 }
             }).then(function () { //define the response callback
             debug('Entry written in PouchDB:');
@@ -37,7 +35,6 @@ function saveToDB(db, data, options) {
         }).catch(function (err) {
             debug('Error on pouchDB write:' + err);
         });
-    }
 }
 
 

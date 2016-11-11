@@ -67,6 +67,31 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             return parser.parse(cmd,buff,{deviceType:that.deviceType, nbParamCompact:that.maxParam})});
     }
 
+    multiLogToDB(entry) {
+        var that = this;
+        return this.getParsedMultiLog(entry).then((data)=>{
+            return that.logInPouch(data, {
+                devicetype: 'bioreactor',
+                cmd: 'm',
+                title: title,
+                deviceID: that.id,
+                memEntry: entry,
+            });
+        });
+    }
+
+    compacLogToDB(){
+        var that = this;
+        return this.getParsedCompactLog().then((data)=>{
+            return that.logInPouch(data, {
+                devicetype: 'bioreactor',
+                cmd: 'c',
+                title: title,
+                deviceID: that.id,
+            });
+        });
+    }
+
     setParameter(param, value) {
         var command = param + value;
         if (!parser.parseCommand(command)) {
@@ -85,15 +110,10 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         }
     }
 
-
-    logEntry(entry){
-
-    }
-
-
-    logEntries(){
-
-    }
+    //getter
+    //getDBEntries
+    //getLastDBLog
+    //autoPoll
 
 }
 

@@ -4,6 +4,8 @@ const EventEmitter = require('events');
 const Handler = require('./../DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('./../parser');
+const Pouch = require('./../pouch');
+
 
 class AbstractDevice extends EventEmitter {
 
@@ -26,21 +28,11 @@ class AbstractDevice extends EventEmitter {
     }
 
 
-    logInPouch(func, options) {
-
-        return func().then((buff)=> {
-          /*  return pouchDB.saveToSerialData(buff, {
-                devicetype: options.devicetype,
-                deviceID: this.id,
-                title: options.title,
-                description: options.description
-            });*/
-        }).catch((err)=> {
-            return Promise.reject(new Error('error logging data to DB' + err.message));
-        })
-
-
-    };
+    logInPouch(data, options) {
+            for (let i = 0; i < data.length; i++) {
+                Pouch.saveToSerialData(data[i],options)
+            }
+   };
 
     _init() {
         Handler.on('connect', id => {
