@@ -28,10 +28,10 @@ class AbstractDevice extends EventEmitter {
     }
 
     logInPouch(data, options) {
-            for (let i = 0; i < data.length; i++) {
-                pouch.saveToSerialData(data[i],options)
-            }
-   }
+        for (let i = 0; i < data.length; i++) {
+            pouch.saveToSerialData(data[i], options)
+        }
+    }
 
     _init() {
         Handler.on('connect', id => {
@@ -103,8 +103,8 @@ class AbstractDevice extends EventEmitter {
 
     setEpochNow() {
         debug('setting epoch to unix time');
-        var time = Date.now();
-        return this.setEpoch(time); //buffer is accessible here
+        var time = Math.floor(Date.now()/1000);
+        return this.setEpoch(time);
     }
 
 }
