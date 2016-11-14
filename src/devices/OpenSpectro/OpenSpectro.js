@@ -108,7 +108,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
     /* TO BE IMPLEMENTED
      renameExperiment(oldName, newName) {
-     return pouchDB.getPouchEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
+     return pouchDB.getEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
      }
      */
 }

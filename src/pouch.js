@@ -39,16 +39,21 @@ function saveToDB(db, data, options) {
 
 
 //map functions for each device type
-function mapBioreactors(doc) {
-    if (doc.$kind === 'bioreactor') {
-        //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-        emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+var mapBioreactors = {
+    map: function (doc) {
+        if (doc.$kind === 'bioreactor') {
+            //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+            emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+        }
     }
 }
 
-function mapSpectros(doc) {
-    if (doc.$kind === 'openspectro') {
-        emit([doc.$content.misc.qualifier, doc.$modificationDate],doc.$content.data);
+var mapSpectros = {
+    map: function (doc) {
+        if (doc.$kind === 'openspectro') {
+            //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+            emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+        }
     }
 }
 
@@ -56,12 +61,12 @@ function mapSpectros(doc) {
 //getter
 function getDeviceDB(map, id) {
     //queries to pouch
-    return pouch.query(map, {
-        startkey: [id, 0 ], endkey: [id, Number.MAX_SAFE_INTEGER ], limit: 5, include_docs: false
+    return DB.query(map, {
+        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 5, include_docs: false
     }).then(function (result) {
         // handle result
         return result;
-    }).catch((err)=>{return Promise.reject(new Error('error getting pouchDB logs' + err.message))});
+    });
 }
 
 
