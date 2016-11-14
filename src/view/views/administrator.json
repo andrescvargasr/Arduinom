@@ -886,7 +886,7 @@
                 0
               ],
               "script": [
-                "var device=require.node('./../devices/AbstractDevice');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\nrequire( ['src/util/ui'], (ui)=>{if(this.event=='cellChanged'){\n    console.log(this);\n    if(DataBoolean.cast(this.row.item.writable)){\n        var cmd=String(this.row.item.parameter);\n        cmd=cmd+String(this.row.item.val);\n        deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            this.row.item.val=this.previous;\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   \n    }\n    else {console.log('this parameter cannot be edited');\n        ui.showNotification('this parameter cannot be edited', 'error');\n    }\n    API.doAction('getParams');\n}});\n\n"
+                "var devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\nrequire( ['src/util/ui'], (ui)=>{if(this.event=='cellChanged'){\n    console.log(this);\n    if(DataBoolean.cast(this.row.item.writable)){\n        var cmd=String(this.row.item.parameter);\n        cmd=cmd+String(this.row.item.val);\n        deviceList[devicekey].addRequest(cmd).catch((err)=>{\n            this.row.item.val=this.previous;\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   \n    }\n    else {console.log('this parameter cannot be edited');\n        ui.showNotification('this parameter cannot be edited', 'error');\n    }\n    API.doAction('getParams');\n}});\n\n"
               ]
             }
           ],
@@ -1039,7 +1039,7 @@
                 0
               ],
               "script": [
-                "(a)ll rgb\r\n(c)ompact settings\r\n(g)reen intensity test\r\n(r)un experiment\r\n(t)est all colors\r\n(e)poch\r\n(f)ree mem\r\n(h)elp\r\n(i)nitialize parameters\r\nle(v)el\r\n(q)ualifier\r\n(k) calibration\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
+                ""
               ]
             }
           ],

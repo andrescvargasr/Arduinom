@@ -31,7 +31,7 @@ class AbstractDevice extends EventEmitter {
             for (let i = 0; i < data.length; i++) {
                 pouch.saveToSerialData(data[i],options)
             }
-   };
+   }
 
     _init() {
         Handler.on('connect', id => {
