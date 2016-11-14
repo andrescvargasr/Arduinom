@@ -38,42 +38,64 @@ function saveToDB(db, data, options) {
 }
 
 
-//map functions for each device type
-var mapBioreactors = {
-    map: function (doc) {
-        if (doc.$kind === 'bioreactor') {
-            //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-            emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+// document that tells PouchDB/CouchDB
+// to build up an index on doc.name
+var ddocBioreactors = {
+    _id: '_design/bioreactors',
+    views: {
+        by_id: {
+            map: function (doc) {
+                if (doc.$kind === 'bioreactor') {
+                    //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+                    emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+                }
+            }.toString()
         }
     }
-}
+};
+// save it
+DB.put(ddocBioreactors).then(function () {
+    // success!
+}).catch(function (err) {
+    // some error (maybe a 409, because it already exists?)
+});
 
-var mapSpectros = {
-    map: function (doc) {
-        if (doc.$kind === 'openspectro') {
-            //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-            emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+
+
+var ddocSpectros = {
+    _id: '_design/spectros',
+    views: {
+        by_id: {
+            map: function (doc) {
+                if (doc.$kind === 'openspectro') {
+                    //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+                    emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+                }
+            }.toString()
         }
     }
-}
+};
+// save it
+DB.put(ddocSpectros).then(function () {
+    // success!
+}).catch(function (err) {
+    // some error (maybe a 409, because it already exists?)
+});
 
 
 //getter
-function getDeviceDB(map, id) {
+function getDeviceDB(ddoc, id) {
+        // some error
     //queries to pouch
-    return DB.query(map, {
+    return DB.query(ddoc, {
         startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 5, include_docs: false
     }).then(function (result) {
-        // handle result
+        debug('query resolved properly');
         return result;
     });
 }
 
-
 //function exports
 exports.saveToSerialData = saveToSerialData;
 exports.saveToDB = saveToDB;
-
 exports.getDeviceDB = getDeviceDB;
-exports.mapSpectros = mapSpectros;
-exports.mapBioreactors = mapBioreactors;

@@ -113,7 +113,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
     //getter
     getDB(){
-        return pouch.getDeviceDB(pouch.mapBioreactors, this.id);
+        return pouch.getDeviceDB('bioreactors/by_id', this.id);
     }
     //getDBEntries
     //getLastDBLog
