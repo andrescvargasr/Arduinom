@@ -49,28 +49,29 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getMultiLog(entry) {
-        if(entry === undefined) {
+        if (entry === undefined) {
             var cmd = 'm';
         } else {
             cmd = 'm' + entry;
         }
-        if(!parser.parseCommand(cmd)) {
+        if (!parser.parseCommand(cmd)) {
             throw new Error('Invalid entry');
         }
         return this.addRequest(cmd);
     }
 
-    getParsedMultiLog(entry){
-        var that=this;
-        return this.getMultiLog(entry).then((buff)=>{
+    getParsedMultiLog(entry) {
+        var that = this;
+        return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry
             debug('Parsing MultiLog');
-            return parser.parse(cmd,buff,{deviceType:that.deviceType, nbParamCompact:that.maxParam})});
+            return parser.parse(cmd, buff, {deviceType: that.deviceType, nbParamCompact: that.maxParam})
+        });
     }
 
     multiLogToDB(entry) {
         var that = this;
-        return this.getParsedMultiLog(entry).then((data)=>{
+        return this.getParsedMultiLog(entry).then((data)=> {
             return that.logInPouch(data, {
                 devicetype: 'bioreactor',
                 cmd: 'm',
@@ -81,9 +82,9 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         });
     }
 
-    compacLogToDB(){
+    compacLogToDB() {
         var that = this;
-        return this.getParsedCompactLog().then((data)=>{
+        return this.getParsedCompactLog().then((data)=> {
             return that.logInPouch(data, {
                 devicetype: 'bioreactor',
                 cmd: 'c',
@@ -112,13 +113,40 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     //getter
-    getDB(){
-        return pouch.getDeviceDB('bioreactors/by_id');//, this.id);
+    getDB() {
+        return pouch.getDeviceDB('bioreactors/by_id', this.id);
     }
-    //getDBEntries
-    //getLastDBLog
-    //autoPoll
 
+    //autoDBLogging every 30sec
+    autoDataLogger() {
+        var that = this;
+        clearInterval(this.dbLoggerInterval);
+        this.dbLoggerInterval = setInterval(()=> {
+            //here poll the last db entry, then compare it to the last flash entry
+            //if local entry > then log all the newest in the pouchdb
+        }, 30000)
+    }
+
+    stopAutoLog() {
+        clearInterval(this.dbLoggerInterval);
+        this.dbLoggerInterval = undefined;
+    }
+
+
+    //autoEpoch every 2 minutes
+    autoSetEpoch() {
+        var that = this;
+        clearInterval(this.autoEpochInterval);
+        this.autoEpochInterval = setInterval(()=> {
+                that.setEpochNow();
+            },
+            120000);
+    }
+
+    clearAutoEpoch() {
+        clearInterval(this.autoEpochInterval);
+        this.autoEpochInterval = undefined;
+    }
 }
 
 module.exports = OpenBio;
