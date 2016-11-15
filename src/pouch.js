@@ -50,6 +50,15 @@ var ddocBioreactors = {
                     emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
                 }
             }.toString()
+        },
+
+        by_mem: {
+            map: function (doc) {
+                if (doc.$kind === 'bioreactor') {
+                    //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+                    emit([doc.$content.misc.qualifier, doc.$content.misc.memEntry], doc.$content.data);
+                }
+            }.toString()
         }
     }
 };
@@ -119,7 +128,16 @@ function getDeviceDB(str, id) {
     });
 }
 
+function getLastInDB(id){
+    return DB.query('bioreactors/by_mem', {
+        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 1, include_docs: false, descending:true
+    }).then(function (result) {
+        return result;
+    });
+}
+
 //function exports
 exports.saveToSerialData = saveToSerialData;
 exports.saveToDB = saveToDB;
 exports.getDeviceDB = getDeviceDB;
+exports.getLastInDB = getLastInDB;

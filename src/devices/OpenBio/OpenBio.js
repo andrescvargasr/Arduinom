@@ -119,37 +119,43 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
     //autoDBLogging every 30sec
     autoDataLogger() {
+        this.dbLoggerActive = true;
         var that = this;
-        clearInterval(this.dbLoggerInterval);
-        this.dbLoggerInterval = setInterval(()=> {
-            this.getDB().then((result)=> {
+        clearTimeout(this.dbLoggerInterval);
+        this.dbLoggerInterval = setTimeout(()=> {
+            this.getLastEntryID().then((lastId)=> {
+                console.log('periodic last entry polling:' + that.id);
+                console.log('returned: ' + lastId);
+                that.LogUntil(lastId);
+            }).then(reSchedule, reSchedule);
+        }, 30000);
+        function reSchedule() {
+            if (that.dbLoggerActive) that.autoDataLogger();
+        }
+    }
+
+    LogUntil(end) {
+        var that = this;
+        var i = 0;
+        return getNext();
+        function getNext() {
+            if (i >= end) return;
+            else return pouch.getLastInDB(that.id).then((result)=> {
                 if (result.total_rows === 0) {
                     console.log('database was empty, starting with m0 command');
-                    this.multiLogToDB(0).then(()=> {
-                      //here must loop until we reach the last entry in flash memory
-                    })
+                    return this.multiLogToDB(0);
                 }
                 else {
-                    var lastEntryInDB = 0; // use a dedicated ddoc view instead !!
-                    for (let i = 0; i < result.total_rows; i++) {
-
-                    }
-                    this.multiLogToDB()
+                    i = result.rows[0].$content.misc.memEntry;
+                    return this.multiLogToDB(i);
                 }
-
-                /*this.getLastEntryID().then((lastId)=> {
-                 console.log('periodic last entry polling:' + this.id);
-                 console.log('returned: ' + lastId);
-                 //this.getDB().then(()=>{})
-                 })*/
-            })
-            //here poll the last db entry, then compare it to the last flash entry
-            //if local entry > then log all the newest in the pouchdb
-        }, 30000)
+            }).then(getNext); //get Last in Db  is to be implemented
+        }
     }
 
     stopAutoLog() {
-        clearInterval(this.dbLoggerInterval);
+        this.dbLoggerActive = false;
+        clearTimeout(this.dbLoggerInterval);
         this.dbLoggerInterval = undefined;
     }
 
@@ -171,3 +177,14 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 }
 
 module.exports = OpenBio;
+
+//example promise loop with end condition
+/*
+ function getUntil(end) {
+ var i = 0;
+ return getNext();
+ function getNext() {
+ if (i === end) return;
+ else return promiseget(i++).then(getNext);
+ }
+ }*/
