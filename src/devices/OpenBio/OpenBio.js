@@ -122,6 +122,9 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var that = this;
         clearInterval(this.dbLoggerInterval);
         this.dbLoggerInterval = setInterval(()=> {
+            this.getLastEntryID().then((lastId)=>{
+                //this.getLastEntryInDB().then(()=>{})
+            })
             //here poll the last db entry, then compare it to the last flash entry
             //if local entry > then log all the newest in the pouchdb
         }, 30000)
@@ -138,7 +141,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var that = this;
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(()=> {
-                that.setEpochNow();
+               return that.setEpochNow();
             },
             120000);
     }
