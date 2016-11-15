@@ -149,7 +149,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -396,7 +396,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -635,8 +635,8 @@
             "top": 0
           },
           "size": {
-            "width": 100,
-            "height": 79
+            "width": 96,
+            "height": 78
           },
           "zIndex": 0,
           "display": true,
@@ -708,7 +708,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 1
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -730,7 +730,7 @@
                 []
               ],
               "script": [
-                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nvar device\n\nif(devicekey){\n    device=deviceList[String(devicekey)];\n    \n    switch(this.button){\n        case 'reload':\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n        case 'setTime':\n            setTimeNow().catch(errorHandler);\n            break;\n        case 'entryID':\n            lastEntry().catch(errorHandler);\n            break;\n        case 'last':\n            lastLog().catch(errorHandler);\n            break;\n        case 'lasts':\n            lastLogs().catch(errorHandler);\n            break;\n        case 'dataDB':\n            dataInDB().catch(errorHandler);\n            break;\n        default:\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n            \n        \n    }\n        \n}\nelse ui.showNotification('no device selected', 'error');\n\n//Utilities\nfunction dataInDB(){\n    return device.getDB()\n        .then((entries)=>{\n            ui.showNotification('got Last Logs \\n' +entries, 'success');\n            API.createData(\"lastCmdExec\",entries);\n            return entries;\n        });\n}\n\nfunction lastLogs(){\n    return device.getLastEntryID().then((val)=> {\n        return device.getMultiLog(val-10).then((buff)=>{\n                    ui.showNotification('got Last Logs \\n' +buff , 'success');\n         API.createData(\"lastCmdExec\",buff);\n        })\n\n    })\n}\n\nfunction lastLog(){\n    return device.getLastLog().then((val)=> {\n        ui.showNotification('got Last Log: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction lastEntry(){\n    return device.getLastEntryID().then((val)=> {\n        ui.showNotification('got Last EntryID: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction setTimeNow(){\n    return device.setEpochNow().then((val)=> {\n        ui.showNotification('Time was set to Unix epoch', 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction reload(){\n    var deviceInfo=device.paramInfo;\n    return device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    })\n    \n}\n\nfunction errorHandler(err){\n    API.createData(\"lastCmdExec\",'error executing last command : \\n'+err.message);\n    console.error(err);\n    ui.showNotification(err.message, 'error');\n}\n\n\n\n\n"
+                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nvar device\n\nif(devicekey){\n    device=deviceList[String(devicekey)];\n    \n    switch(this.button){\n        case 'reload':\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n        case 'setTime':\n            setTimeNow().catch(errorHandler);\n            break;\n        case 'entryID':\n            lastEntry().catch(errorHandler);\n            break;\n        case 'last':\n            lastLog().catch(errorHandler);\n            break;\n        case 'lasts':\n            lastLogs().catch(errorHandler);\n            break;\n        case 'dataDB':\n            dataInDB().catch(errorHandler);\n            break;\n        default:\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n            \n        \n    }\n        \n}\nelse ui.showNotification('no device selected', 'error');\n\n//Utilities\nfunction dataInDB(){\n    return device.getDB()\n        .then((entries)=>{\n            ui.showNotification('got Last Logs in DB \\n' +entries, 'success');\n            API.createData(\"lastCmdExec\",entries);\n            API.createData(\"objectToInterpret\",entries);\n            return entries;\n        });\n}\n\nfunction lastLogs(){\n    return device.getLastEntryID().then((val)=> {\n        return device.getMultiLog(val-10).then((buff)=>{\n                    ui.showNotification('got Last Logs \\n' +buff , 'success');\n         API.createData(\"lastCmdExec\",buff);\n        })\n\n    })\n}\n\nfunction lastLog(){\n    return device.getLastLog().then((val)=> {\n        ui.showNotification('got Last Log: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction lastEntry(){\n    return device.getLastEntryID().then((val)=> {\n        ui.showNotification('got Last EntryID: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction setTimeNow(){\n    return device.setEpochNow().then((val)=> {\n        ui.showNotification('Time was set to Unix epoch', 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction reload(){\n    var deviceInfo=device.paramInfo;\n    return device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    })\n    \n}\n\nfunction errorHandler(err){\n    API.createData(\"lastCmdExec\",'error executing last command : \\n'+err.message);\n    console.error(err);\n    ui.showNotification(err.message, 'error');\n}\n\n\n\n\n"
               ]
             }
           ],
@@ -879,7 +879,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1035,7 +1035,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1189,7 +1189,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1348,7 +1348,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -1490,7 +1490,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -1528,7 +1528,7 @@
                 0
               ],
               "script": [
-                "error executing last command : \nCannot assign to read only property 'get' of object '#<EventEmitter>'"
+                "[object Object]"
               ]
             }
           ],
@@ -1646,7 +1646,7 @@
           ]
         }
       ],
-      "zindex": 2
+      "zindex": 3
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -1782,7 +1782,8 @@
             ""
           ]
         }
-      ]
+      ],
+      "zindex": 2
     }
   ],
   "variables": [

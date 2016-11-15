@@ -54,13 +54,19 @@ var ddocBioreactors = {
     }
 };
 // save it
-DB.put(ddocBioreactors).then(function () {
-    // success!
-}).catch(function (err) {
-    // some error (maybe a 409, because it already exists?)
+DB.get(ddocBioreactors._id).then((doc)=> {
+    ddocBioreactors._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
+    debug('ddocBioreactors already exists with rev:' + doc._rev);
+    getDeviceDB('bioreactors/by_id').then(console.log);
+}, (err)=> {
+    if (err.reason === 'missing') {
+        DB.put(ddocBioreactors).then(()=> {
+            getDeviceDB('bioreactors/by_id').then(console.log);
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
 });
-
-
 
 var ddocSpectros = {
     _id: '_design/spectros',
@@ -76,21 +82,38 @@ var ddocSpectros = {
     }
 };
 // save it
-DB.put(ddocSpectros).then(function () {
-    // success!
-}).catch(function (err) {
-    // some error (maybe a 409, because it already exists?)
+// save it
+DB.get(ddocSpectros._id).then((doc)=> {
+    ddocSpectros._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
+    debug('ddocSpectros already exists with rev:' + doc._rev);
+    getDeviceDB('spectros/by_id').then(console.log);
+}, (err)=> {
+    if (err.reason === 'missing') {
+        DB.put(ddocSpectros).then(()=> {
+            getDeviceDB('spectros/by_id').then(console.log);
+        }).catch(function (err) {
+            console.log(err);
+        });
+    }
 });
 
 
 //getter
-function getDeviceDB(ddoc, id) {
-        // some error
-    //queries to pouch
-    return DB.query(ddoc, {
-        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 5, include_docs: false
+function getDeviceDB(str, id) {
+    //queries to
+    if (id == null) {
+        return DB.query(str, {
+            limit: 20, include_docs: false
+        }).then(function (result) {
+            debug('query resolved properly on :' + str);
+            return result;
+        });
+    }
+
+    else return DB.query(str, {
+        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 20, include_docs: false
     }).then(function (result) {
-        debug('query resolved properly');
+        debug('query resolved properly on :' + str);
         return result;
     });
 }
