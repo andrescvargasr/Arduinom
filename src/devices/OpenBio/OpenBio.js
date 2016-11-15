@@ -122,10 +122,26 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var that = this;
         clearInterval(this.dbLoggerInterval);
         this.dbLoggerInterval = setInterval(()=> {
-            this.getLastEntryID().then((lastId)=> {
-                console.log('periodic last entry polling:' + this.id);
-                console.log('returned: ' + lastId);
-                //this.getDB().then(()=>{})
+            this.getDB().then((result)=> {
+                if (result.total_rows === 0) {
+                    console.log('database was empty, starting with m0 command');
+                    this.multiLogToDB(0).then(()=> {
+                      //here must loop until we reach the last entry in flash memory
+                    })
+                }
+                else {
+                    var lastEntryInDB = 0; // use a dedicated ddoc view instead !!
+                    for (let i = 0; i < result.total_rows; i++) {
+
+                    }
+                    this.multiLogToDB()
+                }
+
+                /*this.getLastEntryID().then((lastId)=> {
+                 console.log('periodic last entry polling:' + this.id);
+                 console.log('returned: ' + lastId);
+                 //this.getDB().then(()=>{})
+                 })*/
             })
             //here poll the last db entry, then compare it to the last flash entry
             //if local entry > then log all the newest in the pouchdb
