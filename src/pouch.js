@@ -113,6 +113,7 @@ function getDeviceDB(str, id) {
     else return DB.query(str, {
         startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 20, include_docs: false
     }).then(function (result) {
+        console.log('found doc with desired properties, id: ', result.$id);
         debug('query resolved properly on :' + str);
         return result;
     });
