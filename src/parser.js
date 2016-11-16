@@ -50,7 +50,7 @@ module.exports = {
                     entries = [];
                     if (lines.length >= 2) {
                         debug('process lines');
-                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
+                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam , options.hasEvent);
                     }
                     return entries;
                 default:
@@ -80,7 +80,7 @@ function parseCommand(cmd) {
     }
 }
 
-function processLinesM(lines, reqLength, nbParam, hasEvent) {
+function processLinesM(lines, reqLength, nbParam , hasEvent) {
     var entries = [];
     for (var i = 0; i < lines.length; i++) {
         if (i === 0) {
@@ -104,6 +104,7 @@ function processLinesM(lines, reqLength, nbParam, hasEvent) {
 }
 
 function processLines(lines, reqLength, nbParam) {
+    debug('buffer to be parsed : \n' +lines);
     var entries = [];
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];
@@ -128,6 +129,7 @@ function processStatusLine(line, reqLength, nbParam) {
         entry.epoch = parseInt('0x' + line.substring(0, 8));
         parseParameters(line, 8, nbParam, entry);
         entry.deviceId = convertSignedIntHexa(line.substring(8 + (nbParam * 4), 12 + (nbParam * 4)));
+        debug('parsed device id is :' +entry.deviceId);
         if (!entry.deviceId) {
             throw new Error('Could not parse device id in process StatusLine');
         }
@@ -155,6 +157,7 @@ function processStatusLineM(line, reqLength, nbParam, hasEvent) {
         // We skip the events for now
         var eventHexaChars = hasEvent ? 8 : 0;
         entry.deviceId = convertSignedIntHexa(line.substring(16 + (nbParam * 4) + eventHexaChars, 16 + (nbParam * 4) + eventHexaChars + 4));
+        debug('parsed device id is :' +entry.deviceId);
         if (!entry.deviceId) {
             throw new Error('Could not parse device id in processStatusLineM');
         }

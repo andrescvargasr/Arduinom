@@ -12,9 +12,9 @@ const pouch = require('./../../pouch');
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        //this.deviceType = OpenBio.getDeviceType();
-        this.maxParam = 52;
-        this.paramInfo = deepcopy(paramConfig);
+        this.deviceType = OpenBio.getDeviceType();
+        this.maxParam = OpenBio.getMaxParam();
+        this.paramInfo = OpenBio.getParamConfig();
     }
 
     static getParamConfig() {
@@ -25,14 +25,18 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return 'bioreactor';
     }
 
+    static getMaxParam(){
+        return 52;
+    }
+
     // Device specific utililties
     getParsedCompactLog() {
         var deviceType=OpenBio.getDeviceType();
-        var that = this;
+        var maxParam=OpenBio.getMaxParam();
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: deviceType, nbParamCompact: that.maxParam})[0];
+                return parser.parse('c', buff, {devicetype: deviceType, nbParamCompact: maxParam})[0];
             });
     }
 
@@ -61,16 +65,17 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         if (!parser.parseCommand(cmd)) {
             throw new Error('Invalid entry');
         }
+        debug('adding multilog request :' +cmd);
         return this.addRequest(cmd);
     }
 
     getParsedMultiLog(entry) {
         var deviceType=OpenBio.getDeviceType();
-        var that = this;
+        var maxParam=OpenBio.getMaxParam();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: deviceType, nbParamCompact: that.maxParam})
+            return parser.parse(cmd, buff, {devicetype: deviceType, nbParamCompact: maxParam});
         });
     }
 
@@ -131,8 +136,8 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         clearTimeout(this.dbLoggerInterval);
         this.dbLoggerInterval = setTimeout(()=> {
             this.getLastEntryID().then((lastId)=> {
-                console.log('periodic last entry polling:' + that.id);
-                console.log('returned: ' + lastId);
+                debug('periodic last entry polling on device :' + that.id);
+                debug('returned: ' + lastId);
                 that.logUntil(lastId);
             }).then(reSchedule, reSchedule);
         }, 30000);
@@ -149,12 +154,12 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             if (i >= end) return;
             else return pouch.getLastInDB(that.id).then((result)=> {
                 if (result.total_rows === 0) {
-                    console.log('database was empty, starting with m0 command');
+                    debug('database was empty, starting with m0 command');
                     return that.multiLogToDB(0);
                 }
                 else {
                     i = result.rows[0].$content.misc.memEntry+1;
-                    console.log('continue to log data from entry:' +i);
+                    debug('continue to log data from entry:' +i);
                     return that.multiLogToDB(i);
                 }
             }).then(getNext); //get Last in Db  is to be implemented
