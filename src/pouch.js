@@ -12,7 +12,7 @@ function saveToSerialData(data, options) {
 
 function saveToDB(db, data, options) {
     //return
-    db.post(
+    return db.post(
         {
             $id: (options.id || Date.now()),
             $kind: (options.devicetype || 'openspectro'),
@@ -43,15 +43,14 @@ function saveToDB(db, data, options) {
 var ddocBioreactors = {
     _id: '_design/bioreactors',
     views: {
-        by_id: {
-            map: function (doc) {
-                if (doc.$kind === 'bioreactor') {
-                    //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-                    emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
-                }
-            }.toString()
-        },
-
+        // by_id: {
+        //     map: function (doc) {
+        //         if (doc.$kind === 'bioreactor') {
+        //             //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
+        //             emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+        //         }
+        //     }.toString()
+        // },
         by_mem: {
             map: function (doc) {
                 if (doc.$kind === 'bioreactor') {
@@ -66,11 +65,13 @@ var ddocBioreactors = {
 DB.get(ddocBioreactors._id).then((doc)=> {
     ddocBioreactors._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
     debug('ddocBioreactors already exists with rev:' + doc._rev);
-    getDeviceDB('bioreactors/by_id').then(console.log);
+    //getDeviceDB('bioreactors/by_id').then(console.log);
+    getDeviceDB('bioreactors/by_mem').then(console.log);
 }, (err)=> {
     if (err.reason === 'missing') {
         DB.put(ddocBioreactors).then(()=> {
-            getDeviceDB('bioreactors/by_id').then(console.log);
+            getDeviceDB('bioreactors/by_mem').then(console.log);
+            //getDeviceDB('bioreactors/by_id').then(console.log);
         }).catch(function (err) {
             console.log(err);
         });
@@ -120,7 +121,7 @@ function getDeviceDB(str, id) {
     }
 
     else return DB.query(str, {
-        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 20, include_docs: false
+        startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 20, descending: true, include_docs: false
     }).then(function (result) {
         console.log('found x doc with desired properties ', result.total_rows);
         debug('query resolved properly on :' + str);
@@ -128,10 +129,12 @@ function getDeviceDB(str, id) {
     });
 }
 
-function getLastInDB(id){
+function getLastInDB(id) {
+    debug('serving last In DB');
     return DB.query('bioreactors/by_mem', {
-        startkey: [id, 0], endkey: [id, Number.MAX_SAFE_INTEGER], limit: 1, include_docs: false, descending:true
+        startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 1, include_docs: false, descending: true
     }).then(function (result) {
+        debug(result);
         return result;
     });
 }

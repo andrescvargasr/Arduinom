@@ -34,7 +34,7 @@
                 []
               ],
               "script": [
-                "const DeviceFactory = require.node(\"./../DeviceFactory\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nDeviceFactory.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    DeviceFactory.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    DeviceFactory.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n    if(deviceList[key].deviceType=='bioreactor'){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n            }\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
+                "const DeviceFactory = require.node(\"./../DeviceFactory\");\nconst OpenBio = require.node(\"../devices/OpenBio/OpenBio\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nDeviceFactory.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    DeviceFactory.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    DeviceFactory.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n    var deviceType= OpenBio.getDeviceType(); \n    if(deviceType==='bioreactor'){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n            }\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
               ]
             }
           ],
@@ -847,7 +847,7 @@
           "name": "getParams"
         }
       ],
-      "title": "",
+      "title": "Device Selector",
       "actions_out": [
         {
           "jpath": []
@@ -1083,7 +1083,7 @@
                 0
               ],
               "script": [
-                "(c)ompact settings\r\n(d)elete flash\r\n(e)poch\r\n(f)ree\r\n(h)elp\r\n(i)2c\r\n(l)og\r\n(m)ultiple log\r\n(o)ne-wire\r\n(p)aram\r\n(q)ualifier\r\n(r)eset\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
+                ""
               ]
             }
           ],
