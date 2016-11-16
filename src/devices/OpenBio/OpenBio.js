@@ -29,6 +29,9 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return 52;
     }
 
+    static getNbParamLog(){
+        return 26;
+    }
     // Device specific utililties
     getParsedCompactLog() {
         var deviceType=OpenBio.getDeviceType();
@@ -71,11 +74,11 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
     getParsedMultiLog(entry) {
         var deviceType=OpenBio.getDeviceType();
-        var maxParam=OpenBio.getMaxParam();
+        var nbParam=OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: deviceType, nbParamCompact: maxParam});
+            return parser.parse(cmd, buff, {devicetype: deviceType, nbParam: nbParam, hasEvent:true});
         });
     }
 
