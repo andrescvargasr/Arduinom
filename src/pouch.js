@@ -29,9 +29,9 @@ function saveToDB(db, data, options) {
                 },
                 data: data
             }
-        }).then(function () { //define the response callback
-        debug('Entry written in PouchDB:');
-        return true;
+        }).then(function (result) { //define the response callback
+        debug('Entry written in PouchDB: \n' + result.id);
+        return result;
     }).catch(function (err) {
         debug('Error on pouchDB write:' + err);
     });
@@ -132,7 +132,7 @@ function getDeviceDB(str, id) {
 function getLastInDB(id) {
     debug('serving last In DB');
     return DB.query('bioreactors/by_mem', {
-        startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 1, include_docs: false, descending: true
+        /*startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0],*/ limit: 1, include_docs: false, descending: true
     }).then(function (result) {
         debug(result);
         return result;

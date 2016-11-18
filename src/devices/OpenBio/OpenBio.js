@@ -21,21 +21,22 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return deepcopy(paramConfig);
     }
 
-    static getDeviceType(){
+    static getDeviceType() {
         return 'bioreactor';
     }
 
-    static getMaxParam(){
+    static getMaxParam() {
         return 52;
     }
 
-    static getNbParamLog(){
+    static getNbParamLog() {
         return 26;
     }
+
     // Device specific utililties
     getParsedCompactLog() {
-        var deviceType=OpenBio.getDeviceType();
-        var maxParam=OpenBio.getMaxParam();
+        var deviceType = OpenBio.getDeviceType();
+        var maxParam = OpenBio.getMaxParam();
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
@@ -68,43 +69,54 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         if (!parser.parseCommand(cmd)) {
             throw new Error('Invalid entry');
         }
-        debug('adding multilog request :' +cmd);
+        debug('adding multilog request :' + cmd);
         return this.addRequest(cmd);
     }
 
     getParsedMultiLog(entry) {
-        var deviceType=OpenBio.getDeviceType();
-        var nbParam=OpenBio.getNbParamLog();
+        var deviceType = OpenBio.getDeviceType();
+        var nbParam = OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: deviceType, nbParam: nbParam, hasEvent:true});
+            return parser.parse(cmd, buff, {devicetype: deviceType, nbParam: nbParam, hasEvent: true});
         });
     }
+
 
     multiLogToDB(entry) {
-        var deviceType=OpenBio.getDeviceType();
+        var deviceType = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedMultiLog(entry).then((data)=> {
-            return that.logInPouch(data, {
-                devicetype: deviceType,
-                cmd: 'm',
-                title: title,
-                deviceID: that.id,
-                memEntry: entry,
+                var end = data.length;
+                debug('memEntry being written to dB: ' + data);
+                var i = 0;
+                return getNext();
+                function getNext() {
+                    if (i >= end) return;
+                    else return pouch.saveToSerialData(data[i], {
+                        devicetype: deviceType,
+                        cmd: 'm',
+                        title: title,
+                        deviceId: that.id,
+                        memEntry: data[i].id,
+                    }).then(()=> {
+                        i++;
+                    }).then(getNext); //get Last in Db  is to be implemented
+                }
             });
-        });
     }
 
+
     compacLogToDB() {
-        var deviceType=OpenBio.getDeviceType();
+        var deviceType = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedCompactLog().then((data)=> {
-            return that.logInPouch(data, {
+            return pouch.saveToSerialData(data, {
                 devicetype: deviceType,
                 cmd: 'c',
                 title: title,
-                deviceID: that.id,
+                deviceId: that.id,
             });
         });
     }
@@ -127,19 +139,19 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         }
     }
 
-    //getter
+//getter
     getDB() {
         return pouch.getDeviceDB('bioreactors/by_mem', this.id);
     }
 
-    //autoDBLogging every 30sec
+//autoDBLogging every 30sec
     autoDataLogger() {
         this.dbLoggerActive = true;
         var that = this;
         clearTimeout(this.dbLoggerInterval);
         this.dbLoggerInterval = setTimeout(()=> {
             this.getLastEntryID().then((lastId)=> {
-                debug('periodic last entry polling on device :' + that.id);
+                debug('periodic polling on device :' + that.id);
                 debug('returned: ' + lastId);
                 that.logUntil(lastId);
             }).then(reSchedule, reSchedule);
@@ -161,8 +173,9 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                     return that.multiLogToDB(0);
                 }
                 else {
-                    i = result.rows[0].$content.misc.memEntry+1;
-                    debug('continue to log data from entry:' +i);
+                    debug('last mementry in DB is: ' + result.rows[0].value.id);
+                    i = result.rows[0].value.id;
+                    debug('continue to log data from entry:' + i);
                     return that.multiLogToDB(i);
                 }
             }).then(getNext); //get Last in Db  is to be implemented
@@ -176,7 +189,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
 
-    //autoEpoch every 2 minutes
+//autoEpoch every 2 minutes
     autoSetEpoch() {
         var that = this;
         clearInterval(this.autoEpochInterval);

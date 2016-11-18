@@ -27,12 +27,6 @@ class AbstractDevice extends EventEmitter {
         throw new Error('getParamConfig not implemented');
     }
 
-    logInPouch(data, options) {
-        for (let i = 0; i < data.length; i++) {
-            pouch.saveToSerialData(data[i], options)
-        }
-    }
-
     _init() {
         Handler.on('connect', id => {
             if (this.id === id) {
