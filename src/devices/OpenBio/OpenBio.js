@@ -150,7 +150,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var that = this;
         clearTimeout(this.dbLoggerInterval);
         this.dbLoggerInterval = setTimeout(()=> {
-            this.getLastEntryID().then((lastId)=> {
+            that.getLastEntryID().then((lastId)=> {
                 debug('periodic polling on device :' + that.id);
                 debug('returned: ' + lastId);
                 that.logUntil(lastId);
@@ -167,14 +167,14 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         return getNext();
         function getNext() {
             if (i >= end) return;
-            else return pouch.getLastInDB(that.id).then((result)=> {
+            else return pouch.getLastInDB(Number(that.id)).then((result)=> {
                 if (result.total_rows === 0) {
                     debug('database was empty, starting with m0 command');
                     return that.multiLogToDB(0);
                 }
                 else {
                     debug('last mementry in DB is: ' + result.rows[0].value.id);
-                    i = result.rows[0].value.id;
+                    i = Number(result.rows[0].value.id);
                     debug('continue to log data from entry:' + i);
                     return that.multiLogToDB(i);
                 }

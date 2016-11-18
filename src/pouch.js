@@ -66,7 +66,7 @@ DB.get(ddocBioreactors._id).then((doc)=> {
     ddocBioreactors._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
     debug('ddocBioreactors already exists with rev:' + doc._rev);
     //getDeviceDB('bioreactors/by_id').then(console.log);
-    getDeviceDB('bioreactors/by_mem').then(console.log);
+    getDeviceDB('bioreactors/by_mem').then((data)=>console.log(JSON.stringify(data)));
 }, (err)=> {
     if (err.reason === 'missing') {
         DB.put(ddocBioreactors).then(()=> {
@@ -123,18 +123,19 @@ function getDeviceDB(str, id) {
     else return DB.query(str, {
         startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 20, descending: true, include_docs: false
     }).then(function (result) {
-        console.log('found x doc with desired properties ', result.total_rows);
-        debug('query resolved properly on :' + str);
+        debug('query resolved properly on :' + str)
+        debug(result);
         return result;
     });
 }
 
 function getLastInDB(id) {
-    debug('serving last In DB');
+    debug('serving last In DB for id:' + id);
     return DB.query('bioreactors/by_mem', {
-        /*startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0],*/ limit: 1, include_docs: false, descending: true
+        startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 1, include_docs: false, descending: true
     }).then(function (result) {
         debug(result);
+//        debug(result.rows[0].key);
         return result;
     });
 }
