@@ -146,6 +146,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
 //autoDBLogging every 30sec
     autoDataLogger() {
+        if (this.dbLoggerActive) return;
         this.dbLoggerActive = true;
         var that = this;
         clearTimeout(this.dbLoggerInterval);
@@ -176,7 +177,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                     debug('last mementry in DB is: ' + result.rows[0].value.id);
                     i = Number(result.rows[0].value.id);
                     debug('continue to log data from entry:' + i);
-                    return that.multiLogToDB(i);
+                    return that.multiLogToDB(i+1);
                 }
             }).then(getNext); //get Last in Db  is to be implemented
         }

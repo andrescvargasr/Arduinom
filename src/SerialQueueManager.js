@@ -185,7 +185,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                     } else {
                         if (!that.buffer.endsWith(that.endString)) {
                             debug('buffer not ending properly, possibly invalid command sent: ' + JSON.stringify(that.buffer));
-                            reject(new Error('buffer not ending properly, possibly invalid command sent: ' + JSON.stringify(that.buffer)));
+                            return reject(new Error('buffer not ending properly, possibly invalid command sent: ' + JSON.stringify(that.buffer)));
                         }
                         that._resolve(that.buffer);
                         that.buffer = ''; //empty the buffer
