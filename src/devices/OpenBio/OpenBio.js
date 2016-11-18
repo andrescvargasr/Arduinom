@@ -156,7 +156,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
                 debug('returned: ' + lastId);
                 that.logUntil(lastId);
             }).then(reSchedule, reSchedule);
-        }, 30000);
+        }, 20000);
         function reSchedule() {
             if (that.dbLoggerActive) that.autoDataLogger();
         }
@@ -167,7 +167,10 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var i = 0;
         return getNext();
         function getNext() {
-            if (i >= end) return;
+            if (i >= end){
+                that.dbLoggerActive=false;
+                return
+            }
             else return pouch.getLastInDB(Number(that.id)).then((result)=> {
                 if (result.total_rows === 0) {
                     debug('database was empty, starting with m0 command');
