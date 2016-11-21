@@ -23,10 +23,17 @@ class AbstractDevice extends EventEmitter {
         this.pending = false; //flag to check if an experiment is currently running
     }
 
+    //static methods
+    static getDeviceType() {
+        return this.devicetype;
+    }
+
     static getParamConfig() {
         throw new Error('getParamConfig not implemented');
     }
 
+
+    //private methods
     _init() {
         Handler.on('connect', id => {
             if (this.id === id) {
@@ -43,6 +50,7 @@ class AbstractDevice extends EventEmitter {
         });
     }
 
+    //public methods
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
         if (!parser.parseCommand(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));

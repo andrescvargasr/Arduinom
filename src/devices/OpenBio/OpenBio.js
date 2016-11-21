@@ -12,17 +12,12 @@ const pouch = require('./../../pouch');
 class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.deviceType = OpenBio.getDeviceType();
+        this.deviceType = 'bioreactor';
         this.maxParam = OpenBio.getMaxParam();
-        this.paramInfo = OpenBio.getParamConfig();
     }
 
     static getParamConfig() {
         return deepcopy(paramConfig);
-    }
-
-    static getDeviceType() {
-        return 'bioreactor';
     }
 
     static getMaxParam() {
