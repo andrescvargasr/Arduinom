@@ -8,8 +8,8 @@ const AbstractDev = require('../devices/AbstractDevice');
 //exported on emitted events listened by the ws server
 var deviceList = {};
 var deviceArr = [];
-var spectroArr = [];
-var bioArr = [];
+//var spectroArr = [];
+//var bioArr = [];
 
 
 DeviceFactory.on('newDevice', (device)=> {
@@ -29,8 +29,8 @@ DeviceFactory.on('newDevice', (device)=> {
 function updateArray(id, stat) {
     var emitter = new EventEmitter();
     var count = 0;
-    var bioCount = 0;
-    var spectroCount = 0;
+    //var bioCount = 0;
+    //var spectroCount = 0;
     console.log('update array event on id :' + id);
     for (let key in deviceList) {
         var deviceType = AbstractDev.getDeviceType();

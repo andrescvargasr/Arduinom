@@ -4,7 +4,7 @@ var express = require('express');
 var path = require('path');
 var http = require('http');
 
-var bioList=require('./deviceLister');
+//need to add event listeners here
 
 console.log('Accelerometer created');
 

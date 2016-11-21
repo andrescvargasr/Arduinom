@@ -30,7 +30,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
     // Device specific utililties
     getParsedCompactLog() {
-        var deviceType = OpenBio.getDeviceType();
+        var deviceType = AbstractDevice.getDeviceType();
         var maxParam = OpenBio.getMaxParam();
         return this.getCompactLog()
             .then((buff)=> {
@@ -69,7 +69,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getParsedMultiLog(entry) {
-        var deviceType = OpenBio.getDeviceType();
+        var deviceType = AbstractDevice.getDeviceType();
         var nbParam = OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
@@ -80,7 +80,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
 
     multiLogToDB(entry) {
-        var deviceType = OpenBio.getDeviceType();
+        var deviceType = AbstractDevice.getDeviceType();
         var that = this;
         return this.getParsedMultiLog(entry).then((data)=> {
                 var end = data.length;
@@ -104,7 +104,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
 
     compacLogToDB() {
-        var deviceType = OpenBio.getDeviceType();
+        var deviceType = AbstractDevice.getDeviceType();
         var that = this;
         return this.getParsedCompactLog().then((data)=> {
             return pouch.saveToSerialData(data, {
