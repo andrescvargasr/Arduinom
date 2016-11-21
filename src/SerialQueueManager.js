@@ -253,7 +253,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
             this.port.on('close', err => {
                 this.statusCode = 4;
                 this._updateStatus();
-                debug(`serialport close on port ${this.portParam}: ${err.message}`);
+                if(err) debug(`serialport close on port ${this.portParam}: ${err.message}`);
                 // delete this.port;
                 this.emit('close', err);
                 this._reconnectionAttempt();
