@@ -58,7 +58,7 @@ function updateArray(id, stat) {
          }
          */
     }
-    emitter.emit('devices', deviceArr);
+    emitter.emit('update', deviceArr);
 }
 
 module.exports = deviceArr; //-> unused, only one global db is more suited
