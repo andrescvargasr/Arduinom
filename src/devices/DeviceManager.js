@@ -116,5 +116,5 @@ class DeviceManager extends EventEmitter { //issue with extends EventEmitter
     }
 }
 
-module.exports = new DeviceManager(8000); //-> unused, only one global db is more suited
+module.exports = new DeviceManager(8000);
 

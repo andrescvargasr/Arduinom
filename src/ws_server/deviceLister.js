@@ -4,7 +4,6 @@
 'use strict';
 const EventEmitter = require('events');
 const DeviceFactory = require("./../devices/DeviceFactory");
-const AbstractDev = require('../devices/AbstractDevice');
 //exported on emitted events listened by the ws server
 var deviceList = {};
 var deviceArr = [];
@@ -30,7 +29,7 @@ function updateArray(id, stat) {
     //var spectroCount = 0;
     console.log('update array event on id :' + id);
     for (let key in deviceList) {
-        var deviceType = AbstractDev.getDeviceType();
+        //var deviceType = AbstractDev.getDeviceType();
         console.log('loop key is :' + key);
         deviceArr[count] = deviceList[key];
         deviceArr[count] = deviceList[key];
