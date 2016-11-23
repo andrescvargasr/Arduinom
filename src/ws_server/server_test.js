@@ -1,10 +1,11 @@
+var path = require('path');
 var deviceLister = require('./deviceLister'); //move to other file ?
+var jsonPath = path.join(__dirname,'..','public','test.html');
 var http = require('http'),
     fs = require('fs'),
     // NEVER use a Sync function except at start-up!
-    index = fs.readFileSync(__dirname + '/index.html');
-
-// Send index.html to all requests
+    index = fs.readFileSync(jsonPath,'utf8');
+// Send test.html to all requests
 var app = http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(index);
@@ -27,8 +28,10 @@ io.on('connection', function (socket) {
 app.listen(3000);
 
 
+
 //Listeners
 function setListeners(io) {
+    clearListeners();
     deviceLister.on('update', (array)=> {
         console.log(array);
         io.emit('devices',JSON.stringify(array));
