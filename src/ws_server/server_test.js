@@ -28,12 +28,10 @@ io.on('connection', function (socket) {
 app.listen(3000);
 
 
-
 //Listeners
 function setListeners(io) {
     clearListeners();
-    deviceLister.on('update', (array)=> {
-        console.log(array);
+    deviceLister.on('devices', (array)=> {
         io.emit('devices',JSON.stringify(array));
     });
 }

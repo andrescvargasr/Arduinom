@@ -25,8 +25,6 @@ DeviceFactory.on('newDevice', (device)=> {
 
 function updateArray(id, stat) {
     var count = 0;
-    //var bioCount = 0;
-    //var spectroCount = 0;
     console.log('update array event on id :' + id);
     for (let key in deviceList) {
         //var deviceType = AbstractDev.getDeviceType();
@@ -37,7 +35,7 @@ function updateArray(id, stat) {
         else if (key == id) deviceArr[count].statusColor = 'Tomato';
         count++;
     }
-    emitter.emit('update', deviceArr);
+    emitter.emit('devices', deviceArr);
 }
 
 module.exports = emitter; //-> unused, only one global db is more suited
