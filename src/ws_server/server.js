@@ -13,7 +13,7 @@ server.listen(8080);
 //init webserver
 var wss = new WebSocketServer({server: server});
 wss.on('connection', function (ws) {
-  //setListeners();
+  setListeners();
   var id = setInterval(function () {
     ws.send(JSON.stringify(Math.random()), function () { /* ignore errors */ });
   }, 100);
@@ -26,11 +26,16 @@ wss.on('connection', function (ws) {
 });
 
 
-/*
-function setListeners(){
-  deviceLister.on('update', ()=>{});
+
+function setListeners(ws){
+  deviceLister.on('update', (array)=>{
+    ws.send(array);
+  });
+
+  //other formatted events ?
 } // deviceLister is not exporting anything but the device table !!! not ok to define listeners in this state
 
-function setListeners(){
+/*
+function clearListeners(){
   deviceLister.off('update');
 }*/

@@ -3,7 +3,7 @@
  */
 'use strict';
 const SerialPort = require('serialport');
-const SerialQueueManager = require('./SerialQueueManager'); //constructor for serial port objects
+const SerialQueueManager = require('./../utilities/SerialQueueManager'); //constructor for serial port objects
 const EventEmitter = require('events');
 const debug = require('debug')('main:device handler');
 const haveConnectedIds = [];

@@ -1,10 +1,10 @@
 'use strict';
-var util = require('../util');
+var util = require('../utilities/util');
 const EventEmitter = require('events');
-const Handler = require('./../DeviceManager');
+const Handler = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
-const parser = require('./../parser');
-const pouch = require('./../pouch');
+const parser = require('../utilities/parser');
+const pouch = require('../pouch');
 
 
 class AbstractDevice extends EventEmitter {

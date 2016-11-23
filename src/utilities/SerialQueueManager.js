@@ -1,7 +1,7 @@
 'use strict';
 const EventEmitter = require('events');
 const SerialPort = require('serialport');
-const debug = require('debug')('main:serialqmanager');
+const debug = require('debug')('main:serialQmanager');
 
 class SerialQueueManager extends EventEmitter { //issue with extends EventEmitter
     constructor(port, options, initialize) {

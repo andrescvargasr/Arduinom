@@ -3,14 +3,12 @@
  */
 'use strict';
 const EventEmitter = require('events');
-const DeviceFactory = require("./../DeviceFactory");
+const DeviceFactory = require("./../devices/DeviceFactory");
 const AbstractDev = require('../devices/AbstractDevice');
 //exported on emitted events listened by the ws server
 var deviceList = {};
 var deviceArr = [];
-//var spectroArr = [];
-//var bioArr = [];
-
+var emitter = new EventEmitter();
 
 DeviceFactory.on('newDevice', (device)=> {
     console.log('new devcie connected');
@@ -27,7 +25,6 @@ DeviceFactory.on('newDevice', (device)=> {
 });
 
 function updateArray(id, stat) {
-    var emitter = new EventEmitter();
     var count = 0;
     //var bioCount = 0;
     //var spectroCount = 0;
@@ -40,25 +37,8 @@ function updateArray(id, stat) {
         if (stat === true && key == id) deviceArr[count].statusColor = 'PaleGreen';
         else if (key == id) deviceArr[count].statusColor = 'Tomato';
         count++;
-        /* see if here or on client side
-         switch (deviceType) {
-         case 'bioreactor':
-         bioArr[bioCount] = deviceList[key];
-         bioArr[bioCount] = deviceList[key];
-         bioCount++;
-         break;
-         case 'openspectro':
-         spectroArr[spectroCount] = deviceList[key];
-         spectroArr[spectroCount] = deviceList[key];
-         spectroCount++;
-         break;
-         default:
-         console.log('unknown device connected: ' + deviceType);
-         break;
-         }
-         */
     }
     emitter.emit('update', deviceArr);
 }
 
-module.exports = deviceArr; //-> unused, only one global db is more suited
+module.exports = emitter; //-> unused, only one global db is more suited
