@@ -4,6 +4,7 @@
   "description": "node interface for at32u4",
   "main": "src/",
   "dependencies": {
+    "bson": "^0.5.7",
     "debug": "^2.2.0",
     "deepcopy": "^0.6.3",
     "express": "^4.14.0",

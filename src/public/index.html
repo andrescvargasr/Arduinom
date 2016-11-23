@@ -13,7 +13,7 @@
       function updateStats(data) {
         var result=[];
         for (var key of Object.keys(data)) {
-          result.push(key+' : '+data[key]+'<br>');
+          result.push(key+' : '+JSON.stringify(data[key])+'<br>');
         }
         document.getElementById('content').innerHTML = result.join('\r');
       }
@@ -24,6 +24,7 @@
       if (port) port = ':'+port;
       var ws = new WebSocket('ws'+secure+'//' + host + port);
       ws.onmessage = function (event) {
+        console.log(event.data);
         updateStats(JSON.parse(event.data));
       };
     </script>

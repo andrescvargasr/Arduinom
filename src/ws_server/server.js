@@ -26,10 +26,15 @@ wss.on('connection', function (ws) {
 
 });
 
+//need to add broadcast methods for some of the events ?
+
+
 function setListeners(ws) {
   deviceLister.on('update', (array)=> {
     console.log(array);
-    ws.send(JSON.stringify(array));
+    ws.send(JSON.stringify(array)/*, function ack(err){
+      console.log('error on ws send', err.message)
+    }*/);
   });
 }
 function clearListeners() {
