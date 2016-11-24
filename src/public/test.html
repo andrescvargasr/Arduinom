@@ -1,22 +1,25 @@
 <!doctype html>
 <html>
 <head>
-    <script src='/socket.io/socket.io.js'></script>
+    <script src='/socket-io.js'></script>
     <script>
-        var socket = io();
+        console.log('helol');
+        socket = io.connect('http://localhost:3000');
+        console.log(socket);
 
         socket.on('welcome', function(data) {
             addMessage(data.message);
-
             // Respond with a message including this clients' id sent from the server
             socket.emit('i am client', {data: 'foo!', id: data.id});
         });
         socket.on('devices', function(data) {
             addMessage(data);
         });
+        socket.on('compactSettings',function(data){
+
+        });
         socket.on('error', console.error.bind(console));
         socket.on('message', console.log.bind(console));
-
         function addMessage(message) {
             var text = document.createTextNode(message),
                     el = document.createElement('li'),
@@ -26,8 +29,14 @@
             messages.appendChild(el);
         }
     </script>
+    <script src='/browserified/OpenBio.js'></script>
+    <script>
+        console.log(window.OpenBio);
+        var o = new OpenBio();
+    </script>
 </head>
 <body>
-<ul id='messages'></ul>
+<ul id='messages'/>
+
 </body>
 </html>

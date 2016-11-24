@@ -9,7 +9,7 @@ const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
 const pouch = require('../../pouch');
 
-class OpenBio extends AbstractDevice { //issue with extends EventEmitter
+class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
         this.deviceType = 'bioreactor';
@@ -103,7 +103,7 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
     }
 
 
-    compacLogToDB() {
+    compactLogToDB() {
         var deviceType = AbstractDevice.getDeviceType();
         var that = this;
         return this.getParsedCompactLog().then((data)=> {

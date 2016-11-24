@@ -1,43 +1,44 @@
-/**
- * Created by qcabrol on 11/23/16.
- */
-'use strict';
-var WebSocketServer = require('ws').Server;
-var express = require('express');
-var path = require('path');
-var http = require('http');
-
-var deviceLister = require('./deviceLister'); //move to other file ?
-
+const express = require('express');
 var app = express();
-var server = http.createServer(app);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
-app.use(express.static(path.join(__dirname, '../public')));
-server.listen(8080);
+server.listen(3000);
 
-var wss = new WebSocketServer({server: server});
-wss.on('connection', function (ws) {
-  setListeners(ws);
-  console.log('started ws client');
-  ws.on('close', function () {
-    console.log('stopping ws client');
-    clearListeners ();
-  });
+app.use(express.static('src/public'));
 
-
+io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
 });
 
-//need to add broadcast methods for some of the events ?
+
+var path = require('path');
+var DeviceFactory = require("../devices/DeviceFactory");
+
+// Emit welcome message on connection
+io.on('connection', function (socket) {
+    console.log('connection')
+    // Use socket to communicate with this particular client only, sending it it's own id
+    setListeners(io);
+    socket.emit('welcome', {message: 'Welcome!', id: socket.id});
+    socket.on('i am client', console.log);
+    socket.on('disconnect', function () {
+        console.log('stopping socket.io client');
+        clearListeners();
+    });
+});
 
 
-function setListeners(ws) {
-  deviceLister.on('update', (array)=> {
-    console.log(array);
-    ws.send(JSON.stringify(array)/*, function ack(err){
-      console.log('error on ws send', err.message)
-    }*/);
-  });
+//Listeners
+function setListeners(io) {
+    clearListeners();
+    DeviceFactory.on('deviceList', (deviceList)=> {
+        io.emit('deviceList', JSON.stringify(deviceList));
+    });
 }
 function clearListeners() {
-  deviceLister.removeAllListeners('update');
+    DeviceFactory.removeAllListeners('deviceList'); //why is it displaying an error here ?=
 }

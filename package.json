@@ -27,7 +27,6 @@
     "node-gyp": "^3.4.0"
   },
   "scripts": {
-    "postinstall": "npm run build-serialport && npm run build-leveldown",
     "build-serialport": "node node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/serialport --dist-url=https://atom.io/download/atom-shell",
     "build-leveldown": "node node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/leveldown --dist-url=https://atom.io/download/atom-shell",
     "test": "echo \"Error: no test specified\" && exit 1",
