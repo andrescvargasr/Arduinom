@@ -1,5 +1,5 @@
 var path = require('path');
-var deviceLister = require('./deviceLister'); //move to other file ?
+var Devices = require('../devices/DeviceFactory'); //move to other file ?
 var jsonPath = path.join(__dirname,'..','public','test.html');
 var http = require('http'),
     fs = require('fs'),
@@ -31,10 +31,11 @@ app.listen(3000);
 //Listeners
 function setListeners(io) {
     clearListeners();
-    deviceLister.on('devices', (array)=> {
-        io.emit('devices',JSON.stringify(array));
+    Devices.on('devices', ()=> { //why is it displaying an error here ?=
+        var data=Devices.getDeviceList();
+        io.emit('devices',JSON.stringify(data));
     });
 }
 function clearListeners() {
-    deviceLister.removeAllListeners('update');
+    Devices.removeAllListeners('devices'); //why is it displaying an error here ?=
 }
