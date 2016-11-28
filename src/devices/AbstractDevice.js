@@ -21,6 +21,7 @@ class AbstractDevice extends EventEmitter {
         this._init();
         this.id = id;
         this.pending = false; //flag to check if an experiment is currently running
+        this.statusColor = 'PaleGreen'
     }
 
     static getParamConfig() {

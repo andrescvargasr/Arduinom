@@ -70,8 +70,14 @@ function updateArray(id, stat) {
         //var deviceType = AbstractDev.getDeviceType();
         console.log('loop key is :' + key);
         deviceArr[count] = deviceList[key];
-        if (stat === true && key == id) deviceArr[count].statusColor = 'PaleGreen';
-        else if (key == id) deviceArr[count].statusColor = 'Tomato';
+        if (stat === true && key == id) {
+            deviceList[id].statusColor='PaleGreen';
+            deviceArr[count].statusColor = 'PaleGreen';
+        }
+        else if (key === id) {
+            deviceList[id].statusColor='Tomato';
+            deviceArr[count].statusColor = 'Tomato';
+        }
         count++;
     }
 }

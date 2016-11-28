@@ -50,6 +50,7 @@ DeviceFactory.on('newDevice', device => {
     io.emit('newDevice', {
         id: device.id,
         type: device.type,
+        //color:device.statusColor
     });
 });
 
@@ -57,7 +58,7 @@ DeviceFactory.on('connect', id => {
     io.emit('connect',id);
 });
 
-DeviceFactory.on('disconnect', id => {
+DeviceFactory.on('disonnect', id => {
     io.emit('disconnect',id);
 });
 
