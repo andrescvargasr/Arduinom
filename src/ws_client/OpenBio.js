@@ -1,13 +1,13 @@
 'use strict';
-const EventEmitter = require('events');
+const Common = require('./Common');
 
-module.exports = function(socket) {
-    class OpenBio extends EventEmitter {
+module.exports = function (socket) {
+    class OpenBio extends Common {
         constructor(id) {
-            super();
-            this.id = id;
+            super(id, socket);
         }
     }
+
 
     var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType']
     var methods = ['getParsedCompactLog', 'getLastLog', 'getLastEntryID', 'getI2C', 'getOneWire', 'getMultiLog',
@@ -19,7 +19,12 @@ module.exports = function(socket) {
         if (!(method.startsWith('_') || method === 'constructor')) {
             OpenBio.prototype[method] = function () {
                 console.log('calling method: ', method);
-                socket.emit('request', {id: OpenBio.id, method: method, type: 'method', args: Array.from(arguments)}, function (data) {
+                socket.emit('request', {
+                    id: OpenBio.id,
+                    method: method,
+                    type: 'method',
+                    args: Array.from(arguments)
+                }, function (data) {
                 });
             }
         }
@@ -29,7 +34,12 @@ module.exports = function(socket) {
         if (!(method.startsWith('_') || method === 'constructor')) {
             OpenBio.prototype[method] = function () {
                 console.log('calling static: ', method);
-                socket.emit('request', {id: OpenBio.id, method: method, type: 'static-method', args:Array.from(arguments)}, function (data) {
+                socket.emit('request', {
+                    id: OpenBio.id,
+                    method: method,
+                    type: 'static-method',
+                    args: Array.from(arguments)
+                }, function (data) {
                 });
             }
         }

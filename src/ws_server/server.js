@@ -15,12 +15,12 @@ var DeviceFactory = require("../devices/DeviceFactory");
 // Emit welcome message on connection
 io.on('connection', function (socket) {
     console.log('connection');
+    // at startup of the connection, all the deviceList is sent
     var deviceList = DeviceFactory.getDeviceList();
-    for(var key in deviceList){
-
+    for (var key in deviceList) {
+        socket.emit('newDevice', {id: key, type: deviceList[key].type});
     }
-    //socket.emit('deviceList', JSON.stringify(deviceList));
-    //socket.emit('welcome', {message: 'Welcome!', id: socket.id});
+    //handling server requests
     socket.on('request', function (request, fn) {
         deviceList = DeviceFactory.getDeviceList();
         var device = deviceList[request.id];
@@ -40,17 +40,24 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         console.log('stopping socket.io client');
     });
+
+    socket.on('error', console.error.bind(console)); // see if we emit instead
 });
 
 
-//Listeners
-DeviceFactory.on('devices', (deviceList)=> {
-    io.emit('devices', JSON.stringify(deviceList));
-});
-
+// //Listeners
 DeviceFactory.on('newDevice', device => {
-    return {
+    io.emit('newDevice', {
         id: device.id,
-        type: device.type
-    }
+        type: device.type,
+    });
 });
+
+DeviceFactory.on('connect', id => {
+    io.emit('connect',id);
+});
+
+DeviceFactory.on('disconnect', id => {
+    io.emit('disconnect',id);
+});
+

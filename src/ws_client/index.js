@@ -9,9 +9,6 @@ module.exports = function(socket) {
     }
 
     var arduino = new EventEmitter();
-    socket.on('deviceList', list => {
-
-    });
 
     socket.on('newDevice', device => {
         if(devices[device.id]) {

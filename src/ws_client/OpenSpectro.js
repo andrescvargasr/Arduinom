@@ -1,17 +1,16 @@
 'use strict';
-const EventEmitter = require('events');
+const Common = require('./Common');
 
 module.exports = function(socket) {
-    class OpenSpectro extends EventEmitter {
+    class OpenSpectro extends Common {
         constructor(id) {
-            super();
-            this.id = id;
+            super(id);
         }
     }
     //to be edited according to spectro config ++++ !!!!
     var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType']
-    var methods = ['getParsedCompactLog', 'getLastLog', 'getLastEntryID', 'getI2C', 'getOneWire', 'getMultiLog',
-        'getParsedMutiLog', 'multiLogToDB', 'compactLogToDB', 'setParameter', 'getDB', 'autoDataLogger', 'stopAutoLog',
+    var methods = ['getParsedCompactLog', 'getLastLog', 'getI2C',
+        'compactLogToDB', 'setParameter', 'getDB',
         'autoSetEpoch', 'clearAutoEpoch', 'addRequest', 'getHelp', 'getFreeMem', 'getQualifier', 'getEEPROM',
         'getSettings', 'getCompactLog', 'getEpoch', 'setEpoch', 'setEpochNow'];
 
