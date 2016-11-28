@@ -15,25 +15,27 @@ class DeviceFactory extends EventEmitter {
         DeviceManager.on('disconnect', (id)=> {
             updateArray(id,true);
             this.emit('disconnect', id);
-            this.emit('devicesList',deviceList);
+            this.emit('devices',deviceList);
         });
         DeviceManager.on('connect', (id)=> {
             updateArray(id,false);
             this.emit('connect', id);
-            this.emit('devicesList',deviceList);
+            this.emit('devices',deviceList);
         });
     }
 
     _createDevice(id, constructor) {
         try {
             var device = new constructor(id);
+            //adding the new device to the cached List
+            deviceList[id]=device;
         } catch (e) {
             this.emit('error', e);
             return;
         }
         updateArray(id,true);
         this.emit('newDevice', device);
-        this.emit('devices',deviceList);
+        this.emit('devices', deviceList);
     }
 
     getDeviceList(){
@@ -60,6 +62,7 @@ function createDevice(id) {
     }
 }
 
+//Array is not being used right now
 function updateArray(id, stat) {
     var count = 0;
     console.log('update array event on id :' + id);
@@ -67,11 +70,10 @@ function updateArray(id, stat) {
         //var deviceType = AbstractDev.getDeviceType();
         console.log('loop key is :' + key);
         deviceArr[count] = deviceList[key];
-        deviceArr[count] = deviceList[key];
         if (stat === true && key == id) deviceArr[count].statusColor = 'PaleGreen';
         else if (key == id) deviceArr[count].statusColor = 'Tomato';
         count++;
-    } //array part must be moved to openbio and openspectro classes
+    }
 }
 
-module.exports = new DeviceFactory(); //-> unused, only one global db is more suited
+module.exports = new DeviceFactory();

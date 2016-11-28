@@ -23,11 +23,6 @@ class AbstractDevice extends EventEmitter {
         this.pending = false; //flag to check if an experiment is currently running
     }
 
-    //static methods
-    static getDeviceType() {
-        return this.devicetype;
-    }
-
     static getParamConfig() {
         throw new Error('getParamConfig not implemented');
     }

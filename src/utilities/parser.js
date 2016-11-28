@@ -27,7 +27,7 @@ module.exports = {
         }
 
         //openspectro specific parsing
-        if (options.devicetype === 'openspectro') {
+        if (options.devicetype === 'OpenSpectro') {
             switch (m.command) {
                 case 'r':
                     return opSpectro.parse(result);
@@ -35,7 +35,7 @@ module.exports = {
                     debug('Error while parsing openspectro, undefined command');
                     return false;
             }
-        } else if (options.devicetype === 'bioreactor') {
+        } else if (options.devicetype === 'OpenBio') {
             //bioreactor specific parsing
             switch (m.command) {
                 case 'm':

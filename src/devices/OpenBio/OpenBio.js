@@ -12,8 +12,13 @@ const pouch = require('../../pouch');
 class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
-        this.deviceType = 'bioreactor';
+        this.type =OpenBio.getDeviceType(),
         this.maxParam = OpenBio.getMaxParam();
+    }
+
+    //static methods
+    static getDeviceType() {
+        return 'OpenBio'
     }
 
     static getParamConfig() {
@@ -30,12 +35,12 @@ class OpenBio extends AbstractDevice {
 
     // Device specific utililties
     getParsedCompactLog() {
-        var deviceType = AbstractDevice.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var maxParam = OpenBio.getMaxParam();
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: deviceType, nbParamCompact: maxParam})[0];
+                return parser.parse('c', buff, {devicetype: type, nbParamCompact: maxParam})[0];
             });
     }
 
@@ -69,18 +74,18 @@ class OpenBio extends AbstractDevice {
     }
 
     getParsedMultiLog(entry) {
-        var deviceType = AbstractDevice.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var nbParam = OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: deviceType, nbParam: nbParam, hasEvent: true});
+            return parser.parse(cmd, buff, {devicetype: type, nbParam: nbParam, hasEvent: true});
         });
     }
 
 
     multiLogToDB(entry) {
-        var deviceType = AbstractDevice.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedMultiLog(entry).then((data)=> {
                 var end = data.length;
@@ -90,7 +95,7 @@ class OpenBio extends AbstractDevice {
                 function getNext() {
                     if (i >= end) return;
                     else return pouch.saveToSerialData(data[i], {
-                        devicetype: deviceType,
+                        devicetype: type,
                         cmd: 'm',
                         title: title,
                         deviceId: that.id,
@@ -104,11 +109,11 @@ class OpenBio extends AbstractDevice {
 
 
     compactLogToDB() {
-        var deviceType = AbstractDevice.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedCompactLog().then((data)=> {
             return pouch.saveToSerialData(data, {
-                devicetype: deviceType,
+                devicetype: type,
                 cmd: 'c',
                 title: title,
                 deviceId: that.id,
