@@ -18,7 +18,7 @@ for (var method of methods) {
     if (!(method.startsWith('_') || method === 'constructor')) {
         BioWrapper.prototype[method] = function () {
             console.log('calling method: ', method);
-            socket.emit('request', {id: BioWrapper.id, method: method, type: 'method'}, function (data) {
+            socket.emit('request', {id: BioWrapper.id, method: method, type: 'method', args: Array.from(arguments)}, function (data) {
             });
         }
     }
@@ -28,7 +28,7 @@ for (var method of staticMethods) {
     if (!(method.startsWith('_') || method === 'constructor')) {
         BioWrapper.prototype[method] = function () {
             console.log('calling static: ', method);
-            socket.emit('request', {id: BioWrapper.id, method: method, type: 'static-method'}, function (data) {
+            socket.emit('request', {id: BioWrapper.id, method: method, type: 'static-method', args:Array.from(arguments)}, function (data) {
             });
         }
     }
