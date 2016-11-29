@@ -45,11 +45,10 @@ io.on('connection', function (socket) {
         var device = DeviceFactory.getDevice(request.id);
         //apply is used to call the static method with provided args
         //check if undefined is ok for request.args
- /*
         if (request.type === 'static-method') device.constructor[request.method].apply(null, request.args)
             .then((data) => ({status: 'success', data: data}))
             .then(fn)
-            .catch((err) => fn({status: 'error', error: err.message}));*/
+            .catch((err) => fn({status: 'error', error: err.message}));
 
         if (request.type === 'method') device[request.method].apply(device, request.args)
             .then((data) => {
