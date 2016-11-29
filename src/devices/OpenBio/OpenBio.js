@@ -67,7 +67,8 @@ class OpenBio extends AbstractDevice {
             cmd = 'm' + entry;
         }
         if (!parser.parseCommand(cmd)) {
-            throw new Error('Invalid entry');
+            console.log('command is :'+ JSON.stringify(cmd));
+            return new Error('Invalid entry');
         }
         debug('adding multilog request :' + cmd);
         return this.addRequest(cmd);
