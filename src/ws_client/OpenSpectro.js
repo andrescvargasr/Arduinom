@@ -43,12 +43,19 @@ module.exports = function (socket) {
         for (let method of staticMethods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenSpectro[method] = function () {
-                    console.log('calling static: ', method);
-                    socket.emit('request', {
-                        id: id,
-                        method: method,
-                        type: 'static-method'
-                    }, function (data) {
+                    return new Promise(function (resolve, reject) {
+                        console.log('calling static: ', method);
+                        socket.emit('request', {
+                            id: id,
+                            method: method,
+                            type: 'static-method'
+                        }, function (data) {
+                            if (data.status === 'success') {
+                                resolve(data.data);
+                            } else {
+                                reject(data.error);
+                            }
+                        });
                     });
                 }
             }

@@ -44,13 +44,20 @@ module.exports = function (socket) {
         for (let method of staticMethods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenBio[method] = function () {
-                    console.log('calling static: ', method);
-                    socket.emit('request', {
-                        id: id,
-                        method: method,
-                        type: 'static-method',
-                        args: Array.from(arguments)
-                    }, function (data) {
+                    return new Promise(function (resolve, reject) {
+                        console.log('calling static: ', method);
+                        socket.emit('request', {
+                            id: id,
+                            method: method,
+                            type: 'static-method',
+                            args: Array.from(arguments)
+                        }, function (data) {
+                            if (data.status === 'success') {
+                                resolve(data.data);
+                            } else {
+                                reject(data.error);
+                            }
+                        });
                     });
                 }
             }
