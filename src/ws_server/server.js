@@ -18,7 +18,7 @@ io.on('connection', function (socket) {
     // at startup of the connection, all the deviceList is sent
     var deviceList = DeviceFactory.getDeviceList();
     for (var key in deviceList) {
-        socket.emit('newDevice', {id: key, type: deviceList[key].type});
+        socket.emit('newDevice', {id: key, type: deviceList[key].type, status:deviceList[key].status});
     }
     //handling server requests
     socket.on('request', function (request, fn) {
@@ -50,7 +50,7 @@ DeviceFactory.on('newDevice', device => {
     io.emit('newDevice', {
         id: device.id,
         type: device.type,
-        //color:device.statusColor
+        status:device.status
     });
 });
 

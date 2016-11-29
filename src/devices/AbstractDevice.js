@@ -21,7 +21,7 @@ class AbstractDevice extends EventEmitter {
         this._init();
         this.id = id;
         this.pending = false; //flag to check if an experiment is currently running
-        this.statusColor = 'PaleGreen'
+        this.status = 'connect'
     }
 
     static getParamConfig() {
@@ -33,6 +33,7 @@ class AbstractDevice extends EventEmitter {
     _init() {
         Handler.on('connect', id => {
             if (this.id === id) {
+                this.status='connect';
                 debug('Device connected, enabling methods: ' + this.id);
                 this.emit('connect');
             }
@@ -40,6 +41,7 @@ class AbstractDevice extends EventEmitter {
 
         Handler.on('disconnect', id => {
             if (this.id === id) {
+                this.status='disconnect';
                 debug('Device disconnected, disabling methods: ' + this.id);
                 this.emit('disconnect');
             }

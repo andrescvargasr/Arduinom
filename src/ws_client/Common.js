@@ -7,7 +7,6 @@ class Common extends EventEmitter {
         this.id = id;
         this.socket = socket;
         this._init = this._setListeners();
-        this.statusColor = 'PaleGreen';
     }
 
     _setListeners() {
@@ -20,17 +19,15 @@ class Common extends EventEmitter {
         })
     }
 
-
     _available() {
-        this.statusColor = 'PaleGreen';
-        this.emit('connected');
+        this.status='connect';
+        this.emit('connect');
     }
 
     _unavailable() {
-        this.statusColor = 'Tomato';
-        this.emit('disconnected');
+        this.status='disconnect';
+        this.emit('disconnect');
     }
-
 }
 
 module.exports = Common;

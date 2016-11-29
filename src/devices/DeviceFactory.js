@@ -6,19 +6,16 @@ const DeviceManager = require('./DeviceManager');
 const debug = require('debug')('main:DeviceFactory');
 const EventEmitter = require('events');
 var deviceList = {};
-var deviceArr = [];
 
 class DeviceFactory extends EventEmitter {
     constructor() {
         super();
         DeviceManager.on('new', createDevice.bind(this));
         DeviceManager.on('disconnect', (id)=> {
-            updateArray(id,true);
             this.emit('disconnect', id);
             this.emit('devices',deviceList);
         });
         DeviceManager.on('connect', (id)=> {
-            updateArray(id,false);
             this.emit('connect', id);
             this.emit('devices',deviceList);
         });
@@ -33,7 +30,6 @@ class DeviceFactory extends EventEmitter {
             this.emit('error', e);
             return;
         }
-        updateArray(id,true);
         this.emit('newDevice', device);
         this.emit('devices', deviceList);
     }
@@ -62,24 +58,5 @@ function createDevice(id) {
     }
 }
 
-//Array is not being used right now
-function updateArray(id, stat) {
-    var count = 0;
-    console.log('update array event on id :' + id);
-    for (let key in deviceList) {
-        //var deviceType = AbstractDev.getDeviceType();
-        console.log('loop key is :' + key);
-        deviceArr[count] = deviceList[key];
-        if (stat === true && key == id) {
-            deviceList[id].statusColor='PaleGreen';
-            deviceArr[count].statusColor = 'PaleGreen';
-        }
-        else if (key === id) {
-            deviceList[id].statusColor='Tomato';
-            deviceArr[count].statusColor = 'Tomato';
-        }
-        count++;
-    }
-}
 
 module.exports = new DeviceFactory();
