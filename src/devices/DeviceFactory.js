@@ -37,6 +37,10 @@ class DeviceFactory extends EventEmitter {
     getDeviceList(){
         return deviceList;
     }
+
+    getDevice(id) {
+        return deviceList[id];
+    }
 }
 
 function createDevice(id) {

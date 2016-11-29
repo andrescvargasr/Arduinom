@@ -15,17 +15,35 @@ var DeviceFactory = require("../devices/DeviceFactory");
 // Emit welcome message on connection
 io.on('connection', function (socket) {
     console.log('connection');
-    // at startup of the connection, all the deviceList is sent
-    var deviceList = DeviceFactory.getDeviceList();
-    for (var key in deviceList) {
-        socket.emit('newDevice', {id: key, type: deviceList[key].type, status:deviceList[key].status});
-    }
+    // at startup of the connection, all the deviceList is sent,
+    // the ready event ensures the code init in the visualizer is served before the events
+
+    socket.on('ready', function () {
+        var deviceList = DeviceFactory.getDeviceList();
+        for (let key in deviceList) {
+            socket.emit('newDevice', {id: parseInt(key), type: deviceList[key].type, status: deviceList[key].status});
+        }
+    });
+
+    /*
+    socket.on('refreshList', function () {
+        var deviceList = DeviceFactory.getDeviceList();
+        var devices=[];
+        var count =0;
+        for (let key in deviceList) {
+            devices[count]={id: parseInt(key), type: deviceList[key].type, status: deviceList[key].status};
+            count++;
+        }
+        socket.emit('refreshList', devices);
+    });*/
+
     //handling server requests
     socket.on('request', function (request, fn) {
-        deviceList = DeviceFactory.getDeviceList();
-        var device = deviceList[request.id];
+        console.log('received request from client:' +JSON.stringify(request));
+        var device = DeviceFactory.getDevice(request.id);
         //apply is used to call the static method with provided args
         //check if undefined is ok for request.args
+        console.log('applying method');
         if (request.type === 'static-method') device.constructor[request.method].apply(null, request.args)
             .then((data) => ({status: 'success', data: data}))
             .then(fn)
@@ -42,6 +60,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('error', console.error.bind(console)); // see if we emit instead
+
 });
 
 
@@ -50,15 +69,17 @@ DeviceFactory.on('newDevice', device => {
     io.emit('newDevice', {
         id: device.id,
         type: device.type,
-        status:device.status
+        status: device.status
     });
 });
 
 DeviceFactory.on('connect', id => {
-    io.emit('connect',id);
+    console.log('connect event server:' + id);
+    io.emit('deviceConnected', id);
 });
 
-DeviceFactory.on('disonnect', id => {
-    io.emit('disconnect',id);
+DeviceFactory.on('disconnect', id => {
+    console.log('disconnect event server:' + id);
+    io.emit('deviceDisconnected', id);
 });
 

@@ -10,13 +10,23 @@ class Common extends EventEmitter {
     }
 
     _setListeners() {
-        this.socket.on('connect', id=> {
+        this.socket.on('deviceConnected', id=> {
+            console.log('client connect event', id, this.id);
             if (id === this.id) this._available();
         });
 
-        this.socket.on('disconnect', id=> {
+        this.socket.on('deviceDisconnected', id=> {
+            console.log('client connect event', id, this.id);
             if (id === this.id) this._unavailable();
-        })
+        });
+
+        this.socket.on('disconnect', this._serverLost);
+    }
+
+    //no event on server crash !!!
+    _serverLost(){
+        this.status='serverLost';
+        this.emit('serverLost');
     }
 
     _available() {
@@ -25,6 +35,7 @@ class Common extends EventEmitter {
     }
 
     _unavailable() {
+        console.log('disconnected server');
         this.status='disconnect';
         this.emit('disconnect');
     }

@@ -2,7 +2,7 @@
 
 module.exports = function(socket) {
     const devices = {};
-
+    const EventEmitter = require('events');
 
     const deviceTypes={
         OpenBio:require('./OpenBio')(socket),
@@ -24,4 +24,9 @@ module.exports = function(socket) {
         devices[device.id].status=device.status;
         arduino.emit('newDevice', devices[device.id]);
     })
+
+    arduino.ready=function(){
+        socket.emit('ready');
+    }
+    return arduino;
 };

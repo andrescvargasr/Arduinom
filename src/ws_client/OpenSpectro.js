@@ -5,6 +5,7 @@ module.exports = function(socket) {
     class OpenSpectro extends Common {
         constructor(id) {
             super(id);
+            this.type='OpenSpectro';
         }
     }
     //to be edited according to spectro config ++++ !!!!

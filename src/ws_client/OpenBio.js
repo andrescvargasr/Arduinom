@@ -5,6 +5,7 @@ module.exports = function (socket) {
     class OpenBio extends Common {
         constructor(id) {
             super(id, socket);
+            this.type='OpenBio';
         }
     }
 
