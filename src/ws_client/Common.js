@@ -1,5 +1,5 @@
 "use strict";
-
+const debug = require('debug')('client: common');
 const EventEmitter = require('events');
 class Common extends EventEmitter {
     constructor(id, socket) {
@@ -11,12 +11,12 @@ class Common extends EventEmitter {
 
     _setListeners() {
         this.socket.on('deviceConnected', id=> {
-            console.log('client connect event', id, this.id);
+            debug('client connect event', id, this.id);
             if (id === this.id) this._available();
         });
 
         this.socket.on('deviceDisconnected', id=> {
-            console.log('client connect event', id, this.id);
+            debug('client connect event', id, this.id);
             if (id === this.id) this._unavailable();
         });
 
@@ -35,7 +35,7 @@ class Common extends EventEmitter {
     }
 
     _unavailable() {
-        console.log('disconnected server');
+        debug('disconnected server');
         this.status='disconnect';
         this.emit('disconnect');
     }

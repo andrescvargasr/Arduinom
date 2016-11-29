@@ -1,11 +1,12 @@
 'use strict';
 const Common = require('./Common');
+const debug = require('debug')('client: OpenSpectro');
 
-module.exports = function(socket) {
+module.exports = function (socket) {
     class OpenSpectro extends Common {
         constructor(id) {
             super(id);
-            this.type='OpenSpectro';
+            this.type = 'OpenSpectro';
             _init(id);
         }
     }
@@ -20,8 +21,20 @@ module.exports = function(socket) {
         for (let method of methods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenSpectro.prototype[method] = function () {
-                    console.log('calling method: ', method);
-                    socket.emit('request', {id: id, method: method, type: 'method'}, function (data) {
+                    return new Promise(function (resolve, reject) {
+                        debug('calling method: ', method);
+                        socket.emit('request', {
+                            id: id,
+                            method: method,
+                            type: 'method',
+                            args: Array.from(arguments)
+                        }, function (data) {
+                            if (data.status === 'success') {
+                                resolve(data.data);
+                            } else {
+                                reject(data.error);
+                            }
+                        });
                     });
                 }
             }
@@ -37,5 +50,6 @@ module.exports = function(socket) {
          }
          }*/
     }
+
     return OpenSpectro;
 };

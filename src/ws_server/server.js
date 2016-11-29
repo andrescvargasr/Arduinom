@@ -1,4 +1,5 @@
 'use strict'
+const debug = require('debug')('main:sever socket-io');
 const OpenBio = require('../devices/OpenBio/OpenBio');
 const OpenSpectro = require('../devices/OpenSpectro/OpenSpectro');
 const express = require('express');
@@ -14,7 +15,7 @@ var path = require('path');
 var DeviceFactory = require("../devices/DeviceFactory");
 // Emit welcome message on connection
 io.on('connection', function (socket) {
-    console.log('connection');
+    debug('connection');
     // at startup of the connection, all the deviceList is sent,
     // the ready event ensures the code init in the visualizer is served before the events
 
@@ -39,8 +40,8 @@ io.on('connection', function (socket) {
 
     //handling server requests
     socket.on('request', function (request, fn) {
-        console.log('received request from client:' +JSON.stringify(request));
-        console.log('device id is ' + request.id);
+        debug('received request from client:' +JSON.stringify(request));
+        debug('device id is ' + request.id);
         var device = DeviceFactory.getDevice(request.id);
         //apply is used to call the static method with provided args
         //check if undefined is ok for request.args
@@ -51,13 +52,17 @@ io.on('connection', function (socket) {
             .catch((err) => fn({status: 'error', error: err.message}));*/
 
         if (request.type === 'method') device[request.method].apply(device, request.args)
-            .then((data) => ({status: 'success', data: data}))
+            .then((data) => {
+                debug(data);
+                return ({status: 'success', data: data});
+
+            })
             .then(fn)
             .catch((err) => fn({status: 'error', error: err.message}));
     });
 
     socket.on('disconnect', function () {
-        console.log('stopping socket.io client');
+        debug('stopping socket.io client');
     });
 
     socket.on('error', console.error.bind(console)); // see if we emit instead
@@ -75,12 +80,12 @@ DeviceFactory.on('newDevice', device => {
 });
 
 DeviceFactory.on('connect', id => {
-    console.log('connect event server:' + id);
+    debug('connect event server:' + id);
     io.emit('deviceConnected', id);
 });
 
 DeviceFactory.on('disconnect', id => {
-    console.log('disconnect event server:' + id);
+    debug('disconnect event server:' + id);
     io.emit('deviceDisconnected', id);
 });
 

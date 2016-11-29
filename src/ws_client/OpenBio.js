@@ -1,5 +1,6 @@
 'use strict';
 const Common = require('./Common');
+const debug = require('debug')('client: OpenBio');
 
 module.exports = function (socket) {
     class OpenBio extends Common {
@@ -20,13 +21,20 @@ module.exports = function (socket) {
         for (let method of methods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenBio.prototype[method] = function () {
-                    console.log('calling method: ', method);
-                    socket.emit('request', {
-                        id: id,
-                        method: method,
-                        type: 'method',
-                        args: Array.from(arguments)
-                    }, function (data) {
+                    return new Promise(function(resolve, reject) {
+                        debug('calling method: ', method);
+                        socket.emit('request', {
+                            id: id,
+                            method: method,
+                            type: 'method',
+                            args: Array.from(arguments)
+                        }, function (data) {
+                            if(data.status === 'success') {
+                                resolve(data.data);
+                            } else {
+                                reject(data.error);
+                            }
+                        });
                     });
                 }
             }
