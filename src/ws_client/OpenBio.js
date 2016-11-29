@@ -14,14 +14,14 @@ module.exports = function (socket) {
     function _init(id) {
 
         var methods = ['getParsedCompactLog', 'getLastLog', 'getLastEntryID', 'getI2C', 'getOneWire', 'getMultiLog',
-            'getParsedMutiLog', 'multiLogToDB', 'compactLogToDB', 'setParameter', 'getDB', 'autoDataLogger', 'stopAutoLog',
+            'getParsedMultiLog', 'multiLogToDB', 'compactLogToDB', 'setParameter', 'getDB', 'autoDataLogger', 'stopAutoLog',
             'autoSetEpoch', 'clearAutoEpoch', 'addRequest', 'getHelp', 'getFreeMem', 'getQualifier', 'getEEPROM',
             'getSettings', 'getCompactLog', 'getEpoch', 'setEpoch', 'setEpochNow'];
 
         for (let method of methods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenBio.prototype[method] = function () {
-                    return new Promise(function(resolve, reject) {
+                    return new Promise(function (resolve, reject) {
                         debug('calling method: ', method);
                         socket.emit('request', {
                             id: id,
@@ -29,7 +29,7 @@ module.exports = function (socket) {
                             type: 'method',
                             args: Array.from(arguments)
                         }, function (data) {
-                            if(data.status === 'success') {
+                            if (data.status === 'success') {
                                 resolve(data.data);
                             } else {
                                 reject(data.error);
@@ -39,22 +39,22 @@ module.exports = function (socket) {
                 }
             }
         }
-        /*
-         var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType'];
-         for (let method of staticMethods) {
-         if (!(method.startsWith('_') || method === 'constructor')) {
-         OpenBio.prototype[method] = function () {
-         console.log('calling static: ', method);
-         socket.emit('request', {
-         id: OpenBio.id,
-         method: method,
-         type: 'static-method',
-         args: Array.from(arguments)
-         }, function (data) {
-         });
-         }
-         }
-         }*/
+
+        var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType'];
+        for (let method of staticMethods) {
+            if (!(method.startsWith('_') || method === 'constructor')) {
+                OpenBio[method] = function () {
+                    console.log('calling static: ', method);
+                    socket.emit('request', {
+                        id: id,
+                        method: method,
+                        type: 'static-method',
+                        args: Array.from(arguments)
+                    }, function (data) {
+                    });
+                }
+            }
+        }
     }
 
     return OpenBio;

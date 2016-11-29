@@ -39,16 +39,20 @@ module.exports = function (socket) {
                 }
             }
         }
-        /*var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType']
-         for (let method of staticMethods) {
-         if (!(method.startsWith('_') || method === 'constructor')) {
-         OpenSpectro.prototype[method] = function () {
-         console.log('calling static: ', method);
-         socket.emit('request', {id: OpenSpectro.id, method: method, type: 'static-method'}, function (data) {
-         });
-         }
-         }
-         }*/
+        var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType']
+        for (let method of staticMethods) {
+            if (!(method.startsWith('_') || method === 'constructor')) {
+                OpenSpectro[method] = function () {
+                    console.log('calling static: ', method);
+                    socket.emit('request', {
+                        id: id,
+                        method: method,
+                        type: 'static-method'
+                    }, function (data) {
+                    });
+                }
+            }
+        }
     }
 
     return OpenSpectro;
