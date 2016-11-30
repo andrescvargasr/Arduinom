@@ -26,18 +26,6 @@ io.on('connection', function (socket) {
         }
     });
 
-    /*
-    socket.on('refreshList', function () {
-        var deviceList = DeviceFactory.getDeviceList();
-        var devices=[];
-        var count =0;
-        for (let key in deviceList) {
-            devices[count]={id: parseInt(key), type: deviceList[key].type, status: deviceList[key].status};
-            count++;
-        }
-        socket.emit('refreshList', devices);
-    });*/
-
     //handling server requests
     socket.on('request', function (request, fn) {
         debug('received request from client:' +JSON.stringify(request));

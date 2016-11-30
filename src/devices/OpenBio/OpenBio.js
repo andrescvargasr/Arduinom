@@ -1,7 +1,8 @@
 'use strict';
+/*
 process.on('unhandledRejection', e => {
     throw e;
-});
+});*/
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
 const paramConfig = require('./bioParam');
@@ -92,6 +93,7 @@ class OpenBio extends AbstractDevice {
                 var end = data.length;
                 debug('memEntry being written to dB: ' + data);
                 var i = 0;
+            console.log('memEntry being written to dB: ' + data);
                 return getNext();
                 function getNext() {
                     if (i >= end) return;
@@ -147,14 +149,14 @@ class OpenBio extends AbstractDevice {
 
 //autoDBLogging every 30sec
     autoDataLogger() {
-        if (this.dbLoggerActive) return;
+        if (this.dbLoggerActive) return this.dbLoggerActive;
         this.dbLoggerActive = true;
         var that = this;
         clearTimeout(this.dbLoggerInterval);
         this.dbLoggerInterval = setTimeout(()=> {
             that.getLastEntryID().then((lastId)=> {
-                debug('periodic polling on device :' + that.id);
-                debug('returned: ' + lastId);
+                console.log('periodic polling on device :' + that.id);
+                console.log('returned: ' + lastId);
                 that.logUntil(lastId);
             }).then(reSchedule, reSchedule);
         }, 20000);
@@ -164,6 +166,7 @@ class OpenBio extends AbstractDevice {
     }
 
     logUntil(end) {
+        console.log('call logUntil');
         var that = this;
         var i = 0;
         return getNext();
@@ -194,9 +197,10 @@ class OpenBio extends AbstractDevice {
     }
 
 
-//autoEpoch every 2 minutes
+    //autoEpoch every 2 minutes (make the interval time a argument of the function)
     autoSetEpoch() {
         var that = this;
+        that.setEpochNow();
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(()=> {
                 return that.setEpochNow();

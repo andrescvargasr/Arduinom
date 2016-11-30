@@ -21,13 +21,14 @@ module.exports = function (socket) {
         for (let method of methods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenSpectro.prototype[method] = function () {
+                    var args=Array.from(arguments);
                     return new Promise(function (resolve, reject) {
                         debug('calling method: ', method);
                         socket.emit('request', {
                             id: id,
                             method: method,
                             type: 'method',
-                            args: Array.from(arguments)
+                            args
                         }, function (data) {
                             if (data.status === 'success') {
                                 resolve(data.data);
@@ -43,12 +44,14 @@ module.exports = function (socket) {
         for (let method of staticMethods) {
             if (!(method.startsWith('_') || method === 'constructor')) {
                 OpenSpectro[method] = function () {
+                    var args=Array.from(arguments);
                     return new Promise(function (resolve, reject) {
                         console.log('calling static: ', method);
                         socket.emit('request', {
                             id: id,
                             method: method,
-                            type: 'static-method'
+                            type: 'static-method',
+                            args
                         }, function (data) {
                             if (data.status === 'success') {
                                 resolve(data.data);
