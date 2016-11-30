@@ -1,8 +1,7 @@
 'use strict';
-/*
 process.on('unhandledRejection', e => {
     throw e;
-});*/
+});
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
 const paramConfig = require('./bioParam');
@@ -13,8 +12,8 @@ const pouch = require('../../pouch');
 class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
-        this.type =OpenBio.getDeviceType(),
-        this.maxParam = OpenBio.getMaxParam();
+        this.type = OpenBio.getDeviceType(),
+            this.maxParam = OpenBio.getMaxParam();
     }
 
     //static methods
@@ -68,7 +67,7 @@ class OpenBio extends AbstractDevice {
             cmd = 'm' + entry;
         }
         if (!parser.parseCommand(cmd)) {
-            console.log('command is :'+ JSON.stringify(cmd));
+            console.log('command is :' + JSON.stringify(cmd));
             return new Error('Invalid entry');
         }
         debug('adding multilog request :' + cmd);
@@ -90,24 +89,24 @@ class OpenBio extends AbstractDevice {
         var type = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedMultiLog(entry).then((data)=> {
-                var end = data.length;
-                debug('memEntry being written to dB: ' + data);
-                var i = 0;
-            console.log('memEntry being written to dB: ' + data);
-                return getNext();
-                function getNext() {
-                    if (i >= end) return;
-                    else return pouch.saveToSerialData(data[i], {
+            var end = data.length;
+            debug('memEntry being written to dB: ' + data);
+            var i = 0;
+            return getNext();
+            function getNext() {
+                if (i >= end) return;
+                else {
+                    return pouch.saveToSerialData(data[i], {
                         devicetype: type,
                         cmd: 'm',
-                        title: title,
                         deviceId: that.id,
                         memEntry: data[i].id,
                     }).then(()=> {
                         i++;
-                    }).then(getNext); //get Last in Db  is to be implemented
+                    }).then(getNext);
                 }
-            });
+            }
+        });
     }
 
 
@@ -118,7 +117,6 @@ class OpenBio extends AbstractDevice {
             return pouch.saveToSerialData(data, {
                 devicetype: type,
                 cmd: 'c',
-                title: title,
                 deviceId: that.id,
             });
         });
@@ -149,51 +147,59 @@ class OpenBio extends AbstractDevice {
 
 //autoDBLogging every 30sec
     autoDataLogger() {
-        if (this.dbLoggerActive) return this.dbLoggerActive;
-        this.dbLoggerActive = true;
+        if (this.dbLoggerTimeout) return true;
         var that = this;
-        clearTimeout(this.dbLoggerInterval);
-        this.dbLoggerInterval = setTimeout(()=> {
+        this.dbLoggerTimeout = setTimeout(()=> {
+            if(this.loggerIsRunning) return;
+            this.loggerIsRunning=true;
             that.getLastEntryID().then((lastId)=> {
-                console.log('periodic polling on device :' + that.id);
-                console.log('returned: ' + lastId);
-                that.logUntil(lastId);
-            }).then(reSchedule, reSchedule);
+                debug('periodic polling on device :' + that.id);
+                debug('returned: ' + lastId);
+                return that.logUntil(lastId);
+            }).then(reSchedule, reScheduleError);
         }, 20000);
         function reSchedule() {
-            if (that.dbLoggerActive) that.autoDataLogger();
+            that.loggerIsRunning=false;
+            console.log('autodataLog reschedule');
+            if(that.dbLoggerTimeout) {
+                that.stopAutoLog();
+                that.autoDataLogger();
+            }
+        }
+
+        function reScheduleError(err) {
+            console.error('error rescheduling autoDataLogger' + err);
+            reSchedule();
         }
     }
 
     logUntil(end) {
-        console.log('call logUntil');
         var that = this;
         var i = 0;
         return getNext();
         function getNext() {
-            if (i >= end){
-                that.dbLoggerActive=false;
-                return
-            }
-            else return pouch.getLastInDB(Number(that.id)).then((result)=> {
-                if (result.total_rows === 0) {
-                    debug('database was empty, starting with m0 command');
-                    return that.multiLogToDB(0);
-                }
-                else {
-                    debug('last mementry in DB is: ' + result.rows[0].value.id);
-                    i = Number(result.rows[0].value.id);
-                    debug('continue to log data from entry:' + i);
-                    return that.multiLogToDB(i+1);
-                }
-            }).then(getNext); //get Last in Db  is to be implemented
+            if (i >= end) {
+                that.dbLoggerActive = false;
+            } else {
+                return pouch.getLastInDB(Number(that.id)).then((result)=> {
+                    if (result.total_rows === 0) {
+                        debug('database was empty, starting with m0 command');
+                        return that.multiLogToDB(0);
+                    }
+                    else {
+                        debug('last mementry in DB is: ' + result.rows[0].value.id);
+                        i = Number(result.rows[0].value.id);
+                        debug('continue to log data from entry:' + i);
+                        return that.multiLogToDB(i + 1);
+                    }
+                }).then(getNext);
+            } //get Last in Db  is to be implemented
         }
     }
 
     stopAutoLog() {
-        this.dbLoggerActive = false;
-        clearTimeout(this.dbLoggerInterval);
-        this.dbLoggerInterval = undefined;
+        clearTimeout(this.dbLoggerTimeout);
+        this.dbLoggerTimeout = undefined;
     }
 
 

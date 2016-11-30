@@ -29,12 +29,11 @@ function saveToDB(db, data, options) {
                 },
                 data: data
             }
-        }).then(function (result) { //define the response callback
-        debug('Entry written in PouchDB: \n' + result.id);
-        return result;
-    }).catch(function (err) {
-        debug('Error on pouchDB write:' + err);
-    });
+        })
+        .then(function (result) { //define the response callback
+            debug('Entry written in PouchDB: \n' + result.id);
+            return result;
+        });
 }
 
 
@@ -62,7 +61,8 @@ DB.get(ddocBioreactors._id).then((doc)=> {
     if (err.reason === 'missing') {
         DB.put(ddocBioreactors).then(()=> {
             getDeviceDB('bioreactors/by_mem').then(console.log);
-        }).catch(function (err) {d
+        }).catch(function (err) {
+            d
             console.log(err);
         });
     }
