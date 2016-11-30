@@ -15,7 +15,7 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
         this.buffer = '';
         this.lastRequest = Promise.resolve('');      // The Last received request
         this.currentRequest = Promise.resolve(''); // The current request being executed
-        this.serialResponseTimeout = (initialize.serialResponseTimeout || 200);//config.serialResponseTimeout || 125;
+        this.serialResponseTimeout = (initialize.serialResponseTimeout || 300);//config.serialResponseTimeout || 125;
         //this.ready = false; // True if ready to accept new requests into the queue
         this.statusCode = 0;
         this._updateStatus(0);
@@ -184,8 +184,12 @@ class SerialQueueManager extends EventEmitter { //issue with extends EventEmitte
                         }, timeout);
                     } else {
                         if (!that.buffer.endsWith(that.endString)) {
-                            debug('buffer not endinf properly, answer is invalid :' + JSON.stringify(that.buffer));
-                            return reject(new Error('buffer not ending properly, answer is invalid: ' + JSON.stringify(that.buffer)));
+                            var errorValue= JSON.stringify(that.buffer);
+                            debug('buffer not ending properly, answer is invalid :' + errorValue );
+                            that.queueLength=0; //queue is considered empty
+                            that.buffer = '';
+                            return reject(new Error('buffer not ending properly, answer is invalid: ' + errorValue));
+
                         }
                         that._resolve(that.buffer);
                         that.buffer = ''; //empty the buffer

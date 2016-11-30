@@ -62,7 +62,6 @@ DB.get(ddocBioreactors._id).then((doc)=> {
         DB.put(ddocBioreactors).then(()=> {
             getDeviceDB('bioreactors/by_mem').then(console.log);
         }).catch(function (err) {
-            d
             console.log(err);
         });
     }

@@ -67,7 +67,7 @@ class OpenBio extends AbstractDevice {
             cmd = 'm' + entry;
         }
         if (!parser.parseCommand(cmd)) {
-            console.log('command is :' + JSON.stringify(cmd));
+            debug('command is :' + JSON.stringify(cmd));
             return new Error('Invalid entry');
         }
         debug('adding multilog request :' + cmd);
@@ -160,7 +160,7 @@ class OpenBio extends AbstractDevice {
         }, 20000);
         function reSchedule() {
             that.loggerIsRunning=false;
-            console.log('autodataLog reschedule');
+            debug('autodataLog reschedule');
             if(that.dbLoggerTimeout) {
                 that.stopAutoLog();
                 that.autoDataLogger();
@@ -180,6 +180,7 @@ class OpenBio extends AbstractDevice {
         function getNext() {
             if (i >= end) {
                 that.dbLoggerActive = false;
+                console.log('lastId in memory reached');
             } else {
                 return pouch.getLastInDB(Number(that.id)).then((result)=> {
                     if (result.total_rows === 0) {
@@ -187,7 +188,7 @@ class OpenBio extends AbstractDevice {
                         return that.multiLogToDB(0);
                     }
                     else {
-                        debug('last mementry in DB is: ' + result.rows[0].value.id);
+                        debug('last memEntry in DB is: ' + result.rows[0].value.id);
                         i = Number(result.rows[0].value.id);
                         debug('continue to log data from entry:' + i);
                         return that.multiLogToDB(i + 1);
