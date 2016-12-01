@@ -9,7 +9,6 @@ function _setMethods(methods, constructor, socket) {
                 var that = this;
                 var args = Array.from(arguments);
                 return new Promise(function (resolve, reject) {
-                    debug('calling method: ', method);
                     socket.emit('request', {
                         id: that.id,
                         method: method,
@@ -33,12 +32,11 @@ function _setStaticMethods(staticMethods, constructor, socket) {
         if (!(method.startsWith('_') || method === 'constructor')) {
             constructor[method] = function () {
                 //here this corresponds to the scope of the class constructor that is called (eg OpenBio)
-                var that = this;
                 var args = Array.from(arguments);
                 return new Promise(function (resolve, reject) {
                     console.log('calling static: ', method);
                     socket.emit('request', {
-                        id: that.id,
+                        constructorName: constructor.name,
                         method: method,
                         type: 'static-method',
                         args
@@ -56,5 +54,5 @@ function _setStaticMethods(staticMethods, constructor, socket) {
 
 }
 
-exports.staticMethods = _setStaticMethods();
-exports.methods = _setMethods();
+exports.staticMethods = _setStaticMethods;
+exports.methods = _setMethods;

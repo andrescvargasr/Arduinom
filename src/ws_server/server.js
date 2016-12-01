@@ -28,26 +28,45 @@ io.on('connection', function (socket) {
 
     //handling server requests
     socket.on('request', function (request, fn) {
-        debug('received request from client:' +JSON.stringify(request));
-        debug('device id is ' + request.id);
 
-        var device = DeviceFactory.getDevice(request.id);
-        if(device === undefined) return fn( {status: 'error', error: 'no device present corresponding to the request'});
-        //apply is used to call the static method with provided args
-        //check if undefined is ok for request.args
-        if (request.type === 'static-method') Promise.resolve(device.constructor[request.method].apply(null, request.args))
-            .then((data) => ({status: 'success', data: data}))
-            .then(fn)
-            .catch((err) => fn({status: 'error', error: err.message}));
+        if (request.type === 'static-method') {
+            debug('received static request from client:' + JSON.stringify(request));
+            debug('device constructor is ' + request.constructorName);
+            var constructor=require('../devices/'+request.constructorName+'/'+request.constructorName);
+            var method=request.method;
+            if (constructor[method] === undefined)return fn({
+                status: 'error',
+                error: 'no device present corresponding to the request'
+            });
+            else Promise.resolve(constructor[method].apply(null, request.args))
+                .then((data) => ({status: 'success', data: data}))
+                .then(fn)
+                .catch((err) => fn({status: 'error', error: err.message}));
 
-        if (request.type === 'method') Promise.resolve(device[request.method].apply(device, request.args))
-            .then((data) => {
-                debug(data);
-                return ({status: 'success', data: data});
+        }
 
-            })
-            .then(fn)
-            .catch((err) => fn({status: 'error', error: err.message}));
+        else if (request.type === 'method') {
+            var device = DeviceFactory.getDevice(request.id);
+            debug('received request from client:' + JSON.stringify(request));
+            debug('device id is ' + request.id);
+            debug('device is:' + JSON.stringify(device));
+            if (device === undefined) return fn({
+                status: 'error',
+                error: 'no device present corresponding to the request'
+            });
+            //apply is used to call the static method with provided args
+            //check if undefined is ok for request.args
+            else Promise.resolve(device[request.method].apply(device, request.args))
+                .then((data) => {
+                    debug(data);
+                    return ({status: 'success', data: data});
+
+                })
+                .then(fn)
+                .catch((err) => fn({status: 'error', error: err.message}));
+        }
+
+
     });
 
     socket.on('disconnect', function () {
