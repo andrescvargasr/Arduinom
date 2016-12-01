@@ -9,22 +9,22 @@ class Common extends EventEmitter {
         this._init = this._setListeners();
     }
 
-    setStatus(event){
-        switch (event){
+    setStatus(event) {
+        switch (event) {
             case 'connect':
-                this.status='connect';
+                this.status = 'connect';
                 this.emit('connect');
                 break;
             case 'disconnect':
-                this.status='disconnect';
+                this.status = 'disconnect';
                 this.emit('disconnect');
                 break;
             case 'serverLost':
-                this.status='serverLost';
+                this.status = 'serverLost';
                 this.emit('serverLost');
                 break;
             case 'serverReconnected':
-                this.status='disconnect';
+                this.status = 'disconnect';
                 this.emit('serverReconnected');
                 break;
         }
@@ -50,8 +50,8 @@ class Common extends EventEmitter {
             debug('server is back');
             this.setStatus('serverReconnected');
         });
-
     }
+
 }
 
 module.exports = Common;
