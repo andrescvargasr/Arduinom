@@ -9,35 +9,48 @@ class Common extends EventEmitter {
         this._init = this._setListeners();
     }
 
+    setStatus(event){
+        switch (event){
+            case 'connect':
+                this.status='connect';
+                this.emit('connect');
+                break;
+            case 'disconnect':
+                this.status='disconnect';
+                this.emit('disconnect');
+                break;
+            case 'serverLost':
+                this.status='serverLost';
+                this.emit('serverLost');
+                break;
+            case 'serverReconnected':
+                this.status='disconnect';
+                this.emit('serverReconnected');
+                break;
+        }
+    }
+
     _setListeners() {
         this.socket.on('deviceConnected', id=> {
-            debug('client connect event', id, this.id);
-            if (id === this.id) this._available();
+            console.log('client connect event', id, this.id);
+            if (id === this.id) this.setStatus('connect');
         });
 
         this.socket.on('deviceDisconnected', id=> {
             debug('client connect event', id, this.id);
-            if (id === this.id) this._unavailable();
+            if (id === this.id) this.setStatus('disconnect');
         });
 
-        this.socket.on('disconnect', this._serverLost);
-    }
+        this.socket.on('connect_error', ()=> {
+            debug('server was lost');
+            this.setStatus('serverLost');
+        });
 
-    //no event on server crash !!!
-    _serverLost(){
-        this.status='serverLost';
-        this.emit('serverLost');
-    }
+        this.socket.on('reconnect', ()=> {
+            debug('server is back');
+            this.setStatus('serverReconnected');
+        });
 
-    _available() {
-        this.status='connect';
-        this.emit('connect');
-    }
-
-    _unavailable() {
-        debug('disconnected server');
-        this.status='disconnect';
-        this.emit('disconnect');
     }
 }
 

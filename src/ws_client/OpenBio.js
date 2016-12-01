@@ -33,7 +33,7 @@ module.exports = function (socket) {
                             if (data.status === 'success') {
                                 resolve(data.data);
                             } else {
-                                reject(data.error);
+                                reject(new Error (data.error));
                             }
                         });
                     });
@@ -57,7 +57,7 @@ module.exports = function (socket) {
                             if (data.status === 'success') {
                                 resolve(data.data);
                             } else {
-                                reject(data.error);
+                                reject(new Error (data.error));
                             }
                         });
                     });

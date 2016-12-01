@@ -30,7 +30,9 @@ io.on('connection', function (socket) {
     socket.on('request', function (request, fn) {
         debug('received request from client:' +JSON.stringify(request));
         debug('device id is ' + request.id);
+
         var device = DeviceFactory.getDevice(request.id);
+        if(device === undefined) return fn( {status: 'error', error: 'no device present corresponding to the request'});
         //apply is used to call the static method with provided args
         //check if undefined is ok for request.args
         if (request.type === 'static-method') Promise.resolve(device.constructor[request.method].apply(null, request.args))
