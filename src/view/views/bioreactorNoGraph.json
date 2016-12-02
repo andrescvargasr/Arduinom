@@ -1,4 +1,5 @@
 {
+  "version": "2.73.0",
   "grid": {
     "layers": {
       "Default layer": {
@@ -11,7 +12,6 @@
     "xWidth": 10,
     "yHeight": 10
   },
-  "version": "2.71.7",
   "modules": [
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -31,10 +31,12 @@
                 ]
               ],
               "asyncAwait": [
-                []
+                [
+                  "top"
+                ]
               ],
               "script": [
-                "const DeviceFactory = require.node(\"./../DeviceFactory\");\nconst OpenBio = require.node(\"../devices/OpenBio/OpenBio\");\n\nvar deviceArr=[];\nvar deviceList={};\n\nDeviceFactory.on('newDevice',(device)=> {\n    console.log('new devcie connected');\n    deviceList[device.id]=device;\n    DeviceFactory.on('connect',(id)=>{\n        updateArray(id,true);\n        console.log('device connected with id :' + id);});\n    DeviceFactory.on('disconnect',(id)=>{\n        updateArray(id,false);\n        console.log('device disconnected with id :' + id);});\n    updateArray(device.id,true);\n});\n\nfunction updateArray(id,stat){\n    var count=0;\n    console.log('update array event on id :' + id);\n    for(let key in deviceList){\n    var deviceType= OpenBio.getDeviceType(); \n    if(deviceType==='bioreactor'){\n        console.log('loop key is :' + key);\n        deviceArr[count]=deviceList[key];\n        if(stat===true && key==id) deviceArr[count].statusColor='PaleGreen';\n        else if(key==id) deviceArr[count].statusColor='Tomato';\n            count ++;\n            }\n    }\n    API.createData('deviceArray',deviceArr);\n    API.cache('deviceList',deviceList);\n}\n"
+                "var io= await API.require('socket');\nvar arduino = await API.require('http://localhost:3000/browserified/index.js');\nvar socket = io.connect('http://localhost:3000');\nAPI.cache('arduino', arduino(socket));\nvar server=true;\n\nvar arduino = API.cache('arduino');\nvar arduinoList=arduino.getDevices();\nAPI.cache('arduinoList', arduinoList);\n\n//listeners\narduino.on('newDevice', device => {\n    if(device.type==='OpenBio') {\n        var bioArray=getBioArray();\n        var bio = device;\n        bioArray.push(bio);\n        bio.on('connect', refreshArray);\n        bio.on('disconnect', refreshArray);\n        bio.on('serverLost',()=>{\n            if(server)refreshArray();\n            server=false;\n        });\n        bio.on('serverReconnected',()=>{\n            refreshArray();\n            server=true;\n        });\n        refreshArray();\n    }\n});\n\narduino.ready();\n\nfunction refreshArray(){\n    var count = 0;\n    var arduinoList=getArduinoList();\n    var bioArray=getBioArray();\n    for(let key in arduinoList){\n        if(arduinoList[key].type === 'OpenBio')\n        {\n            var stat=arduinoList[key].status;\n            \n            bioArray[count]={id: key,\n                type: arduinoList[key].type,\n            }\n            \n            if(stat === 'connect'){\n                bioArray[count].status='connected';\n                bioArray[count].statusColor='PaleGreen';\n            }else if(stat === 'disconnect'){\n                bioArray[count].status='disconnected';\n                bioArray[count].statusColor='Tomato';\n            }else if(stat === 'serverLost'){\n                bioArray[count].status='serverLost';\n                bioArray[count].statusColor='Yellow';\n            }else {\n                bioArray[count].status='unknown';\n                bioArray[count].statusColor='Grey';\n            }\n            count ++;\n        }\n    }\n    API.createData('bioArray', bioArray);\n}\n\nfunction getBioArray() {\n    var bioArray=API.getData('bioArray');\n    if (!bioArray) {\n        bioArray=[];\n        API.createData('bioArray', bioArray);\n    }\n    return bioArray;\n}\n\nfunction getArduinoList() {\n    var arduinoList=API.cache('arduinoList');\n    if (!arduinoList) {\n        arduinoList={};\n        API.cache('arduinoList', arduinoList);\n    }\n    return arduinoList;\n}\n"
               ]
             }
           ],
@@ -58,15 +60,15 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 35
+            "top": 66.9999984741211
           },
           "size": {
-            "width": 61,
-            "height": 34
+            "width": 42.0181818,
+            "height": 36.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "Devices List Updater",
+          "title": "Init Script",
           "bgColor": [
             255,
             255,
@@ -80,15 +82,15 @@
         "GUI": {
           "position": {
             "left": 0,
-            "top": 35
+            "top": 66.9999984741211
           },
           "size": {
-            "width": 61,
-            "height": 34
+            "width": 42.0181818,
+            "height": 36.0181818
           },
           "zIndex": 0,
           "display": false,
-          "title": "Devices List Updater",
+          "title": "Init Script",
           "bgColor": [
             255,
             255,
@@ -105,9 +107,12 @@
         {}
       ],
       "actions_in": [
-        {}
+        {
+          "rel": "execute",
+          "name": "ready"
+        }
       ],
-      "title": "Devices List Updater",
+      "title": "Init Script",
       "actions_out": [
         {
           "jpath": []
@@ -148,8 +153,7 @@
             ""
           ]
         }
-      ],
-      "zindex": 3
+      ]
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -206,7 +210,7 @@
           "cols": [
             [
               {
-                "name": "device ID",
+                "name": "ID",
                 "jpath": [
                   "id"
                 ],
@@ -219,9 +223,9 @@
                 "hideColumn": []
               },
               {
-                "name": "device Type",
+                "name": "Type",
                 "jpath": [
-                  "deviceType"
+                  "type"
                 ],
                 "editor": "none",
                 "forceType": "",
@@ -232,9 +236,9 @@
                 "hideColumn": []
               },
               {
-                "name": "Param Table size",
+                "name": "Status",
                 "jpath": [
-                  "maxParam"
+                  "status"
                 ],
                 "editor": "none",
                 "forceType": "",
@@ -296,16 +300,16 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 0,
+            "left": 43,
             "top": 0
           },
           "size": {
-            "width": 37,
-            "height": 34
+            "width": 20.0181818,
+            "height": 36.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "Devices",
+          "title": "Device List",
           "bgColor": [
             255,
             255,
@@ -318,16 +322,16 @@
         },
         "GUI": {
           "position": {
-            "left": 0,
-            "top": 0
+            "left": 0.9971590995788574,
+            "top": 0.9971588134765625
           },
           "size": {
-            "width": 37,
-            "height": 34
+            "width": 20.0181818,
+            "height": 36.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "Devices",
+          "title": "Device List",
           "bgColor": [
             255,
             255,
@@ -343,7 +347,7 @@
       "vars_in": [
         {
           "rel": "list",
-          "name": "deviceArray"
+          "name": "bioArray"
         }
       ],
       "actions_in": [
@@ -354,7 +358,7 @@
           "jpath": []
         }
       ],
-      "title": "Devices",
+      "title": "Device List",
       "vars_out": [
         {
           "event": "onSelect",
@@ -362,7 +366,7 @@
           "jpath": [
             "id"
           ],
-          "name": "devicekey"
+          "name": "selected"
         }
       ],
       "toolbar": {
@@ -395,8 +399,7 @@
             ""
           ]
         }
-      ],
-      "zindex": 3
+      ]
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -421,9 +424,7 @@
                 []
               ],
               "colorjpath": [
-                [
-                  "statusCode"
-                ]
+                []
               ],
               "slick.defaultColumnWidth": [
                 null
@@ -493,9 +494,9 @@
                 "hideColumn": []
               },
               {
-                "name": "unit",
+                "name": "factor",
                 "jpath": [
-                  "unit"
+                  "factor"
                 ],
                 "editor": "none",
                 "forceType": "",
@@ -506,9 +507,9 @@
                 "hideColumn": []
               },
               {
-                "name": "factor",
+                "name": "unit",
                 "jpath": [
-                  "factor"
+                  "unit"
                 ],
                 "editor": "none",
                 "forceType": "",
@@ -609,12 +610,12 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 62,
+            "left": 64,
             "top": 0
           },
           "size": {
-            "width": 100,
-            "height": 69
+            "width": 71.01818180000001,
+            "height": 52.0181818
           },
           "zIndex": 0,
           "display": true,
@@ -631,12 +632,12 @@
         },
         "GUI": {
           "position": {
-            "left": 62,
-            "top": 0
+            "left": 43.999997806549075,
+            "top": 0.9999996185302734
           },
           "size": {
-            "width": 96,
-            "height": 78
+            "width": 71.01818180000001,
+            "height": 52.0181818
           },
           "zIndex": 0,
           "display": true,
@@ -707,105 +708,75 @@
             ""
           ]
         }
-      ],
-      "zindex": 1
+      ]
     },
     {
-      "url": "modules/types/client_interaction/code_executor/",
+      "url": "modules/types/client_interaction/code_editor/",
       "configuration": {
         "sections": {},
         "groups": {
           "group": [
             {
-              "display": [
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
                 [
-                  "buttons",
-                  "editor"
+                  "editable"
                 ]
               ],
-              "execOnLoad": [
+              "hasButton": [
                 []
               ],
-              "asyncAwait": [
+              "variable": [
                 []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
               ],
               "script": [
-                "var OpenBio=require.node('./../devices/OpenBio/OpenBio');\nvar OpenSpectro=require.node('./../devices/OpenSpectro/OpenSpectro');\n\nvar deviceArray= API.getData('deviceArray');\nvar deviceList= API.cache('deviceList');\nvar devicekey=get('devicekey');\nvar device\n\nif(devicekey){\n    device=deviceList[String(devicekey)];\n    \n    switch(this.button){\n        case 'reload':\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n        case 'setTime':\n            setTimeNow().catch(errorHandler);\n            break;\n        case 'entryID':\n            lastEntry().catch(errorHandler);\n            break;\n        case 'last':\n            lastLog().catch(errorHandler);\n            break;\n        case 'lasts':\n            lastLogs().catch(errorHandler);\n            break;\n        case 'autoEpoch':\n            autoEpoch();\n            break;\n        case 'parsedLogs':\n            parsedLogs().catch(errorHandler);\n            break;\n        case 'autoLog':\n            autoLog();\n            break;\n        case 'dataDB':\n            dataInDB().catch(errorHandler);\n            break;\n        default:\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=>{API.createData('helpMenu',value)});\n            break;\n            \n        \n    }\n        \n}\nelse ui.showNotification('no device selected', 'error');\n\n//Utilities\nfunction autoLog(){\n    if(device.dbLoggerInterval==null){\n        device.autoDataLogger();\n        ui.showNotification('automated db Log for device :' + devicekey, 'success');\n    }else{\n        device.stopAutoLog();\n        ui.showNotification('stopped auto db Log for device:' + devicekey, 'success');\n    } \n}\n\n\nfunction autoEpoch(){\n    if(device.autoEpochInterval==null){\n        device.autoSetEpoch();\n        ui.showNotification('automated epoch set for device :' + devicekey, 'success');\n    }else{\n        device.clearAutoEpoch();\n        ui.showNotification('removed automated epoch for device :' + devicekey, 'success');\n    } \n}\n\nfunction dataInDB(){\n    return device.getDB()\n        .then((entries)=>{\n            ui.showNotification('got Last Logs in DB \\n' +entries, 'success');\n            API.createData(\"lastCmdExec\",entries);\n            API.createData(\"objectToInterpret\",entries);\n            return entries;\n        });\n}\n\nfunction parsedLogs(){\n    return device.getLastEntryID().then((val)=> {\n        return device.getParsedMultiLog(val-10).then((buff)=>{\n                    ui.showNotification('got Last Logs \\n' +buff , 'success');\n         API.createData(\"lastCmdExec\",buff);\n        })\n\n    })\n}\n\n\n\nfunction lastLogs(){\n    return device.getLastEntryID().then((val)=> {\n        return device.getMultiLog(val-10).then((buff)=>{\n                    ui.showNotification('got Last Logs \\n' +buff , 'success');\n         API.createData(\"lastCmdExec\",buff);\n        })\n\n    })\n}\n\nfunction lastLog(){\n    return device.getLastLog().then((val)=> {\n        ui.showNotification('got Last Log: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction lastEntry(){\n    return device.getLastEntryID().then((val)=> {\n        ui.showNotification('got Last EntryID: ' + val, 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction setTimeNow(){\n    return device.setEpochNow().then((val)=> {\n        ui.showNotification('Time was set to Unix epoch', 'success');\n         API.createData(\"lastCmdExec\",val);\n    })\n}\n\nfunction reload(){\n    var deviceInfo=device.paramInfo;\n    return device.getParsedCompactLog().then((value)=> {\n        for(let key in deviceInfo){\n            if(value.parameters[deviceInfo[key].parameter]){\n                deviceInfo[key].val=value.parameters[deviceInfo[key].parameter];\n            }\n        \n        }\n     API.createData(\"deviceInfo\",deviceInfo);\n    })\n    \n}\n\nfunction errorHandler(err){\n    API.createData(\"lastCmdExec\",'error executing last command : \\n'+err.message);\n    console.error(err);\n    ui.showNotification(err.message, 'error');\n}\n\n\n\n\n"
+                "(c)ompact settings\r\n(d)elete flash\r\n(e)poch\r\n(f)ree\r\n(h)elp\r\n(i)2c\r\n(l)og\r\n(m)ultiple log\r\n(o)ne-wire\r\n(p)aram\r\n(q)ualifier\r\n(r)eset\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
               ]
             }
           ],
-          "libs": [
-            [
-              {
-                "lib": "src/util/ui",
-                "alias": "ui"
-              }
-            ]
-          ],
-          "buttons": [
-            [
-              {
-                "name": "reload",
-                "label": "Reload Parameters",
-                "hide": []
-              },
-              {
-                "name": "setTime",
-                "label": "Set Time To Unix Epoch",
-                "hide": []
-              },
-              {
-                "name": "entryID",
-                "label": "Last EntryID",
-                "hide": []
-              },
-              {
-                "name": "last",
-                "label": "Last Log",
-                "hide": []
-              },
-              {
-                "name": "lasts",
-                "label": "Last Logs",
-                "hide": []
-              },
-              {
-                "name": "dataDB",
-                "label": "Get Device DB",
-                "hide": []
-              },
-              {
-                "name": "autoEpoch",
-                "label": "Auto Epoch",
-                "hide": []
-              },
-              {
-                "name": "autoLog",
-                "label": "Auto Log",
-                "hide": []
-              },
-              {
-                "name": "parsedLogs",
-                "label": "Parsed Logs",
-                "hide": []
-              }
-            ]
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
           ]
         }
       },
       "layers": {
         "Default layer": {
           "position": {
-            "left": 0,
-            "top": 97
+            "left": 43,
+            "top": 37
           },
           "size": {
-            "width": 81,
-            "height": 39
+            "width": 20.0181818,
+            "height": 29.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "Device Selector",
+          "title": "HelpMenu",
           "bgColor": [
             255,
             255,
@@ -818,16 +789,16 @@
         },
         "GUI": {
           "position": {
-            "left": 0,
-            "top": 35
+            "left": 21.99857873916626,
+            "top": 0.9957386016845703
           },
           "size": {
-            "width": 60,
-            "height": 10
+            "width": 21.0181818,
+            "height": 29.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "HelpMenu",
           "bgColor": [
             255,
             255,
@@ -842,23 +813,20 @@
       "id": 4,
       "vars_in": [
         {
-          "rel": "inputValue",
-          "name": "devicekey"
+          "rel": "data",
+          "name": "helpMenu"
         }
       ],
       "actions_in": [
-        {
-          "rel": "execute",
-          "name": "getParams"
-        }
+        {}
       ],
-      "title": "",
-      "actions_out": [
+      "vars_out": [
         {
           "jpath": []
         }
       ],
-      "vars_out": [
+      "title": "HelpMenu",
+      "actions_out": [
         {
           "jpath": []
         }
@@ -893,8 +861,7 @@
             ""
           ]
         }
-      ],
-      "zindex": 3
+      ]
     },
     {
       "url": "modules/types/client_interaction/code_editor/",
@@ -918,9 +885,7 @@
                 ]
               ],
               "hasButton": [
-                [
-                  "button"
-                ]
+                []
               ],
               "variable": [
                 []
@@ -934,7 +899,7 @@
                 0
               ],
               "script": [
-                "var devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\nrequire( ['src/util/ui'], (ui)=>{if(this.event=='cellChanged'){\n    console.log(this);\n    if(DataBoolean.cast(this.row.item.writable)){\n        var cmd=String(this.row.item.parameter);\n        cmd=cmd+String(this.row.item.val);\n        deviceList[devicekey].addRequest(cmd)\n        .then(()=>{ui.showNotification('parameter value edited', 'success');})\n        .catch((err)=>{\n            this.row.item.val=this.previous;\n            ui.showNotification(err.message, 'error');\n            rerender();\n        });   \n    }\n    else console.log('this parameter cannot be edited');\n    API.doAction('getParams');\n}});\n\n"
+                "var id=API.getData('selected');\nvar deviceList=API.cache('arduinoList');\nrequire( ['src/util/ui'], (ui)=>{\n    if(this.event=='cellChanged'){\n        if(DataBoolean.cast(this.row.item.writable)){\n            var cmd=String(this.row.item.parameter);\n            cmd=cmd+String(this.row.item.val);\n            deviceList[id].addRequest(cmd)\n                .then(()=>{ui.showNotification('parameter value edited', 'success');})\n                .catch((err)=>{\n                    console.log(err);\n                    this.row.item.val=this.previous;\n                    ui.showNotification(err.message, 'error');\n                    rerender();\n                });\n        }\n        else {\n            console.log('this parameter cannot be edited');\n            ui.showNotification('this parameter cannot be edited', 'error');\n        }\n        API.doAction('getParams');\n    }\n});"
               ]
             }
           ],
@@ -956,11 +921,11 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 70
+            "top": 36.99999847412109
           },
           "size": {
-            "width": 61,
-            "height": 26
+            "width": 42.0181818,
+            "height": 29.0181818
           },
           "zIndex": 0,
           "display": true,
@@ -977,12 +942,12 @@
         },
         "GUI": {
           "position": {
-            "left": 0,
-            "top": 103
+            "left": 0.9971590995788574,
+            "top": 36.99715728759766
           },
           "size": {
-            "width": 61,
-            "height": 26
+            "width": 41.0181818,
+            "height": 29.0181818
           },
           "zIndex": 0,
           "display": false,
@@ -1049,619 +1014,7 @@
             ""
           ]
         }
-      ],
-      "zindex": 3
-    },
-    {
-      "url": "modules/types/client_interaction/code_editor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "mode": [
-                "text"
-              ],
-              "outputType": [
-                null
-              ],
-              "btnvalue": [
-                "Send script"
-              ],
-              "iseditable": [
-                [
-                  "editable"
-                ]
-              ],
-              "hasButton": [
-                []
-              ],
-              "variable": [
-                []
-              ],
-              "storeOnChange": [
-                [
-                  "store"
-                ]
-              ],
-              "debouncing": [
-                0
-              ],
-              "script": [
-                "(c)ompact settings\r\n(d)elete flash\r\n(e)poch\r\n(f)ree\r\n(h)elp\r\n(i)2c\r\n(l)og\r\n(m)ultiple log\r\n(o)ne-wire\r\n(p)aram\r\n(q)ualifier\r\n(r)eset\r\n(s)ettings\r\n(z) eeprom\r\n\r\n"
-              ]
-            }
-          ],
-          "ace": [
-            {
-              "useSoftTabs": [
-                [
-                  "yes"
-                ]
-              ],
-              "tabSize": [
-                4
-              ]
-            }
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 38,
-            "top": 0
-          },
-          "size": {
-            "width": 23,
-            "height": 34
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Help Menu",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "GUI": {
-          "position": {
-            "left": 38,
-            "top": 0
-          },
-          "size": {
-            "width": 23,
-            "height": 23
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Help Menu",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        }
-      },
-      "id": 6,
-      "vars_in": [
-        {
-          "rel": "data",
-          "name": "helpMenu"
-        }
-      ],
-      "actions_in": [
-        {}
-      ],
-      "vars_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "title": "Help Menu",
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "zindex": 3
-    },
-    {
-      "url": "modules/types/client_interaction/code_editor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "mode": [
-                "text"
-              ],
-              "outputType": [
-                null
-              ],
-              "btnvalue": [
-                "Execute Command"
-              ],
-              "iseditable": [
-                [
-                  "editable"
-                ]
-              ],
-              "hasButton": [
-                [
-                  "button"
-                ]
-              ],
-              "variable": [
-                []
-              ],
-              "storeOnChange": [
-                [
-                  "store"
-                ]
-              ],
-              "debouncing": [
-                0
-              ],
-              "script": [
-                "m0"
-              ]
-            }
-          ],
-          "ace": [
-            {
-              "useSoftTabs": [
-                [
-                  "yes"
-                ]
-              ],
-              "tabSize": [
-                4
-              ]
-            }
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 62,
-            "top": 70
-          },
-          "size": {
-            "width": 37,
-            "height": 8
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Command to Execute",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "GUI": {
-          "position": {
-            "left": 38,
-            "top": 24
-          },
-          "size": {
-            "width": 23,
-            "height": 10
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Command to Execute",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "GUI"
-        }
-      },
-      "id": 7,
-      "vars_in": [
-        {}
-      ],
-      "actions_in": [
-        {}
-      ],
-      "vars_out": [
-        {
-          "event": "onButtonClick",
-          "rel": "data",
-          "jpath": [],
-          "name": "sentCommand"
-        }
-      ],
-      "title": "Command to Execute",
-      "actions_out": [
-        {
-          "event": "_onVarUpdated",
-          "rel": "_varName",
-          "jpath": [],
-          "name": "ExecCommand"
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "zindex": 3
-    },
-    {
-      "url": "modules/types/client_interaction/code_executor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "display": [
-                [
-                  "editor"
-                ]
-              ],
-              "execOnLoad": [
-                []
-              ],
-              "asyncAwait": [
-                []
-              ],
-              "script": [
-                "var device=require.node('./../devices/AbstractDevice');\nvar cmd = API.getData('sentCommand');\nvar devicekey=API.getData('devicekey');\nvar deviceList=API.cache('deviceList');\n\nrequire( ['src/util/ui'], (ui)=>{\n    if(devicekey===null){\n        ui.showNotification('no device selected', 'error');\n        return;\n    } \n    console.log('value of the command is ' + cmd)\n    console.log('executing input command');\n    deviceList[devicekey].addRequest(cmd).\n    then((val)=>{\n        var message = 'Command executed correctly';\n        ui.showNotification(message, 'success');\n        API.createData('lastCmdExec',val);\n        \n    }).\n    catch((err)=>{\n            ui.showNotification(err.message, 'error');\n        });   \n    API.doAction('getParams');\n});"
-              ]
-            }
-          ],
-          "libs": [
-            [
-              {}
-            ]
-          ],
-          "buttons": [
-            [
-              {
-                "name": "button1",
-                "label": "Execute",
-                "hide": []
-              }
-            ]
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 101,
-            "top": 70
-          },
-          "size": {
-            "width": 57,
-            "height": 17
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Command Executor",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "GUI": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "GUI"
-        }
-      },
-      "id": 8,
-      "vars_in": [
-        {
-          "rel": "inputValue",
-          "name": "sentCommand"
-        }
-      ],
-      "actions_in": [
-        {
-          "rel": "execute",
-          "name": "ExecCommand"
-        }
-      ],
-      "title": "Command Executor",
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "vars_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "zindex": 3
-    },
-    {
-      "url": "modules/types/client_interaction/code_editor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "mode": [
-                "text"
-              ],
-              "outputType": [
-                null
-              ],
-              "btnvalue": [
-                "Send script"
-              ],
-              "iseditable": [
-                [
-                  "editable"
-                ]
-              ],
-              "hasButton": [
-                []
-              ],
-              "variable": [
-                []
-              ],
-              "storeOnChange": [
-                [
-                  "store"
-                ]
-              ],
-              "debouncing": [
-                0
-              ],
-              "script": [
-                "error executing last command : \nCould not parse device id in processStatusLineM"
-              ]
-            }
-          ],
-          "ace": [
-            {
-              "useSoftTabs": [
-                [
-                  "yes"
-                ]
-              ],
-              "tabSize": [
-                4
-              ]
-            }
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 62,
-            "top": 79
-          },
-          "size": {
-            "width": 37,
-            "height": 17
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Last Exec Result",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "GUI": {
-          "position": {
-            "left": 0,
-            "top": 46
-          },
-          "size": {
-            "width": 61,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "Last Exec Result",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "GUI"
-        }
-      },
-      "id": 9,
-      "vars_in": [
-        {
-          "rel": "data",
-          "name": "lastCmdExec"
-        }
-      ],
-      "actions_in": [
-        {
-          "rel": "_editPreferences"
-        }
-      ],
-      "vars_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "title": "Last Exec Result",
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "zindex": 3
+      ]
     },
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -1680,23 +1033,68 @@
                 []
               ],
               "asyncAwait": [
-                []
+                [
+                  "top"
+                ]
               ],
               "script": [
-                ""
+                "var deviceList = API.cache('arduinoList');\nvar id = API.getData('selected');\nif (id) {\n    var device = deviceList[id];\n    if(device.status==='serverLost'){\n        API.createData('selected', undefined);\n        ui.showNotification('serverLost, no command can be served before reconnection', 'error');\n        return;\n    }\n    if(device.status==='disconnected'){\n        API.createData('selected', undefined);\n        ui.showNotification('device is not connected, select a connected device');\n        return;\n    }\n    \n    switch (this.button) {\n        case 'reload':\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=> {\n                API.createData('helpMenu', value)\n            }).catch(erroHandler);\n            break;\n        case 'setTime':\n            setTimeNow().catch(errorHandler);\n            break;\n        case 'entryID':\n            lastEntry().catch(errorHandler);\n            break;\n        case 'last':\n            lastLog().catch(errorHandler);\n            break;\n        case 'lasts':\n            lastLogs().catch(errorHandler);\n            break;\n        case 'parsedLogs':\n            parsedLogs().catch(errorHandler);\n            break;\n        case 'autoEpoch':\n            autoEpoch().catch(errorHandler);\n            break;\n        case 'dataDB':\n            dataInDB().catch(errorHandler);\n            break;\n        case'autoLog':\n            autoLog().catch(errorHandler);\n            break;\n        default:\n            reload().catch(errorHandler);\n            device.getHelp().then((value)=> {\n                API.createData('helpMenu', value)\n            });\n            break;\n    }\n}\nelse ui.showNotification('no device selected', 'error');\n\nfunction autoEpoch() {\n    return device.autoSetEpoch().then(()=> {\n            return ui.showNotification('autoSetting Epoch periodically on:' + id, 'success');\n    });\n}\n\nfunction autoLog() {\n    return device.autoDataLogger().then((active)=> {\n        if (active) {\n            device.stopAutoLog();\n            return ui.showNotification('stopped auto db Log for device:' + id, 'success');\n        } else {\n            return device.autoDataLogger().then(active => {\n                if (active) return ui.showNotification('automated db Log for device :' + id, 'success');\n                else return ui.showNotification('error autoDBLog did not set properly :' + id, 'error');\n            })\n        }\n    })\n}\n\nfunction dataInDB(){\n    return device.getDB()\n        .then((entries)=>{\n            ui.showNotification('got Last Logs in DB \\n' +JSON.stringify(entries), 'success');\n            API.createData(\"lastCmdExec\",JSON.stringify(entries));\n            API.createData(\"objectToInterpret\",entries);\n            return entries;\n        });\n}\n\nfunction parsedLogs() {\n    return device.getLastEntryID().then((val)=> {\n        return device.getParsedMultiLog(val - 10).then((buff)=> {\n            ui.showNotification('got Last Logs \\n' + buff, 'success');\n            API.createData(\"lastCmdExec\", JSON.stringify(buff));\n        })\n\n    })\n}\n\nfunction lastLogs() {\n    return device.getLastEntryID().then((val)=> {\n        return device.getMultiLog(val - 10).then((buff)=> {\n            ui.showNotification('got Last Logs \\n' + buff, 'success');\n            API.createData(\"lastCmdExec\", buff);\n        })\n\n    })\n}\n\nfunction lastLog() {\n    return device.getLastLog().then((val)=> {\n        ui.showNotification('got Last Log: ' + val, 'success');\n        API.createData(\"lastCmdExec\", val);\n    })\n}\n\nfunction lastEntry() {\n    return device.getLastEntryID().then((val)=> {\n        ui.showNotification('got Last EntryID: ' + val, 'success');\n        API.createData(\"lastCmdExec\", val);\n    })\n}\n\nfunction setTimeNow() {\n    return device.setEpochNow().then((val)=> {\n        ui.showNotification('Time was set to Unix epoch', 'success');\n        API.createData(\"lastCmdExec\", val);\n    })\n}\n\nfunction reload() {\n    return device.constructor.getParamConfig().then((info)=>{\n        device.getParsedCompactLog().then((value)=>{\n         for (let key in info) {\n            if (value.parameters[info[key].parameter]) {\n                info[key].val = value.parameters[info[key].parameter];\n            }\n        }\n        API.createData(\"deviceInfo\", info);\n        })\n        \n    }); \n}\n\nfunction errorHandler(err) {\n    API.createData(\"lastCmdExec\", 'error executing last command : \\n' + err.message);\n    console.error(err);\n    ui.showNotification(err.message, 'error');\n}\n\n\n\n"
               ]
             }
           ],
           "libs": [
             [
-              {}
+              {
+                "lib": "src/util/ui",
+                "alias": "ui"
+              }
             ]
           ],
           "buttons": [
             [
               {
-                "name": "button1",
-                "label": "Start DB completion",
+                "name": "setTime",
+                "label": "setTime",
+                "hide": []
+              },
+              {
+                "name": "entryID",
+                "label": "LastID",
+                "hide": []
+              },
+              {
+                "name": "reload",
+                "label": "Reload Config",
+                "hide": []
+              },
+              {
+                "name": "last",
+                "label": "Last Log",
+                "hide": []
+              },
+              {
+                "name": "lasts",
+                "label": "Last Logs",
+                "hide": []
+              },
+              {
+                "name": "parsedLogs",
+                "label": "Parsed",
+                "hide": []
+              },
+              {
+                "name": "autoEpoch",
+                "label": "AutoEpoch",
+                "hide": []
+              },
+              {
+                "name": "dataDB",
+                "label": "DataInDB",
+                "hide": []
+              },
+              {
+                "name": "autoLog",
+                "label": "AutoLog",
                 "hide": []
               }
             ]
@@ -1710,12 +1108,12 @@
             "top": 0
           },
           "size": {
-            "width": 20,
-            "height": 20
+            "width": 42.0181818,
+            "height": 36.0181818
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Device Command Center",
           "bgColor": [
             255,
             255,
@@ -1728,16 +1126,16 @@
         },
         "GUI": {
           "position": {
-            "left": 0,
-            "top": 67
+            "left": 21.99857873916626,
+            "top": 30.99999885559082
           },
           "size": {
-            "width": 43,
-            "height": 21
+            "width": 21.0181818,
+            "height": 14.018181799999999
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Device Command Center",
           "bgColor": [
             255,
             255,
@@ -1746,17 +1144,23 @@
           ],
           "wrapper": true,
           "created": true,
-          "name": "GUI"
+          "name": "Default layer"
         }
       },
-      "id": 10,
+      "id": 6,
       "vars_in": [
-        {}
+        {
+          "rel": "inputValue",
+          "name": "selected"
+        }
       ],
       "actions_in": [
-        {}
+        {
+          "rel": "execute",
+          "name": "getParams"
+        }
       ],
-      "title": "",
+      "title": "Device Command Center",
       "actions_out": [
         {
           "jpath": []
@@ -1797,45 +1201,290 @@
             ""
           ]
         }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                []
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "error executing last command : \nno device present corresponding to the request"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 63.999997806549075,
+            "top": 52.99999771118164
+          },
+          "size": {
+            "width": 71.01818180000001,
+            "height": 13.018181799999999
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Last Command REsult",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "GUI": {
+          "position": {
+            "left": 63.999997806549075,
+            "top": 52.99999771118164
+          },
+          "size": {
+            "width": 71.01818180000001,
+            "height": 13.018181799999999
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Last Command REsult",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": "lastCmdExec"
+        }
       ],
-      "zindex": 2
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "title": "Last Command REsult",
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
     }
   ],
   "variables": [
     {
-      "varname": "slickScript",
       "jpath": [
-        "slickScript"
-      ]
-    },
-    {
-      "varname": "deviceArray",
-      "jpath": [
-        "deviceArray"
-      ]
-    },
-    {
-      "varname": "deviceInfo",
-      "jpath": [
-        "deviceInfo"
-      ]
-    },
-    {
-      "varname": "helpMenu",
-      "jpath": [
-        "helpMenu"
-      ]
-    },
-    {
-      "varname": "sentCommand",
-      "jpath": [
-        "sentCommand"
+        ""
       ]
     }
   ],
-  "pouchvariables": [],
+  "aliases": [
+    {
+      "path": "http://localhost:3000/socket-io",
+      "alias": "socket"
+    }
+  ],
+  "pouchvariables": [
+    {}
+  ],
   "configuration": {
     "title": "No title"
   },
-  "aliases": []
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "couch_replication": [
+    {
+      "sections": {},
+      "groups": {
+        "couch": [
+          [
+            {
+              "direction": "both",
+              "continuous": []
+            }
+          ]
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              ""
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ]
 }
