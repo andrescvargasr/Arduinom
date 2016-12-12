@@ -1,6 +1,6 @@
 'use strict';
 
-const DeviceManager = require('serial-requests').DeviceManager;
+const DeviceManager = require('serial-requests');
 const deviceManager = new DeviceManager({
     optionCreator: function(portInfo) {
         if(portInfo.manufacturer === 'Arduino_LLC') {
