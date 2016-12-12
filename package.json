@@ -20,7 +20,6 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
-    "electron-prebuilt": "1.2.1",
     "eslint": "^3.9.1",
     "eslint-config-cheminfo": "^1.5.2",
     "eslint-plugin-no-only-tests": "^1.1.0",
@@ -28,12 +27,9 @@
   },
   "scripts": {
     "prepublish":"npm run browserify",
-    "postinstall": "npm run build-serialport && npm run build-leveldown",
-    "build-serialport": "node node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/serialport --dist-url=https://atom.io/download/atom-shell",
-    "build-leveldown": "node node_modules/node-gyp/bin/node-gyp.js rebuild --target=1.2.1 --arch=x64 --directory=./node_modules/leveldown --dist-url=https://atom.io/download/atom-shell",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "browserify": "browserify src/ws_client/index.js -o src/public/browserified/index.js --standalone=arduino",
-    "start": "electron ./src/view",
+    "browserify": "browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduino",
+    "start": "node src/server/server.js",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix"
   },
