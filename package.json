@@ -9,7 +9,7 @@
     "open-spectro": "0.0.7",
     "pouchdb": "^6.0.5",
     "pouchdb-find": "^0.10.3",
-    "serialport": "^4.0.0"
+    "serial-requests": "^0.0.1"
   },
   "devDependencies": {
     "electron-prebuilt": "1.2.1",
