@@ -2,20 +2,24 @@
 process.on('unhandledRejection', e => {
     throw e;
 });
-const AbstractDevice = require('./../AbstractDevice');
+const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:openspectro');
 const paramConfig = require('./spectroParam');
-const parser = require('./../../parser');
+const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
-const pouch = require('./../../pouch');
+const pouch = require('../../pouch');
 
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.deviceType = 'openspectro';
+        this.type= OpenSpectro.getDeviceType();
         this.maxParam = 26;
-        this.paramConfig = deepcopy(paramConfig);
+    }
+
+    //static methods
+    static getDeviceType() {
+        return 'OpenSpectro'
     }
 
     static getParamConfig() {
@@ -25,9 +29,10 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     // Device specific utilities
     getParsedCompactLog() {
         var that = this;
+        var type=OpenSpectro.getDeviceType();
         return this.getCompactLog()
             .then((buff)=> {
-                return parser.parse('c', buff, {devicetype: this.deviceType, nbParamCompact: that.maxParam})[0];
+                return parser.parse('c', buff, {devicetype: type, nbParamCompact: that.maxParam})[0];
             });
     }
 
@@ -67,10 +72,11 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
                 return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
             })
             .then((buff)=> {
+                var type=OpenSpectro.getDeviceType();
                 this.pending = false;
                 debug('openspectro experiment results received');
                 return pouchDB.parseAndSaveToSerialData(buff, 'r', {
-                    devicetype: 'openspectro',
+                    devicetype: type,
                     deviceID: this.id,
                     title: title,
                     description: description
@@ -83,15 +89,17 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     runAndParseExperiment() {
         return this.runExperiment()
             .then((experiment)=> {
-                return parser.parse('r', experiment, {decicetype: 'openspectro'});
+                var type=OpenSpectro.getDeviceType();
+                return parser.parse('r', experiment, {devicetype: type});
             });
     }
 
     runAndLogExperiment(title, description) {
         var that = this;
         return this.runAndParseExperiment().then((data)=>{
+            var type=OpenSpectro.getDeviceType();
             return this.logInPouch(data, {
-                devicetype: 'openspectro',
+                devicetype: type,
                 cmd: 'r',
                 title: title,
                 description: description,
@@ -105,12 +113,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return pouch.getDeviceDB(pouch.mapSpectros,this.id);
      }
 
-
-    /* TO BE IMPLEMENTED
-     renameExperiment(oldName, newName) {
-     return pouchDB.getEntriesSerialData({devicetype: 'openspectro', deviceID: this.id});
-     }
-     */
 }
 
 module.exports = OpenSpectro;

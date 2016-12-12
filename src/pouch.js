@@ -15,7 +15,7 @@ function saveToDB(db, data, options) {
     return db.post(
         {
             $id: (options.id || Date.now()),
-            $kind: (options.devicetype || 'openspectro'),
+            $kind: (options.devicetype || 'OpenSpectro'),
             $modificationDate: Date.now(),
             $content: {
                 general: {
@@ -29,12 +29,11 @@ function saveToDB(db, data, options) {
                 },
                 data: data
             }
-        }).then(function (result) { //define the response callback
-        debug('Entry written in PouchDB: \n' + result.id);
-        return result;
-    }).catch(function (err) {
-        debug('Error on pouchDB write:' + err);
-    });
+        })
+        .then(function (result) { //define the response callback
+            debug('Entry written in PouchDB: \n' + result.id);
+            return result;
+        });
 }
 
 
@@ -43,17 +42,9 @@ function saveToDB(db, data, options) {
 var ddocBioreactors = {
     _id: '_design/bioreactors',
     views: {
-        // by_id: {
-        //     map: function (doc) {
-        //         if (doc.$kind === 'bioreactor') {
-        //             //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-        //             emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
-        //         }
-        //     }.toString()
-        // },
         by_mem: {
             map: function (doc) {
-                if (doc.$kind === 'bioreactor') {
+                if (doc.$kind === 'OpenBio') {
                     //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
                     emit([doc.$content.misc.qualifier, doc.$content.misc.memEntry], doc.$content.data);
                 }
@@ -65,13 +56,11 @@ var ddocBioreactors = {
 DB.get(ddocBioreactors._id).then((doc)=> {
     ddocBioreactors._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
     debug('ddocBioreactors already exists with rev:' + doc._rev);
-    //getDeviceDB('bioreactors/by_id').then(console.log);
     getDeviceDB('bioreactors/by_mem').then((data)=>console.log(JSON.stringify(data)));
 }, (err)=> {
     if (err.reason === 'missing') {
         DB.put(ddocBioreactors).then(()=> {
             getDeviceDB('bioreactors/by_mem').then(console.log);
-            //getDeviceDB('bioreactors/by_id').then(console.log);
         }).catch(function (err) {
             console.log(err);
         });
@@ -83,7 +72,7 @@ var ddocSpectros = {
     views: {
         by_id: {
             map: function (doc) {
-                if (doc.$kind === 'openspectro') {
+                if (doc.$kind === 'OpenSpectro') {
                     //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
                     emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
                 }
@@ -91,7 +80,6 @@ var ddocSpectros = {
         }
     }
 };
-// save it
 // save it
 DB.get(ddocSpectros._id).then((doc)=> {
     ddocSpectros._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number

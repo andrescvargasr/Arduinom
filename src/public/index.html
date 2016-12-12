@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <script src='/socket-io.js'></script>
+    <script>
+        socket = io.connect('http://localhost:3000');
+        socket.on('devices', function(data) {
+            addMessage(data);
+        });
+
+        socket.on('message', console.log.bind(console));
+        function addMessage(message) {
+            var text = document.createTextNode(message),
+                    el = document.createElement('li'),
+                    messages = document.getElementById('messages');
+
+            el.appendChild(text);
+            messages.appendChild(el);
+        }
+    </script>
+</head>
+<body>
+<ul id='messages'/>
+</body>
+</html>

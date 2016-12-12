@@ -2,27 +2,27 @@
 process.on('unhandledRejection', e => {
     throw e;
 });
-const AbstractDevice = require('./../AbstractDevice');
+const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
 const paramConfig = require('./bioParam');
-const parser = require('./../../parser');
+const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
-const pouch = require('./../../pouch');
+const pouch = require('../../pouch');
 
-class OpenBio extends AbstractDevice { //issue with extends EventEmitter
+class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
-        this.deviceType = OpenBio.getDeviceType();
-        this.maxParam = OpenBio.getMaxParam();
-        this.paramInfo = OpenBio.getParamConfig();
+        this.type = OpenBio.getDeviceType(),
+            this.maxParam = OpenBio.getMaxParam();
+    }
+
+    //static methods
+    static getDeviceType() {
+        return 'OpenBio'
     }
 
     static getParamConfig() {
         return deepcopy(paramConfig);
-    }
-
-    static getDeviceType() {
-        return 'bioreactor';
     }
 
     static getMaxParam() {
@@ -35,12 +35,12 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
     // Device specific utililties
     getParsedCompactLog() {
-        var deviceType = OpenBio.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var maxParam = OpenBio.getMaxParam();
         return this.getCompactLog()
             .then((buff)=> {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: deviceType, nbParamCompact: maxParam})[0];
+                return parser.parse('c', buff, {devicetype: type, nbParamCompact: maxParam})[0];
             });
     }
 
@@ -67,55 +67,56 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
             cmd = 'm' + entry;
         }
         if (!parser.parseCommand(cmd)) {
-            throw new Error('Invalid entry');
+            debug('command is :' + JSON.stringify(cmd));
+            return new Error('Invalid entry');
         }
         debug('adding multilog request :' + cmd);
         return this.addRequest(cmd);
     }
 
     getParsedMultiLog(entry) {
-        var deviceType = OpenBio.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var nbParam = OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff)=> {
             var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: deviceType, nbParam: nbParam, hasEvent: true});
+            return parser.parse(cmd, buff, {devicetype: type, nbParam: nbParam, hasEvent: true});
         });
     }
 
 
     multiLogToDB(entry) {
-        var deviceType = OpenBio.getDeviceType();
+        var type = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedMultiLog(entry).then((data)=> {
-                var end = data.length;
-                debug('memEntry being written to dB: ' + data);
-                var i = 0;
-                return getNext();
-                function getNext() {
-                    if (i >= end) return;
-                    else return pouch.saveToSerialData(data[i], {
-                        devicetype: deviceType,
+            var end = data.length;
+            debug('memEntry being written to dB: ' + data);
+            var i = 0;
+            return getNext();
+            function getNext() {
+                if (i >= end) return;
+                else {
+                    return pouch.saveToSerialData(data[i], {
+                        devicetype: type,
                         cmd: 'm',
-                        title: title,
                         deviceId: that.id,
                         memEntry: data[i].id,
                     }).then(()=> {
                         i++;
-                    }).then(getNext); //get Last in Db  is to be implemented
+                    }).then(getNext);
                 }
-            });
+            }
+        });
     }
 
 
-    compacLogToDB() {
-        var deviceType = OpenBio.getDeviceType();
+    compactLogToDB() {
+        var type = OpenBio.getDeviceType();
         var that = this;
         return this.getParsedCompactLog().then((data)=> {
             return pouch.saveToSerialData(data, {
-                devicetype: deviceType,
+                devicetype: type,
                 cmd: 'c',
-                title: title,
                 deviceId: that.id,
             });
         });
@@ -146,19 +147,29 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
 
 //autoDBLogging every 30sec
     autoDataLogger() {
-        if (this.dbLoggerActive) return;
-        this.dbLoggerActive = true;
+        if (this.dbLoggerTimeout) return true;
         var that = this;
-        clearTimeout(this.dbLoggerInterval);
-        this.dbLoggerInterval = setTimeout(()=> {
+        this.dbLoggerTimeout = setTimeout(()=> {
+            if(this.loggerIsRunning) return;
+            this.loggerIsRunning=true;
             that.getLastEntryID().then((lastId)=> {
                 debug('periodic polling on device :' + that.id);
                 debug('returned: ' + lastId);
-                that.logUntil(lastId);
-            }).then(reSchedule, reSchedule);
+                return that.logUntil(lastId);
+            }).then(reSchedule, reScheduleError);
         }, 20000);
         function reSchedule() {
-            if (that.dbLoggerActive) that.autoDataLogger();
+            that.loggerIsRunning=false;
+            debug('autodataLog reschedule');
+            if(that.dbLoggerTimeout) {
+                that.stopAutoLog();
+                that.autoDataLogger();
+            }
+        }
+
+        function reScheduleError(err) {
+            console.error('error rescheduling autoDataLogger' + err);
+            reSchedule();
         }
     }
 
@@ -167,35 +178,36 @@ class OpenBio extends AbstractDevice { //issue with extends EventEmitter
         var i = 0;
         return getNext();
         function getNext() {
-            if (i >= end){
-                that.dbLoggerActive=false;
-                return
-            }
-            else return pouch.getLastInDB(Number(that.id)).then((result)=> {
-                if (result.total_rows === 0) {
-                    debug('database was empty, starting with m0 command');
-                    return that.multiLogToDB(0);
-                }
-                else {
-                    debug('last mementry in DB is: ' + result.rows[0].value.id);
-                    i = Number(result.rows[0].value.id);
-                    debug('continue to log data from entry:' + i);
-                    return that.multiLogToDB(i+1);
-                }
-            }).then(getNext); //get Last in Db  is to be implemented
+            if (i >= end) {
+                that.dbLoggerActive = false;
+                console.log('lastId in memory reached');
+            } else {
+                return pouch.getLastInDB(Number(that.id)).then((result)=> {
+                    if (result.total_rows === 0) {
+                        debug('database was empty, starting with m0 command');
+                        return that.multiLogToDB(0);
+                    }
+                    else {
+                        debug('last memEntry in DB is: ' + result.rows[0].value.id);
+                        i = Number(result.rows[0].value.id);
+                        debug('continue to log data from entry:' + i);
+                        return that.multiLogToDB(i + 1);
+                    }
+                }).then(getNext);
+            } //get Last in Db  is to be implemented
         }
     }
 
     stopAutoLog() {
-        this.dbLoggerActive = false;
-        clearTimeout(this.dbLoggerInterval);
-        this.dbLoggerInterval = undefined;
+        clearTimeout(this.dbLoggerTimeout);
+        this.dbLoggerTimeout = undefined;
     }
 
 
-//autoEpoch every 2 minutes
+    //autoEpoch every 2 minutes (make the interval time a argument of the function)
     autoSetEpoch() {
         var that = this;
+        that.setEpochNow();
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(()=> {
                 return that.setEpochNow();
