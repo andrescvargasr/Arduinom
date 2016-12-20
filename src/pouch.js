@@ -46,7 +46,7 @@ var ddocBioreactors = {
             map: function (doc) {
                 if (doc.$kind === 'OpenBio') {
                     //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-                    emit([doc.$content.misc.qualifier, doc.$content.misc.memEntry], doc.$content.data);
+                    emit([doc.$content.misc.qualifier, doc.$content.misc.memEntry], doc.$content.data); // eslint-disable-line no-undef
                 }
             }.toString()
         }
@@ -56,13 +56,13 @@ var ddocBioreactors = {
 DB.get(ddocBioreactors._id).then((doc)=> {
     ddocBioreactors._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
     debug('ddocBioreactors already exists with rev:' + doc._rev);
-    getDeviceDB('bioreactors/by_mem').then((data)=>console.log(JSON.stringify(data)));
+    return getDeviceDB('bioreactors/by_mem');
 }, (err)=> {
     if (err.reason === 'missing') {
         DB.put(ddocBioreactors).then(()=> {
-            getDeviceDB('bioreactors/by_mem').then(console.log);
+            getDeviceDB('bioreactors/by_mem');
         }).catch(function (err) {
-            console.log(err);
+            debug(`Failed to update bioreactor design doc: ${err.message}`);
         });
     }
 });
@@ -74,7 +74,7 @@ var ddocSpectros = {
             map: function (doc) {
                 if (doc.$kind === 'OpenSpectro') {
                     //then add values for temp, weight, ...(only keys for know) //remove the .data and emit only what is needed to make the request faster
-                    emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data);
+                    emit([doc.$content.misc.qualifier, doc.$modificationDate], doc.$content.data); // eslint-disable-line no-undef
                 }
             }.toString()
         }
@@ -84,13 +84,13 @@ var ddocSpectros = {
 DB.get(ddocSpectros._id).then((doc)=> {
     ddocSpectros._rev = doc._rev; //in the future would be nice to support ddoc update using put with the correct rev number
     debug('ddocSpectros already exists with rev:' + doc._rev);
-    getDeviceDB('spectros/by_id').then(console.log);
+    getDeviceDB('spectros/by_id');
 }, (err)=> {
     if (err.reason === 'missing') {
         DB.put(ddocSpectros).then(()=> {
-            getDeviceDB('spectros/by_id').then(console.log);
+            getDeviceDB('spectros/by_id');
         }).catch(function (err) {
-            console.log(err);
+            debug(`Failed to update spectro design doc: ${err.message}`);
         });
     }
 });
@@ -106,15 +106,14 @@ function getDeviceDB(str, id) {
             debug('query resolved properly on :' + str);
             return result;
         });
-    }
-
-    else return DB.query(str, {
-        startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 20, descending: true, include_docs: false
-    }).then(function (result) {
-        debug('query resolved properly on :' + str)
-        debug(result);
-        return result;
-    });
+    }    else {
+        return DB.query(str, {
+            startkey: [id, Number.MAX_SAFE_INTEGER], endkey: [id, 0], limit: 20, descending: true, include_docs: false
+        }).then(function (result) {
+            debug('query resolved properly on :' + str);
+            debug(result);
+            return result;
+        });}
 }
 
 function getLastInDB(id) {

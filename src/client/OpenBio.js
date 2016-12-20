@@ -1,6 +1,5 @@
 'use strict';
 const Common = require('./Common');
-const debug = require('debug')('client: OpenBio');
 const addMethods = require('./addMethods');
 
 module.exports = function (socket) {

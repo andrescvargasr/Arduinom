@@ -2,8 +2,8 @@
 
 const DeviceManager = require('serial-requests').DeviceManager;
 const deviceManager = new DeviceManager({
-    optionCreator: function(portInfo) {
-        if(portInfo.manufacturer === 'Arduino_LLC') {
+    optionCreator: function (portInfo) {
+        if (portInfo.manufacturer === 'Arduino_LLC') {
             return {
                 baudrate: 38400,
                 getIdCommand: 'q',
@@ -16,7 +16,9 @@ const deviceManager = new DeviceManager({
                 checkResponse: function (buffer) {
                     return buffer.endsWith('\r\n\r\n');
                 }
-            }
+            };
+        } else {
+            return null;
         }
     }
 });

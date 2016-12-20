@@ -4,7 +4,6 @@ const EventEmitter = require('events');
 const Handler = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('../utilities/parser');
-const pouch = require('../pouch');
 
 
 class AbstractDevice extends EventEmitter {
@@ -21,7 +20,7 @@ class AbstractDevice extends EventEmitter {
         this._init();
         this.id = id;
         this.pending = false; //flag to check if an experiment is currently running
-        this.status = 'connect'
+        this.status = 'connect';
     }
 
     static getParamConfig() {
@@ -33,7 +32,7 @@ class AbstractDevice extends EventEmitter {
     _init() {
         Handler.on('connect', id => {
             if (this.id === id) {
-                this.status='connect';
+                this.status = 'connect';
                 debug('Device connected, enabling methods: ' + this.id);
                 this.emit('connect');
             }
@@ -41,7 +40,7 @@ class AbstractDevice extends EventEmitter {
 
         Handler.on('disconnect', id => {
             if (this.id === id) {
-                this.status='disconnect';
+                this.status = 'disconnect';
                 debug('Device disconnected, disabling methods: ' + this.id);
                 this.emit('disconnect');
             }
@@ -103,7 +102,7 @@ class AbstractDevice extends EventEmitter {
 
     setEpochNow() {
         debug('setting epoch to unix time');
-        var time = Math.floor(Date.now()/1000);
+        var time = Math.floor(Date.now() / 1000);
         return this.setEpoch(time);
     }
 

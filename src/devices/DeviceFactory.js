@@ -56,7 +56,7 @@ function createDevice(data) {
             break;
         default:
             debug('detected unknown device with id:', idString);
-            this.emit('error', new Error('Detected device of unknown type'))
+            this.emit('error', new Error('Detected device of unknown type'));
             break;
     }
 }

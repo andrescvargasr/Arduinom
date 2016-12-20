@@ -1,7 +1,5 @@
-'use strict'
+'use strict';
 const debug = require('debug')('main:sever socket-io');
-const OpenBio = require('../devices/OpenBio/OpenBio');
-const OpenSpectro = require('../devices/OpenSpectro/OpenSpectro');
 const express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -11,8 +9,7 @@ server.listen(3000);
 
 app.use(express.static('src/public'));
 
-var path = require('path');
-var DeviceFactory = require("../devices/DeviceFactory");
+var DeviceFactory = require('../devices/DeviceFactory');
 // Emit welcome message on connection
 io.on('connection', function (socket) {
     debug('connection');
@@ -32,38 +29,36 @@ io.on('connection', function (socket) {
         if (request.type === 'static-method') {
             debug('received static request from client:' + JSON.stringify(request));
             debug('device constructor is ' + request.constructorName);
-            var constructor=require('../devices/'+request.constructorName+'/'+request.constructorName);
-            var method=request.method;
-            if (constructor[method] === undefined)return fn({
-                status: 'error',
-                error: 'no device present corresponding to the request'
-            });
-            else Promise.resolve(constructor[method].apply(null, request.args))
-                .then((data) => ({status: 'success', data: data}))
-                .then(fn)
-                .catch((err) => fn({status: 'error', error: err.message}));
+            var constructor = require('../devices/' + request.constructorName + '/' + request.constructorName);
+            var method = request.method;
+            if (constructor[method] === undefined) {
+                fn({
+                    status: 'error',
+                    error: 'no device present corresponding to the request'
+                });
+            } else {
+                Promise.resolve(constructor[method].apply(null, request.args))
+                    .then((data) => ({status: 'success', data: data}))
+                    .then(fn)
+                    .catch((err) => fn({status: 'error', error: err.message}));
+            }
 
-        }
-
-        else if (request.type === 'method') {
+        } else if (request.type === 'method') {
             var device = DeviceFactory.getDevice(request.id);
             debug('received request from client:' + JSON.stringify(request));
             debug('device id is ' + request.id);
             debug('device is:' + JSON.stringify(device));
-            if (device === undefined) return fn({
-                status: 'error',
-                error: 'no device present corresponding to the request'
-            });
-            //apply is used to call the static method with provided args
-            //check if undefined is ok for request.args
-            else Promise.resolve(device[request.method].apply(device, request.args))
-                .then((data) => {
-                    debug(data);
-                    return ({status: 'success', data: data});
-
-                })
-                .then(fn)
-                .catch((err) => fn({status: 'error', error: err.message}));
+            if (device === undefined) {
+                fn({
+                    status: 'error',
+                    error: 'no device present corresponding to the request'
+                });
+            } else {
+                Promise.resolve(device[request.method].apply(device, request.args))
+                    .then((data) => ({status: 'success', data: data}))
+                    .then(fn)
+                    .catch((err) => fn({status: 'error', error: err.message}));
+            }
         }
 
 
@@ -73,7 +68,7 @@ io.on('connection', function (socket) {
         debug('stopping socket.io client');
     });
 
-    socket.on('error', console.error.bind(console)); // see if we emit instead
+    socket.on('error', err => debug(`socket error: ${err.message}`));
 
 });
 

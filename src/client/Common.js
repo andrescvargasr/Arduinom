@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 const debug = require('debug')('client: common');
 const EventEmitter = require('events');
 class Common extends EventEmitter {
@@ -27,12 +27,13 @@ class Common extends EventEmitter {
                 this.status = 'disconnect';
                 this.emit('serverReconnected');
                 break;
+            default:
+                throw new Error('Unknown status was set');
         }
     }
 
     _setListeners() {
         this.socket.on('deviceConnected', id=> {
-            console.log('client connect event', id, this.id);
             if (id === this.id) this.setStatus('connect');
         });
 

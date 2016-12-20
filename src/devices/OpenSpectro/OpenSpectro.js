@@ -7,19 +7,18 @@ const debug = require('debug')('main:openspectro');
 const paramConfig = require('./spectroParam');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
-const pouch = require('../../pouch');
 
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.type= OpenSpectro.getDeviceType();
+        this.type = OpenSpectro.getDeviceType();
         this.maxParam = 26;
     }
 
     //static methods
     static getDeviceType() {
-        return 'OpenSpectro'
+        return 'OpenSpectro';
     }
 
     static getParamConfig() {
@@ -29,9 +28,9 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     // Device specific utilities
     getParsedCompactLog() {
         var that = this;
-        var type=OpenSpectro.getDeviceType();
+        var type = OpenSpectro.getDeviceType();
         return this.getCompactLog()
-            .then((buff)=> {
+            .then((buff) => {
                 return parser.parse('c', buff, {devicetype: type, nbParamCompact: that.maxParam})[0];
             });
     }
@@ -47,7 +46,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded
     getRGB() {
-        var getRGB = this.addRequest('a', {timeout: 5000}).then((buff)=> {
+        var getRGB = this.addRequest('a', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('rgb data: ', buff);
         });
@@ -57,7 +56,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
 
     testAll() {
-        var testAll = this.addRequest('t', {timeout: 5000}).then((buff)=> {
+        var testAll = this.addRequest('t', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('test all: ', buff);
         });
@@ -65,22 +64,15 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return testAll;
     }
 
-    runExperiment(title, description) {
+    runExperiment() {
         var experiment = this.addRequest('I', {timeout: 500})
-            .then((delay)=> {
+            .then((delay) => {
                 debug('experiment delay in ms :', parseInt(delay));
                 return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
             })
-            .then((buff)=> {
-                var type=OpenSpectro.getDeviceType();
+            .then(buff => {
                 this.pending = false;
-                debug('openspectro experiment results received');
-                return pouchDB.parseAndSaveToSerialData(buff, 'r', {
-                    devicetype: type,
-                    deviceID: this.id,
-                    title: title,
-                    description: description
-                });
+                return buff;
             });
         this.pending = true;
         return experiment;
@@ -88,30 +80,11 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
     runAndParseExperiment() {
         return this.runExperiment()
-            .then((experiment)=> {
-                var type=OpenSpectro.getDeviceType();
-                return parser.parse('r', experiment, {devicetype: type});
+            .then(buffer => {
+                var type = OpenSpectro.getDeviceType();
+                return parser.parse('r', buffer, {devicetype: type});
             });
     }
-
-    runAndLogExperiment(title, description) {
-        var that = this;
-        return this.runAndParseExperiment().then((data)=>{
-            var type=OpenSpectro.getDeviceType();
-            return this.logInPouch(data, {
-                devicetype: type,
-                cmd: 'r',
-                title: title,
-                description: description,
-                deviceID: that.id
-            });
-        });
-    }
-
-
-     getAllExperimentResults() {
-        return pouch.getDeviceDB(pouch.mapSpectros,this.id);
-     }
 
 }
 

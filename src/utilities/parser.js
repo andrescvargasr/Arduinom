@@ -50,7 +50,7 @@ module.exports = {
                     entries = [];
                     if (lines.length >= 2) {
                         debug('process lines');
-                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam , options.hasEvent);
+                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
                     }
                     return entries;
                 default:
@@ -80,7 +80,7 @@ function parseCommand(cmd) {
     }
 }
 
-function processLinesM(lines, reqLength, nbParam , hasEvent) {
+function processLinesM(lines, reqLength, nbParam, hasEvent) {
     var entries = [];
     for (var i = 0; i < lines.length; i++) {
         if (i === 0) {
@@ -104,7 +104,7 @@ function processLinesM(lines, reqLength, nbParam , hasEvent) {
 }
 
 function processLines(lines, reqLength, nbParam) {
-    debug('buffer to be parsed : \n' +lines);
+    debug('buffer to be parsed : \n' + lines);
     var entries = [];
     for (var i = 0; i < lines.length; i++) {
         var line = lines[i];

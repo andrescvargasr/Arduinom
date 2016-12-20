@@ -22,7 +22,7 @@ function _setMethods(methods, constructor, socket) {
                         }
                     });
                 });
-            }
+            };
         }
     }
 }
@@ -34,7 +34,6 @@ function _setStaticMethods(staticMethods, constructor, socket) {
                 //here this corresponds to the scope of the class constructor that is called (eg OpenBio)
                 var args = Array.from(arguments);
                 return new Promise(function (resolve, reject) {
-                    console.log('calling static: ', method);
                     socket.emit('request', {
                         constructorName: constructor.name,
                         method: method,
@@ -48,7 +47,7 @@ function _setStaticMethods(staticMethods, constructor, socket) {
                         }
                     });
                 });
-            }
+            };
         }
     }
 
