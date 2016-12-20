@@ -11,30 +11,28 @@ class DeviceFactory extends EventEmitter {
     constructor() {
         super();
         DeviceManager.on('new', createDevice.bind(this));
-        DeviceManager.on('disconnect', (id)=> {
-            this.emit('disconnect', id);
-            this.emit('devices',deviceList);
+        DeviceManager.on('disconnect', data => {
+            this.emit('disconnect', data.id);
+            this.emit('devices', deviceList);
         });
-        DeviceManager.on('connect', (id)=> {
-            this.emit('connect', id);
-            this.emit('devices',deviceList);
+        DeviceManager.on('connect', data => {
+            this.emit('connect', data.id);
+            this.emit('devices', deviceList);
         });
     }
 
     _createDevice(id, constructor) {
         try {
-            var device = new constructor(id);
-            //adding the new device to the cached List
-            deviceList[id]=device;
+            deviceList[id] = new constructor(id);
         } catch (e) {
             this.emit('error', e);
             return;
         }
-        this.emit('newDevice', device);
+        this.emit('newDevice', deviceList[id]);
         this.emit('devices', deviceList);
     }
 
-    getDeviceList(){
+    getDeviceList() {
         return deviceList;
     }
 
@@ -43,8 +41,9 @@ class DeviceFactory extends EventEmitter {
     }
 }
 
-function createDevice(id) {
-    var idString = util.deviceIdNumberToString(id);
+function createDevice(data) {
+    const id = data.id;
+    const idString = util.deviceIdNumberToString(id);
     debug('new device was connected, calling instantiator createDevice()');
     switch (idString[0]) {
         case '$':
