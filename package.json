@@ -4,8 +4,6 @@
   "description": "node interface for at32u4",
   "main": "src/",
   "dependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.21.0",
     "bson": "^0.5.7",
     "debug": "^2.2.0",
     "deepcopy": "^0.6.3",
@@ -22,18 +20,24 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "eslint": "^3.9.1",
     "eslint-config-cheminfo": "^1.5.2",
     "eslint-plugin-no-only-tests": "^1.1.0",
-    "node-gyp": "^3.4.0"
+    "node-gyp": "^3.4.0",
+    "watchify": "^3.8.0"
   },
   "scripts": {
-    "browser-build": "mkdir -p src/public/browserified; browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduinom",
+    "browser-build": "mkdir -p lib/public/browserified; browserify src/client/index.js -o lib/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
+    "browser-watch": "mkdir -p lib/public/browserified; watchify src/client/index.js -v -o lib/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
     "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix",
     "node-build": "babel src --out-dir lib --quiet",
+    "node-watch": "npm run node-build -- --watch",
     "prepublish": "npm run build",
     "start": "node lib/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

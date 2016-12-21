@@ -19,7 +19,6 @@ module.exports = function(io) {
 
         //handling server requests
         socket.on('request', function (request, fn) {
-
             if (request.type === 'static-method') {
                 debug('received static request from client:' + JSON.stringify(request));
                 debug('device constructor is ' + request.constructorName);

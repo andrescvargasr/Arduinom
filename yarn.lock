@@ -263,7 +263,7 @@ babel-code-frame@^6.16.0, babel-code-frame@^6.20.0:
     esutils "^2.0.2"
     js-tokens "^2.0.0"
 
-babel-core@^6.18.0, babel-core@^6.21.0:
+babel-core@^6.0.14, babel-core@^6.18.0, babel-core@^6.21.0:
   version "6.21.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.21.0.tgz#75525480c21c803f826ef3867d22c19f080a3724"
   dependencies:
@@ -371,6 +371,13 @@ babel-types@^6.16.0, babel-types@^6.21.0:
     esutils "^2.0.2"
     lodash "^4.2.0"
     to-fast-properties "^1.0.1"
+
+babelify@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/babelify/-/babelify-7.3.0.tgz#aa56aede7067fd7bd549666ee16dc285087e88e5"
+  dependencies:
+    babel-core "^6.0.14"
+    object-assign "^4.0.0"
 
 babylon@^6.11.0:
   version "6.14.1"
@@ -538,7 +545,7 @@ browserify-zlib@~0.1.2:
   dependencies:
     pako "~0.2.0"
 
-browserify@^13.1.1:
+browserify@^13.0.0, browserify@^13.1.1:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/browserify/-/browserify-13.1.1.tgz#72a2310e2f706ed87db929cf0ee73a5e195d9bb0"
   dependencies:
@@ -870,13 +877,13 @@ debug@2.2.0, debug@~2.2.0:
   dependencies:
     ms "0.7.1"
 
-debug@2.3.3, debug@^2.3.2, debug@^2.3.3:
+debug@2.3.3, debug@^2.1.1, debug@^2.3.2, debug@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
   dependencies:
     ms "0.7.2"
 
-debug@^2.1.0, debug@^2.1.1, debug@^2.2.0:
+debug@^2.1.0, debug@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.0.tgz#3912dc55d7167fc3af17d2b85c13f93deaedaa43"
   dependencies:
@@ -2398,7 +2405,7 @@ oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-object-assign@4.1.0, object-assign@^4.0.1, object-assign@^4.1.0:
+object-assign@4.1.0, object-assign@^4.0.0, object-assign@^4.0.1, object-assign@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
 
@@ -2490,6 +2497,12 @@ osenv@0:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+outpipe@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/outpipe/-/outpipe-1.1.1.tgz#50cf8616365e87e031e29a5ec9339a3da4725fa2"
+  dependencies:
+    shell-quote "^1.4.2"
 
 output-file-sync@^1.1.0:
   version "1.1.2"
@@ -3084,7 +3097,7 @@ shasum@^1.0.0:
     json-stable-stringify "~0.0.0"
     sha.js "~2.4.4"
 
-shell-quote@^1.4.3:
+shell-quote@^1.4.2, shell-quote@^1.4.3:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
   dependencies:
@@ -3526,6 +3539,18 @@ vm-browserify@~0.0.1:
 vuvuzela@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/vuvuzela/-/vuvuzela-1.0.3.tgz#3be145e58271c73ca55279dd851f12a682114b0b"
+
+watchify@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/watchify/-/watchify-3.8.0.tgz#a5cacc3517ca1e637d7b0af745375cafb597d6bb"
+  dependencies:
+    anymatch "^1.3.0"
+    browserify "^13.0.0"
+    chokidar "^1.0.0"
+    defined "^1.0.0"
+    outpipe "^1.1.0"
+    through2 "^2.0.0"
+    xtend "^4.0.0"
 
 which@1:
   version "1.2.11"
