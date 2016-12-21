@@ -1,6 +1,6 @@
 {
-  "name": "serialarduino",
-  "version": "0.0.1",
+  "name": "arduinom",
+  "version": "0.0.0",
   "description": "node interface for at32u4",
   "main": "src/",
   "dependencies": {
