@@ -102,7 +102,7 @@ class AbstractDevice extends EventEmitter {
 
     setEpochNow() {
         debug('setting epoch to unix time');
-        var time = Math.floor(Date.now() / 1000);
+        var time = Math.round(Date.now() / 1000);
         return this.setEpoch(time);
     }
 
