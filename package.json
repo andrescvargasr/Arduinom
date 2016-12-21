@@ -4,6 +4,8 @@
   "description": "node interface for at32u4",
   "main": "src/",
   "dependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
     "bson": "^0.5.7",
     "debug": "^2.2.0",
     "deepcopy": "^0.6.3",
@@ -27,12 +29,14 @@
     "node-gyp": "^3.4.0"
   },
   "scripts": {
-    "prepublish": "npm run browserify",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "browserify": "mkdir -p src/public/browserified; browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduino",
-    "start": "node src/server/server.js",
+    "browser-build": "mkdir -p src/public/browserified; browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduinom",
+    "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
-    "eslint-fix": "eslint src --fix"
+    "eslint-fix": "eslint src --fix",
+    "node-build": "babel src --out-dir lib --quiet",
+    "prepublish": "npm run build",
+    "start": "node lib/server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "serial",
