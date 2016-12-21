@@ -1,7 +1,7 @@
 'use strict';
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
-const paramConfig = require('./bioParam');
+const paramConfig = require('./params');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
 const pouch = require('../../pouch');

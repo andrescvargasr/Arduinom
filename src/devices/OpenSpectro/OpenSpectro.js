@@ -4,7 +4,7 @@ process.on('unhandledRejection', e => {
 });
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:openspectro');
-const paramConfig = require('./spectroParam');
+const paramConfig = require('./params');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
 
