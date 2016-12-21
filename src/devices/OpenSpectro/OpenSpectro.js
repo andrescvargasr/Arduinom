@@ -36,17 +36,17 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     calibrate() {
-        return this.addRequest('k', {timeout: 500});
+        return this.addRequest('k\n', {timeout: 500});
     }
 
     initializeParameters() {
-        return this.addRequest('i');
+        return this.addRequest('i\n');
     }
 
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded
     getRGB() {
-        var getRGB = this.addRequest('a', {timeout: 5000}).then((buff) => {
+        var getRGB = this.addRequest('a\n', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('rgb data: ', buff);
         });
@@ -56,7 +56,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
 
     testAll() {
-        var testAll = this.addRequest('t', {timeout: 5000}).then((buff) => {
+        var testAll = this.addRequest('t\n', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('test all: ', buff);
         });
@@ -65,10 +65,10 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     runExperiment() {
-        var experiment = this.addRequest('I', {timeout: 500})
+        var experiment = this.addRequest('I\n', {timeout: 500})
             .then((delay) => {
                 debug('experiment delay in ms :', parseInt(delay));
-                return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
+                return this.addRequest('r\n', {timeout: (parseInt(delay) * 1000 + 5000)});
             })
             .then(buff => {
                 this.pending = false;
@@ -82,7 +82,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return this.runExperiment()
             .then(buffer => {
                 var type = OpenSpectro.getDeviceType();
-                return parser.parse('r', buffer, {devicetype: type});
+                return parser.parse('r\n', buffer, {devicetype: type});
             });
     }
 

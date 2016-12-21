@@ -69,7 +69,7 @@ module.exports = {
 };
 
 function parseCommand(cmd) {
-    var commandReg = /^(A?[A-Z]|[a-z])(\d+)?$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
+    var commandReg = /^(A?[A-Z]|[a-z])(\d+)?\n$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
     var m = commandReg.exec(cmd);
     debug('Checking the command, regex is :' + m);
     if (!m) {

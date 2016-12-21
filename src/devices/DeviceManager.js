@@ -6,7 +6,7 @@ const deviceManager = new DeviceManager({
         if (portInfo.manufacturer === 'Arduino_LLC') {
             return {
                 baudrate: 38400,
-                getIdCommand: 'q',
+                getIdCommand: 'q\n',
                 getIdResponseParser: function (buffer) {
                     if (!buffer.match(/^\d{1,5}\r\n\r\n$/)) {
                         throw new Error('invalid qualifier');

@@ -40,19 +40,19 @@ class OpenBio extends AbstractDevice {
     }
 
     getLastLog() {
-        return this.addRequest('l');
+        return this.addRequest('l\n');
     }
 
     getLastEntryID() {
-        return this.addRequest('m');
+        return this.addRequest('m\n');
     }
 
     getI2C() {
-        return this.addRequest('i');
+        return this.addRequest('i\n');
     }
 
     getOneWire() {
-        return this.addRequest('o');
+        return this.addRequest('o\n');
     }
 
     getMultiLog(entry) {
@@ -61,6 +61,7 @@ class OpenBio extends AbstractDevice {
         } else {
             cmd = 'm' + entry;
         }
+        cmd += '\n';
         if (!parser.parseCommand(cmd)) {
             debug('command is :' + JSON.stringify(cmd));
             return new Error('Invalid entry');
@@ -119,7 +120,7 @@ class OpenBio extends AbstractDevice {
     }
 
     setParameter(param, value) {
-        var command = param + value;
+        var command = param + value + '\n';
         if (!parser.parseCommand(command)) {
             debug('command does not match expected format A-AZ + value, no parameter set');
             return Promise.reject(new Error('Command does not match the expected format'));

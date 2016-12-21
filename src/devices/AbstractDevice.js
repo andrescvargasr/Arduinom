@@ -67,36 +67,36 @@ class AbstractDevice extends EventEmitter {
 
     // Device utilities
     getHelp() {
-        return this.addRequest('h');
+        return this.addRequest('h\n');
     }
 
     getFreeMem() {
-        return this.addRequest('f');
+        return this.addRequest('f\n');
     }
 
     getQualifier() {
-        return this.addRequest('q');
+        return this.addRequest('q\n');
     }
 
     getEEPROM() {
-        return this.addRequest('z', {timeout: 500});
+        return this.addRequest('z\n', {timeout: 500});
     }
 
     getSettings() {
-        this.addRequest('s');
+        this.addRequest('s\n');
     }
 
     getCompactLog() {
-        return this.addRequest('c');
+        return this.addRequest('c\n');
     }
 
     // Time utilities
     getEpoch() {
-        return this.addRequest('e');
+        return this.addRequest('e\n');
     }
 
     setEpoch(time) {
-        var cmd = 'e' + time;
+        var cmd = 'e' + time + '\n';
         return this.addRequest(cmd);
     }
 
