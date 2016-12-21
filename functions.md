@@ -1,29 +1,29 @@
 ## Common instructions
 
-output->println(F("(e)poch"));
-  output->println(F("(f)ree"));
-  output->println(F("(h)elp"));
-  output->println(F("(i)2c"));
-  output->println(F("(l)og"));
-  output->println(F("(m)ultiple log"));
-  output->println(F("(o)ne-wire"));
-  output->println(F("(p)aram"));
-  output->println(F("(q)ualifier"));
-  output->println(F("(r)eset"));
-  output->println(F("(s)ettings"));
-  output->println(F("(w)eight"));
-  output->println(F("(z) eeprom"));
+* (e)poch
+* (f)ree
+* (h)elp
+* (i)2c
+* (l)og
+* (m)ultiple log
+* (o)ne-wire
+* (p)aram
+* (q)ualifier
+* (r)eset
+* (s)ettings
+* (w)eight
+* (z) eeprom
   
   ## Lora enabled
 
-  output->println(F("LoRa help"));
-  output->println(F("(ai) Info"));
-  output->println(F("(ar) Reset"));
-  output->println(F("(as) Send message"));
-  output->println(F("(ap) Send parameters"));
-  output->println(F("(aa) set appskey"));
-  output->println(F("(an) set nwkskey"));
-  output->println(F("(ad) set devaddr"));
+* LoRa help
+* (ai) Info
+* (ar) Reset
+* (as) Send message
+* (ap) Send parameters
+* (aa) set appskey
+* (an) set nwkskey
+* (ad) set devaddr
 
 ## Bioreactor
 
