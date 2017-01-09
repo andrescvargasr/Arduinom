@@ -7,7 +7,7 @@ Node.js websocket server to communicate with our arduino devices
 ```bash
 npm install --global --production windows-build-tools
 ```
-The follow unix installation procedure
+Then follow unix installation procedure
 
 
 ### Unix
