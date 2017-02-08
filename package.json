@@ -11,6 +11,7 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "https": "^1.0.0",
+    "mongodb": "^2.2.19",
     "open-spectro": "0.0.7",
     "path": "^0.12.7",
     "pouchdb": "^6.0.5",
