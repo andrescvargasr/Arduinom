@@ -111,9 +111,9 @@ class AbstractDevice extends EventEmitter {
 module.exports = AbstractDevice;
 
 function isCommandValid(cmd) {
-    if (cmd.match(/^([A-Z]{1,2}|[a-z]{1,2})\d+$/)) {
-        return false;
-    } else {
+    if (cmd.match(/^([A-Z]{1,2}|[a-z]{1,2})\d*$/)) {
         return true;
+    } else {
+        return false;
     }
 }

@@ -8,7 +8,7 @@ DeviceFactory.on('newDevice', device => {
         console.log(data);
     });
 
-    device.getMultiLog().then(data => {
+    device.getParsedMultiLog(14000).then(data => {
         console.log(data);
     })
 
