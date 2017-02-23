@@ -13,12 +13,8 @@ function getCyclicData(options) {
             const d = (i * interval) % options.period;
             const date = new Date((options.from + i * interval));
             return {
-                date: date,
+                epoch: date.getTime(),
                 A: options.mean + options.amplitude * Math.sin(d / options.period * 2 * Math.PI) + noise,
-                day: date.getUTCDate(),
-                month: date.getUTCMonth() + 1,
-                hour: date.getHours(),
-                year: date.getFullYear()
             }
         })
 }
@@ -71,9 +67,15 @@ function queryPoints(db) {
             {
                 $group: {
                     _id: {
-                         day: "$day", month: "$month", year: "$year"
+                        epoch: {
+                            $subtract: ["$epoch", {
+                                $mod: ["$epoch", 3600000]
+                            }]
+                        }
                     },
-
+                    average: {
+                        $avg: "$A"
+                    },
                     count: {
                         $sum: 1
                     }
