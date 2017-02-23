@@ -12,14 +12,11 @@ const deepcopy = require('deepcopy');
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.type = OpenSpectro.getDeviceType();
-        this.maxParam = 26;
+        this.type = 'OpenSpectro';
+        this.numberParameters = 26;
     }
 
-    //static methods
-    static getDeviceType() {
-        return 'OpenSpectro';
-    }
+
 
     static getParamConfig() {
         return deepcopy(paramConfig);

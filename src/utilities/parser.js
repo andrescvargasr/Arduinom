@@ -7,96 +7,18 @@ var opSpectro = require('open-spectro');
 
 // TODO: review this file completly!!
 module.exports = {
-    parseMultiLog(buffer, options) {
-        var nbParam = options.nbParamCompact;
-        var reqLength = nbParam * 4 + 14;
-        var lines = buffer.split(/[\r\n]+/);
-        var entries = [];
-        if (lines.length >= 2) {
-            debug('process lines');
-            entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
-        }
-        return entries;
+    parseMultiLog(lines, options) {
+        var numberLogParameters = options.numberLogParameters;
+        var lineLength = numberLogParameters * 4 + 22 + 8;
+        return processLinesM(lines, lineLength, numberLogParameters);
     },
-    parseCompactLog(buffer, options) {
-        var nbParam = options.nbParamCompact;
-        var reqLength = nbParam * 4 + 14;
-        console.log(buffer);
-        return processStatusLine(buffer, reqLength, nbParam);
-    },
-    parse: function (cmd, result, options) {
-        options = options || {};
-        var m = parseCommand(cmd);
-        if (!m) throw new Error('Invalid command');
-        //compact log parsing is the same for all the device types
-        if (m.command === 'c') {
-            // If c was specify without the number of params to retrieve
-            // We use the parameter in the device config file
-            nbParam = m.value || options.nbParamCompact;
-            var reqLength = nbParam * 4 + 14;
-            var lines = result.split(/[\r\n]+/);
-            // We are ready to process the next request
-            var entries = [];
-            if (lines.length >= 2) {
-                debug('process lines');
-                entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
-            }
-            return entries;
-        }
-
-        //openspectro specific parsing
-        if (options.devicetype === 'OpenSpectro') {
-            switch (m.command) {
-                case 'r':
-                    return opSpectro.parse(result);
-                default:
-                    debug('Error while parsing openspectro, undefined command');
-                    return false;
-            }
-        } else if (options.devicetype === 'OpenBio') {
-            //bioreactor specific parsing
-            switch (m.command) {
-                case 'm':
-                    // m require an argument which is the log position
-                    if (!m.value) return result;
-                    // The nb of parameters is specified in the config file
-                    var nbParam = options.nbParam;
-                    var hasEventHexas = options.hasEvent ? 8 : 0;
-                    reqLength = nbParam * 4 + 22 + hasEventHexas;
-                    lines = result.split(/[\r\n]+/);
-                    // We are ready to process the next request
-                    entries = [];
-                    if (lines.length >= 2) {
-                        debug('process lines');
-                        entries = processLinesM(lines.slice(0, lines.length - 1), reqLength, nbParam, options.hasEvent);
-                    }
-                    return entries;
-                default:
-                    debug('Error while parsing bioreactor, undefined command');
-                    return false;
-            }
-        }        else {
-            debug('Error while parsing, device type undefined');
-            return false;
-        }
-
-    },
-
-    parseCommand: parseCommand
-
+    parseCompactLog(line, options) {
+        var numberParameters = options.numberParameters;
+        var lineLength = numberParameters * 4 + 14;
+        return processStatusLine(line, lineLength, numberParameters);
+    }
 };
 
-function parseCommand(cmd) {
-    var commandReg = /^(A?[A-Za-z])(\d+)?\n$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
-    var m = commandReg.exec(cmd);
-    debug('Checking the command, regex is :' + m);
-    if (!m) {
-        debug('The command did not match the regex. Send a correct command.');
-        return false;
-    }    else {
-        return {command: m[1], value: m[2]};
-    }
-}
 
 function processLinesM(lines, reqLength, nbParam, hasEvent) {
     var entries = [];
@@ -121,64 +43,52 @@ function processLinesM(lines, reqLength, nbParam, hasEvent) {
     return entries;
 }
 
-function processLines(lines, reqLength, nbParam) {
-    debug('buffer to be parsed : \n' + lines);
-    var entries = [];
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        var entry = processStatusLine(line, reqLength, nbParam);
-        if (entry) entries.push(entry);
-    }
-    return entries;
-}
 
-function processStatusLine(line, reqLength, nbParam) {
+function processStatusLine(line, lineLength, numberParameters) {
     // this line contains the 26 parameters as well as the check digit. We should
     // only consider the line if the check digit is ok
-    //console.log(line);
-
-    var entry = {};
-    if (reqLength && line.length !== reqLength) {
-        debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
+    const entry = {};
+    if (lineLength && line.length !== lineLength) {
+        debug('Unexpected response length: ', line.length, 'instead of ', lineLength);
         throw new Error('Unexpected response length');
     }
 
     if (checkDigit(line)) {
         entry.epoch = parseInt('0x' + line.substring(0, 8));
-        parseParameters(line, 8, nbParam, entry);
-        entry.deviceId = convertSignedIntHexa(line.substring(8 + (nbParam * 4), 12 + (nbParam * 4)));
+        parseParameters(line, 8, numberParameters, entry);
+        entry.deviceId = convertSignedIntHexa(line.substring(8 + (numberParameters * 4), 12 + (numberParameters * 4)));
         if (!entry.deviceId) {
             throw new Error('Could not parse device id in process StatusLine');
         }
-        entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
-    }    else {
+        entry.deviceCode = util.deviceIdNumberToString(entry.deviceId);
+    } else {
         debug('Check digit error', line);
         throw new Error('Check digit error');
     }
     return entry;
-
-
 }
 
-function processStatusLineM(line, reqLength, nbParam, hasEvent) {
-    var entry = {};
-    if (reqLength && line.length !== reqLength) {
-        debug('Unexpected response length: ', line.length, 'instead of ', reqLength);
+function processStatusLineM(line, lineLength, numberParameters) {
+    const entry = {};
+    if (lineLength && line.length !== lineLength) {
+        debug('Unexpected response length: ', line.length, 'instead of ', lineLength);
         throw new Error('Unexpected response length');
     }
 
     if (checkDigit(line)) {
         entry.id = parseInt('0x' + line.substring(0, 8));
         entry.epoch = parseInt('0x' + line.substring(8, 16));
-        parseParameters(line, 16, nbParam, entry);
-        // We skip the events for now
-        var eventHexaChars = hasEvent ? 8 : 0;
-        entry.deviceId = convertSignedIntHexa(line.substring(16 + (nbParam * 4) + eventHexaChars, 16 + (nbParam * 4) + eventHexaChars + 4));
+        parseParameters(line, 16, numberParameters, entry);
+
+        entry.event=convertSignedIntHexa(line.substring(16 + numberParameters * 4, 16 + numberParameters * 4 + 4));
+        entry.eventValue=convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 4, 16 + numberParameters * 4 + 4 + 4));
+
+        entry.deviceId = convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 8, 16 + numberParameters * 4 + 8 + 4));
         if (!entry.deviceId) {
             throw new Error('Could not parse device id in processStatusLineM');
         }
-        entry.deviceId = util.deviceIdNumberToString(entry.deviceId);
-    }    else {
+        entry.deviceCode = util.deviceIdNumberToString(entry.deviceId);
+    } else {
         debug('Check digit error', line);
         throw new Error('Check digit error');
     }
@@ -187,13 +97,13 @@ function processStatusLineM(line, reqLength, nbParam, hasEvent) {
 
 
 // Utility functions
-function parseParameters(line, start, nbParam, entry) {
-    for (var j = 0; j < nbParam; j++) {
-        if (j === 0) entry.parameters = {};
-        var value = convertSignedIntHexa(line.substring(start + (j * 4), start + 4 + (j * 4)));
+function parseParameters(line, start, numberParameters, entry) {
+    for (var i = 0; i < numberParameters; i++) {
+        if (i === 0) entry.parameters = {};
+        var value = convertSignedIntHexa(line.substring(start + (i * 4), start + 4 + (i * 4)));
         if (value === -32768) value = null;
-        if (j < 26) entry.parameters[String.fromCharCode(65 + j)] = value;
-        else entry.parameters[String.fromCharCode(65, 65 + j - 26)] = value;
+        if (i < 26) entry.parameters[String.fromCharCode(65 + i)] = value;
+        else entry.parameters[String.fromCharCode(Math.floor(i/26)+64, 65 + i - 26)] = value;
     }
 }
 
