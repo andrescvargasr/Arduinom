@@ -35,7 +35,7 @@ class OpenBio extends AbstractDevice {
         return this.getCompactLog()
             .then((buff) => {
                 debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: type, nbParamCompact: maxParam})[0];
+                return parser.parseCompactLog(buff, {devicetype: type, nbParamCompact: maxParam});
             });
     }
 

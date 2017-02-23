@@ -5,7 +5,25 @@ var util = require('./util');
 var opSpectro = require('open-spectro');
 
 
+// TODO: review this file completly!!
 module.exports = {
+    parseMultiLog(buffer, options) {
+        var nbParam = options.nbParamCompact;
+        var reqLength = nbParam * 4 + 14;
+        var lines = buffer.split(/[\r\n]+/);
+        var entries = [];
+        if (lines.length >= 2) {
+            debug('process lines');
+            entries = processLines(lines.slice(0, lines.length - 1), reqLength, nbParam);
+        }
+        return entries;
+    },
+    parseCompactLog(buffer, options) {
+        var nbParam = options.nbParamCompact;
+        var reqLength = nbParam * 4 + 14;
+        console.log(buffer);
+        return processStatusLine(buffer, reqLength, nbParam);
+    },
     parse: function (cmd, result, options) {
         options = options || {};
         var m = parseCommand(cmd);
@@ -69,7 +87,7 @@ module.exports = {
 };
 
 function parseCommand(cmd) {
-    var commandReg = /^(A?[A-Z]|[a-z])(\d+)?\n$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
+    var commandReg = /^(A?[A-Za-z])(\d+)?\n$/; //command input must be 1 or 2 capital letters or 1 non capital letter followed or not by a number
     var m = commandReg.exec(cmd);
     debug('Checking the command, regex is :' + m);
     if (!m) {

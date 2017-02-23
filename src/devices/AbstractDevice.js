@@ -1,7 +1,7 @@
 'use strict';
 var util = require('../utilities/util');
 const EventEmitter = require('events');
-const Handler = require('./DeviceManager');
+const deviceManagerInstance = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('../utilities/parser');
 
@@ -30,7 +30,7 @@ class AbstractDevice extends EventEmitter {
 
     //private methods
     _init() {
-        Handler.on('connect', id => {
+        deviceManagerInstance.on('connect', id => {
             if (this.id === id) {
                 this.status = 'connect';
                 debug('Device connected, enabling methods: ' + this.id);
@@ -38,7 +38,7 @@ class AbstractDevice extends EventEmitter {
             }
         });
 
-        Handler.on('disconnect', id => {
+        deviceManagerInstance.on('disconnect', id => {
             if (this.id === id) {
                 this.status = 'disconnect';
                 debug('Device disconnected, disabling methods: ' + this.id);
@@ -53,10 +53,7 @@ class AbstractDevice extends EventEmitter {
         if (!parser.parseCommand(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
-        return Promise.resolve().then(()=> {
-            var serialQ = Handler.getSerialQ(this.id);
-            return serialQ.addRequest(cmd, options);
-        });
+        return deviceManagerInstance.addRequest(this.id, cmd, options).then(res => res.replace(/[\r\n]*$/, ''));
     }
 
     //safety to prevent command of being received while an slow experiment is running

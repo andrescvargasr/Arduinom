@@ -3,7 +3,7 @@
 const DeviceManager = require('serial-requests').DeviceManager;
 const deviceManager = new DeviceManager({
     optionCreator: function (portInfo) {
-        if (portInfo.manufacturer === 'Arduino_LLC') {
+        if (portInfo.manufacturer === 'Arduino_LLC' || portInfo.manufacturer === 'SparkFun') {
             return {
                 baudrate: 38400,
                 getIdCommand: 'q\n',
