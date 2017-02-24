@@ -7,10 +7,10 @@ var opSpectro = require('open-spectro');
 
 // TODO: review this file completly!!
 module.exports = {
-    parseMultiLog(lines, options) {
+    parseMultiLog(buffer, options) {
         var numberLogParameters = options.numberLogParameters;
         var lineLength = numberLogParameters * 4 + 22 + 8;
-        return processLinesM(lines, lineLength, numberLogParameters);
+        return processMultilog(buffer, lineLength, numberLogParameters);
     },
     parseCompactLog(line, options) {
         var numberParameters = options.numberParameters;
@@ -20,20 +20,17 @@ module.exports = {
 };
 
 
-function processLinesM(lines, reqLength, nbParam, hasEvent) {
+function processMultilog(buffer, lineLength, numberLogParameters) {
+    var lines=buffer.split(/[\r\n]+/);
     var entries = [];
-    for (var i = 0; i < lines.length; i++) {
-        if (i === 0) {
-            debug('first processed line', JSON.stringify(lines[0]));
-        }
-        var line = lines[i];
-        var entry = processStatusLineM(line, reqLength, nbParam, hasEvent);
+    for (var line of lines) {
+        var entry=processMultilogLine(line, lineLength, numberLogParameters);
         if (entry) entries.push(entry);
     }
     // Check that all entries come from the same device!!
     if (entries.length > 0) {
         var deviceId = entries[0].deviceId;
-        for (i = 1; i < entries.length; i++) {
+        for (var i = 1; i < entries.length; i++) {
             if (entries[i].deviceId !== deviceId) {
                 debug('checkdigit is ok but all lines did not come from the same device. There are at least 2 device ids: ' + entries[0].deviceId + ', ' + entries[i].deviceId);
                 throw new Error('all lines do not have the same id');
@@ -68,7 +65,7 @@ function processStatusLine(line, lineLength, numberParameters) {
     return entry;
 }
 
-function processStatusLineM(line, lineLength, numberParameters) {
+function processMultilogLine(line, lineLength, numberParameters) {
     const entry = {};
     if (lineLength && line.length !== lineLength) {
         debug('Unexpected response length: ', line.length, 'instead of ', lineLength);
@@ -85,7 +82,7 @@ function processStatusLineM(line, lineLength, numberParameters) {
 
         entry.deviceId = convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 8, 16 + numberParameters * 4 + 8 + 4));
         if (!entry.deviceId) {
-            throw new Error('Could not parse device id in processStatusLineM');
+            throw new Error('Could not parse device id in processMultilogLine');
         }
         entry.deviceCode = util.deviceIdNumberToString(entry.deviceId);
     } else {

@@ -21,13 +21,12 @@ class OpenBio extends AbstractDevice {
 
     // Device specific utilities
     getParsedCompactLog() {
-        return this.getCompactLog()
-            .then((buff) => {
-                debug('parsing compact log');
-                return parser.parseCompactLog(buff, {
-                    numberParameters:this.numberParameters
-                });
+        return this.getCompactLog().then((buff) => {
+            debug('parsing compact log');
+            return parser.parseCompactLog(buff, {
+                numberParameters:this.numberParameters
             });
+        });
     }
 
     getLastLog() {
@@ -47,12 +46,7 @@ class OpenBio extends AbstractDevice {
     }
 
     getMultiLog(entry) {
-        if (entry === undefined) {
-            var cmd = 'm';
-        } else {
-            cmd = 'm' + entry;
-        }
-        debug('adding multilog request :' + cmd);
+        var cmd = 'm' + ((entry === undefined) ? '' : entry);
         return this.addRequest(cmd);
     }
 
@@ -60,7 +54,7 @@ class OpenBio extends AbstractDevice {
         return this.getMultiLog(entry).then((buff) => {
             debug('Parsing MultiLog');
             return parser.parseMultiLog(buff, {
-                numberParameters: this.numberParameters
+                numberLogParameters: this.numberLogParameters
             });
         });
     }
@@ -137,13 +131,14 @@ class OpenBio extends AbstractDevice {
 
 
     //autoEpoch every 2 minutes (make the interval time a argument of the function)
-    autoSetEpoch() {
+    autoSetEpoch(interval = 120) {
         var that = this;
         that.setEpochNow();
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(() => {
-            return that.setEpochNow();
-        }, 120000);
+            // is 'this' not correct ?
+            that.setEpochNow();
+        }, interval * 1000);
     }
 
     clearAutoEpoch() {
