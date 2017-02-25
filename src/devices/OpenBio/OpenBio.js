@@ -76,24 +76,23 @@ class OpenBio extends AbstractDevice {
 
 //autoDBLogging every 30sec
     autoDataLogger() {
-        function reSchedule() {
-            that.loggerIsRunning = false;
+        var reSchedule = () => {
+            this.loggerIsRunning = false;
             debug('autodataLog reschedule');
-            if (that.dbLoggerTimeout) {
-                that.stopAutoLog();
-                that.autoDataLogger();
+            if (this.dbLoggerTimeout) {
+                this.stopAutoLog();
+                this.autoDataLogger();
             }
-        }
+        };
 
         if (!this.dbLoggerTimeout) {
-            var that = this;
             this.dbLoggerTimeout = setTimeout(() => {
                 if (!this.loggerIsRunning) {
                     this.loggerIsRunning = true;
-                    that.getLastEntryID().then((lastId) => {
-                        debug('periodic polling on device :' + that.id);
+                    this.getLastEntryID().then((lastId) => {
+                        debug('periodic polling on device :' + this.id);
                         debug('returned: ' + lastId);
-                        return that.logUntil(lastId);
+                        return this.logUntil(lastId);
                     }).then(reSchedule, reSchedule);
                 }
             }, 20000);
@@ -132,12 +131,11 @@ class OpenBio extends AbstractDevice {
 
     //autoEpoch every 2 minutes (make the interval time a argument of the function)
     autoSetEpoch(interval = 120) {
-        var that = this;
-        that.setEpochNow();
+        this.setEpochNow();
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(() => {
             // is 'this' not correct ?
-            that.setEpochNow();
+            this.setEpochNow();
         }, interval * 1000);
     }
 
