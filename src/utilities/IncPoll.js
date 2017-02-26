@@ -1,13 +1,16 @@
 'use strict';
-import EventEmitter from 'events';
+
+const EventEmitter = require('events');
 
 class IncPoll extends EventEmitter {
     constructor(options) {
         super();
-        this.options = options;
-        this.inc = this.options.start || 0;
-        this.busy = false;
-        this.task = this.options.task;
+        this.startInc = options.start || 0;
+        this.inc = this.startInc;
+        this.task = options.task;
+        this.chunk = options.chunk;
+        this.interval = options.interval;
+        if(!this.chunk || this.interval == null) throw new Error('IncPoll bad arguments');
     }
 
     start() {
@@ -17,9 +20,7 @@ class IncPoll extends EventEmitter {
     }
 
     async cont() {
-        console.log('poll');
-        this.busy = true;
-        let data = await this.task(this.inc, this.options.chunk);
+        let data = await this.task(this.inc);
         if(Array.isArray(data)) {
             var inc = data.length;
             if(inc) {
@@ -33,21 +34,24 @@ class IncPoll extends EventEmitter {
         if(inc) {
             this.emit('progress', {
                 inc: this.inc,
-                done: this.inc - this.options.start
+                done: this.inc - this.startInc
             });
         }
 
-        if(this.options.chunk <= inc) {
-            await this.cont();
-        } else {
-            this.busy = false;
-            this.timeoutId = setTimeout(() => this.cont(), this.options.interval);
+        if(this.started) {
+            if(inc >= this.chunk) { // continue because hit response's maximum length
+                await this.cont();
+            } else { // Stop because below response's maximum length, retry later
+                this.timeoutId = setTimeout(() => this.cont(), this.interval);
+            }
         }
+
     }
 
     stop() {
+        this.started = false;
         clearInterval(this.timeoutId);
     }
 }
 
-export default IncPoll;
+module.exports = IncPoll;
