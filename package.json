@@ -14,8 +14,6 @@
     "mongodb": "^2.2.19",
     "open-spectro": "0.0.7",
     "path": "^0.12.7",
-    "pouchdb": "^6.0.5",
-    "pouchdb-find": "^0.10.3",
     "serial-requests": "^0.1.3",
     "socket.io": "^1.6.0",
     "ws": "^1.1.1"

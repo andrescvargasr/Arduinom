@@ -99,35 +99,6 @@ class OpenBio extends AbstractDevice {
         }
     }
 
-    logUntil(end) {
-        var that = this;
-        var i = 0;
-        return getNext();
-        function getNext() {
-            if (i >= end) {
-                that.dbLoggerActive = false;
-                return undefined;
-            } else {
-                return pouch.getLastInDB(Number(that.id)).then((result) => {
-                    if (result.total_rows === 0) {
-                        debug('database was empty, starting with m0 command');
-                        return that.multiLogToDB(0);
-                    } else {
-                        debug('last memEntry in DB is: ' + result.rows[0].value.id);
-                        i = Number(result.rows[0].value.id);
-                        debug('continue to log data from entry:' + i);
-                        return that.multiLogToDB(i + 1);
-                    }
-                }).then(getNext);
-            } //get Last in Db  is to be implemented
-        }
-    }
-
-    stopAutoLog() {
-        clearTimeout(this.dbLoggerTimeout);
-        this.dbLoggerTimeout = undefined;
-    }
-
 
     //autoEpoch every 2 minutes (make the interval time a argument of the function)
     autoSetEpoch(interval = 120) {
