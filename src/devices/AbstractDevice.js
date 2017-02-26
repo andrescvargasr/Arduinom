@@ -1,7 +1,7 @@
 'use strict';
 var util = require('../utilities/util');
 const EventEmitter = require('events');
-const Handler = require('./DeviceManager');
+const deviceManagerInstance = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const parser = require('../utilities/parser');
 
@@ -30,7 +30,7 @@ class AbstractDevice extends EventEmitter {
 
     //private methods
     _init() {
-        Handler.on('connect', id => {
+        deviceManagerInstance.on('connect', id => {
             if (this.id === id) {
                 this.status = 'connect';
                 debug('Device connected, enabling methods: ' + this.id);
@@ -38,7 +38,7 @@ class AbstractDevice extends EventEmitter {
             }
         });
 
-        Handler.on('disconnect', id => {
+        deviceManagerInstance.on('disconnect', id => {
             if (this.id === id) {
                 this.status = 'disconnect';
                 debug('Device disconnected, disabling methods: ' + this.id);
@@ -50,14 +50,14 @@ class AbstractDevice extends EventEmitter {
     //public methods
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if (!parser.parseCommand(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
+        if (!isCommandValid(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
         if (this.pending) return this._pendingExperiment();
         debug('adding a new request to queue via abstract device class');
-        return Promise.resolve().then(()=> {
-            var serialQ = Handler.getSerialQ(this.id);
-            return serialQ.addRequest(cmd, options);
-        });
+        return deviceManagerInstance.addRequest(this.id, cmd + '\n', options).then(res => res.replace(/[\r\n]*$/, ''));
     }
+
+
+
 
     //safety to prevent command of being received while an slow experiment is running
     _pendingExperiment() {
@@ -67,36 +67,36 @@ class AbstractDevice extends EventEmitter {
 
     // Device utilities
     getHelp() {
-        return this.addRequest('h\n');
+        return this.addRequest('h');
     }
 
     getFreeMem() {
-        return this.addRequest('f\n');
+        return this.addRequest('f');
     }
 
     getQualifier() {
-        return this.addRequest('q\n');
+        return this.addRequest('q');
     }
 
     getEEPROM() {
-        return this.addRequest('z\n', {timeout: 500});
+        return this.addRequest('z', {timeout: 500});
     }
 
     getSettings() {
-        this.addRequest('s\n');
+        this.addRequest('s');
     }
 
     getCompactLog() {
-        return this.addRequest('c\n');
+        return this.addRequest('c');
     }
 
     // Time utilities
     getEpoch() {
-        return this.addRequest('e\n');
+        return this.addRequest('e');
     }
 
     setEpoch(time) {
-        var cmd = 'e' + time + '\n';
+        var cmd = 'e' + time;
         return this.addRequest(cmd);
     }
 
@@ -109,3 +109,11 @@ class AbstractDevice extends EventEmitter {
 }
 
 module.exports = AbstractDevice;
+
+function isCommandValid(cmd) {
+    if (cmd.match(/^([A-Z]{1,2}|[a-z]{1,2})\d*$/)) {
+        return true;
+    } else {
+        return false;
+    }
+}

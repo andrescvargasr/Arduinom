@@ -4,164 +4,95 @@ const debug = require('debug')('main:OpenBio');
 const paramConfig = require('./params');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
-const pouch = require('../../pouch');
+
 
 class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
+        this.type = 'OpenBio';
+        this.numberParameters = 52;
+        this.numberLogParameters = 26;
     }
 
-    //static methods
-    static getDeviceType() {
-        return 'OpenBio';
-    }
 
     static getParamConfig() {
         return deepcopy(paramConfig);
     }
 
-    static getMaxParam() {
-        return 52;
-    }
-
-    static getNbParamLog() {
-        return 26;
-    }
-
-    // Device specific utililties
+    // Device specific utilities
     getParsedCompactLog() {
-        var type = OpenBio.getDeviceType();
-        var maxParam = OpenBio.getMaxParam();
-        return this.getCompactLog()
-            .then((buff) => {
-                debug('parsing compact log');
-                return parser.parse('c', buff, {devicetype: type, nbParamCompact: maxParam})[0];
+        return this.getCompactLog().then((buff) => {
+            debug('parsing compact log');
+            return parser.parseCompactLog(buff, {
+                numberParameters:this.numberParameters
             });
+        });
     }
 
     getLastLog() {
-        return this.addRequest('l\n');
+        return this.addRequest('l');
     }
 
     getLastEntryID() {
-        return this.addRequest('m\n');
+        return this.addRequest('m');
     }
 
     getI2C() {
-        return this.addRequest('i\n');
+        return this.addRequest('i');
     }
 
     getOneWire() {
-        return this.addRequest('o\n');
+        return this.addRequest('o');
     }
 
     getMultiLog(entry) {
-        if (entry === undefined) {
-            var cmd = 'm';
-        } else {
-            cmd = 'm' + entry;
-        }
-        cmd += '\n';
-        if (!parser.parseCommand(cmd)) {
-            debug('command is :' + JSON.stringify(cmd));
-            return new Error('Invalid entry');
-        }
-        debug('adding multilog request :' + cmd);
+        var cmd = 'm' + ((entry === undefined) ? '' : entry);
         return this.addRequest(cmd);
     }
 
     getParsedMultiLog(entry) {
-        var type = OpenBio.getDeviceType();
-        var nbParam = OpenBio.getNbParamLog();
         return this.getMultiLog(entry).then((buff) => {
-            var cmd = 'm' + entry;
             debug('Parsing MultiLog');
-            return parser.parse(cmd, buff, {devicetype: type, nbParam: nbParam, hasEvent: true});
-        });
-    }
-
-
-    multiLogToDB(entry) {
-        var type = OpenBio.getDeviceType();
-        var that = this;
-        return this.getParsedMultiLog(entry).then((data) => {
-            var end = data.length;
-            debug('memEntry being written to dB: ' + data);
-            var i = 0;
-            return getNext();
-            function getNext() {
-                if (i >= end) {
-                    return undefined;
-                } else {
-                    return pouch.saveToSerialData(data[i], {
-                        devicetype: type,
-                        cmd: 'm',
-                        deviceId: that.id,
-                        memEntry: data[i].id,
-                    }).then(() => {
-                        i++;
-                    }).then(getNext);
-                }
-            }
-        });
-    }
-
-
-    compactLogToDB() {
-        var type = OpenBio.getDeviceType();
-        var that = this;
-        return this.getParsedCompactLog().then((data) => {
-            return pouch.saveToSerialData(data, {
-                devicetype: type,
-                cmd: 'c',
-                deviceId: that.id,
+            return parser.parseMultiLog(buff, {
+                numberLogParameters: this.numberLogParameters
             });
         });
     }
 
     setParameter(param, value) {
-        var command = param + value + '\n';
-        if (!parser.parseCommand(command)) {
-            debug('command does not match expected format A-AZ + value, no parameter set');
-            return Promise.reject(new Error('Command does not match the expected format'));
-        } else {
-            return this.addRequest(param + value).then((buff) => {
-                if (buff === value.toString()) {
-                    debug('written:', buff);
-                    return buff;
-                } else {
-                    debug('error writing to param:', buff);
-                    return Promise.reject('Param may not have been written');
-                }
-            });
-        }
+        var command = param + value;
+        return this.addRequest(param + value).then((buff) => {
+            if (buff === value.toString()) {
+                debug('written:', buff);
+                return buff;
+            } else {
+                debug('error writing to param:', buff);
+                return Promise.reject('Param may not have been written');
+            }
+        });
     }
 
-//getter
-    getDB() {
-        return pouch.getDeviceDB('bioreactors/by_mem', this.id);
-    }
+
 
 //autoDBLogging every 30sec
     autoDataLogger() {
-        function reSchedule() {
-            that.loggerIsRunning = false;
+        var reSchedule = () => {
+            this.loggerIsRunning = false;
             debug('autodataLog reschedule');
-            if (that.dbLoggerTimeout) {
-                that.stopAutoLog();
-                that.autoDataLogger();
+            if (this.dbLoggerTimeout) {
+                this.stopAutoLog();
+                this.autoDataLogger();
             }
-        }
+        };
 
         if (!this.dbLoggerTimeout) {
-            var that = this;
             this.dbLoggerTimeout = setTimeout(() => {
                 if (!this.loggerIsRunning) {
                     this.loggerIsRunning = true;
-                    that.getLastEntryID().then((lastId) => {
-                        debug('periodic polling on device :' + that.id);
+                    this.getLastEntryID().then((lastId) => {
+                        debug('periodic polling on device :' + this.id);
                         debug('returned: ' + lastId);
-                        return that.logUntil(lastId);
+                        return this.logUntil(lastId);
                     }).then(reSchedule, reSchedule);
                 }
             }, 20000);
@@ -199,13 +130,13 @@ class OpenBio extends AbstractDevice {
 
 
     //autoEpoch every 2 minutes (make the interval time a argument of the function)
-    autoSetEpoch() {
-        var that = this;
-        that.setEpochNow();
+    autoSetEpoch(interval = 120) {
+        this.setEpochNow();
         clearInterval(this.autoEpochInterval);
         this.autoEpochInterval = setInterval(() => {
-            return that.setEpochNow();
-        }, 120000);
+            // is 'this' not correct ?
+            this.setEpochNow();
+        }, interval * 1000);
     }
 
     clearAutoEpoch() {
