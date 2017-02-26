@@ -10,7 +10,7 @@ const incPoll = new IncPoll({
     chunk: 5,
     task: function (inc) {
         return new Promise(function(resolve) {
-            console.log('poll');
+            console.log('poll, inc: ', inc);
             setTimeout(() => {
                 resolve(arr.slice(inc, inc + 5));
             }, 3000);

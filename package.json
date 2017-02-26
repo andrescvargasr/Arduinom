@@ -37,7 +37,7 @@
     "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix",
-    "node-build": "babel src --out-dir lib --quiet",
+    "node-build": "babel src --out-dir lib",
     "node-watch": "npm run node-build -- --watch",
     "prepublish": "npm run build",
     "start": "node lib/server/server.js",
