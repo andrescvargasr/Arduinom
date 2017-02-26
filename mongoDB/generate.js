@@ -5,6 +5,8 @@ const createCollection = false;
 
 const url = 'mongodb://localhost:27017/mongo_test';
 
+// test();
+
 function getCyclicData(options) {
     const interval = (options.to - options.from) / options.n;
     return Array.from({length: options.n})
@@ -20,7 +22,7 @@ function getCyclicData(options) {
 }
 
 function createIndex(db) {
-    return getCollection(db).createIndex({ year: 1, month: 1, day: 1, "A": 1});
+    return getCollection(db).createIndex({ epoch: 1});
 }
 
 function getCollection(db) {
@@ -32,7 +34,7 @@ function insertDocuments(db) {
         var collection = db.collection('cyclic');
         return collection.drop().then(() => {
             return collection.insertMany(getCyclicData({
-                n: 1000000,
+                n: 100000,
                 from: Date.now() - 10000000000,
                 to: Date.now(),
                 mean: 3,
@@ -122,3 +124,16 @@ MongoClient.connect(url)
     .catch(err => {
         console.log('error', err);
     });
+
+
+function test() {
+    MongoClient.connect(url).then(db => {
+        const collection = db.collection('cyclic');
+        const x = collection.find({}, {_id: 0, epoch: 1}).sort({epoch: 1}).limit(1).toArray().then(data => console.log(data));
+        console.log('x', x);
+        db.close();
+    });
+
+}
+
+
