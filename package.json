@@ -43,7 +43,7 @@
     "node-build": "babel src --out-dir lib",
     "node-watch": "npm run node-build -- --watch",
     "prepublish": "npm run build",
-    "start": "node lib/server/server.js",
+    "start": "node src/server/server.js --sync-db",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
