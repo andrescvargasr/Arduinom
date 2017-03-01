@@ -1,14 +1,18 @@
 'use strict';
-const express = require('express');
-const app = express();
-const server = require('http').Server(app);
+
+const path = require('path');
+const Koa = require('koa');
+const koaStatic = require('koa-static');
+const app = new Koa();
+const callback = app.callback();
+const server = require('http').Server(callback);
 const argv = require('minimist')(process.argv.slice(2));
 const io = require('socket.io')(server);
 const ioDevices = require('./socketio/devices');
 
 server.listen(3000);
 
-app.use(express.static('src/public'));
+app.use(koaStatic(path.join(__dirname, '../public')));
 // Emit welcome message on connection
 ioDevices(io);
 
