@@ -17,7 +17,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
 
-
     static getParamConfig() {
         return deepcopy(paramConfig);
     }

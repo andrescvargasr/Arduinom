@@ -3,7 +3,6 @@ var util = require('../utilities/util');
 const EventEmitter = require('events');
 const deviceManagerInstance = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
-const parser = require('../utilities/parser');
 
 
 class AbstractDevice extends EventEmitter {
@@ -55,8 +54,6 @@ class AbstractDevice extends EventEmitter {
         debug('adding a new request to queue via abstract device class');
         return deviceManagerInstance.addRequest(this.id, cmd + '\n', options).then(res => res.replace(/[\r\n]*$/, ''));
     }
-
-
 
 
     //safety to prevent command of being received while an slow experiment is running

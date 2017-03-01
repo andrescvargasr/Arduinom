@@ -2,8 +2,6 @@
 
 var debug = require('debug')('main: parser');
 var util = require('./util');
-var opSpectro = require('open-spectro');
-
 
 // TODO: review this file completly!!
 module.exports = {
@@ -21,10 +19,10 @@ module.exports = {
 
 
 function processMultilog(buffer, lineLength, numberLogParameters) {
-    var lines=buffer.split(/[\r\n]+/);
+    var lines = buffer.split(/[\r\n]+/);
     var entries = [];
     for (var line of lines) {
-        var entry=processMultilogLine(line, lineLength, numberLogParameters);
+        var entry = processMultilogLine(line, lineLength, numberLogParameters);
         if (entry) entries.push(entry);
     }
     // Check that all entries come from the same device!!
@@ -77,8 +75,8 @@ function processMultilogLine(line, lineLength, numberParameters) {
         entry.epoch = parseInt('0x' + line.substring(8, 16));
         parseParameters(line, 16, numberParameters, entry);
 
-        entry.event=convertSignedIntHexa(line.substring(16 + numberParameters * 4, 16 + numberParameters * 4 + 4));
-        entry.eventValue=convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 4, 16 + numberParameters * 4 + 4 + 4));
+        entry.event = convertSignedIntHexa(line.substring(16 + numberParameters * 4, 16 + numberParameters * 4 + 4));
+        entry.eventValue = convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 4, 16 + numberParameters * 4 + 4 + 4));
 
         entry.deviceId = convertSignedIntHexa(line.substring(16 + numberParameters * 4 + 8, 16 + numberParameters * 4 + 8 + 4));
         if (!entry.deviceId) {
@@ -100,7 +98,7 @@ function parseParameters(line, start, numberParameters, entry) {
         var value = convertSignedIntHexa(line.substring(start + (i * 4), start + 4 + (i * 4)));
         if (value === -32768) value = null;
         if (i < 26) entry.parameters[String.fromCharCode(65 + i)] = value;
-        else entry.parameters[String.fromCharCode(Math.floor(i/26)+64, 65 + i - 26)] = value;
+        else entry.parameters[String.fromCharCode(Math.floor(i / 26) + 64, 65 + i - 26)] = value;
     }
 }
 

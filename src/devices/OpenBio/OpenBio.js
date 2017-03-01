@@ -24,7 +24,7 @@ class OpenBio extends AbstractDevice {
         return this.getCompactLog().then((buff) => {
             debug('parsing compact log');
             return parser.parseCompactLog(buff, {
-                numberParameters:this.numberParameters
+                numberParameters: this.numberParameters
             });
         });
     }
@@ -60,7 +60,6 @@ class OpenBio extends AbstractDevice {
     }
 
     setParameter(param, value) {
-        var command = param + value;
         return this.addRequest(param + value).then((buff) => {
             if (buff === value.toString()) {
                 debug('written:', buff);
@@ -71,7 +70,6 @@ class OpenBio extends AbstractDevice {
             }
         });
     }
-
 
 
 //autoDBLogging every 30sec

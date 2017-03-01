@@ -5,7 +5,7 @@ function idStringToNumber(idString) {
 
     if (idString.length === 2) {
         return idString.charCodeAt(0) * 256 + idString.charCodeAt(1);
-    }    else {
+    } else {
         throw new Error('Id does not have the expected 2 char format');
     }
     //return idString;
