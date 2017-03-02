@@ -35,8 +35,8 @@
     "watchify": "^3.8.0"
   },
   "scripts": {
-    "browser-build": "mkdir -p lib/public/browserified; browserify src/client/index.js -o lib/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
-    "browser-watch": "mkdir -p lib/public/browserified; watchify src/client/index.js -v -o lib/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
+    "browser-build": "mkdir -p src/public/browserified; browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
+    "browser-watch": "mkdir -p src/public/browserified; watchify src/client/index.js -v -o src/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
     "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix",
