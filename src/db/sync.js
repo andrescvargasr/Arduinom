@@ -27,7 +27,7 @@ deviceFactory.on('newDevice', async function (device) {
         },
         chunk: 10,
         start,
-        pollTimeout: 10000,
+        pollTimeout: 20000,
         errorTimeout: 1000
     });
 
