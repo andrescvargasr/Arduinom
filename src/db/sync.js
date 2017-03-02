@@ -12,7 +12,7 @@ deviceFactory.on('newDevice', async function (device) {
     // Get start
     // ignore devices that don't have multilog
     if (!device.getParsedMultiLog) return;
-    let deviceId = 'device' + device.id;
+    let deviceId = device.id;
     const start = await connection.getLastSeqId(deviceId);
     const incPoll = new IncPoll({
         task: async function (inc) {
