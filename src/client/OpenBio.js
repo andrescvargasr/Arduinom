@@ -11,9 +11,9 @@ module.exports = function (socket) {
     }
 
     var methods = ['getParsedCompactLog', 'getLastLog', 'getLastEntryID', 'getI2C', 'getOneWire', 'getMultiLog',
-        'getParsedMultiLog', 'multiLogToDB', 'compactLogToDB', 'setParameter', 'getDB', 'autoDataLogger', 'stopAutoLog',
-        'autoSetEpoch', 'clearAutoEpoch', 'addRequest', 'getHelp', 'getFreeMem', 'getQualifier', 'getEEPROM',
-        'getSettings', 'getCompactLog', 'getEpoch', 'setEpoch', 'setEpochNow'];
+        'getParsedMultiLog', 'multiLogToDB', 'compactLogToDB', 'setParameter', 'getDB', 'addRequest', 'getHelp',
+        'getFreeMem', 'getQualifier', 'getEEPROM', 'getSettings', 'getCompactLog', 'getEpoch', 'setEpoch',
+        'setEpochNow'];
     var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType'];
 
     addMethods.methods(methods, OpenBio, socket);

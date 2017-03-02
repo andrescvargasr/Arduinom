@@ -70,48 +70,6 @@ class OpenBio extends AbstractDevice {
             }
         });
     }
-
-
-//autoDBLogging every 30sec
-    autoDataLogger() {
-        var reSchedule = () => {
-            this.loggerIsRunning = false;
-            debug('autodataLog reschedule');
-            if (this.dbLoggerTimeout) {
-                this.stopAutoLog();
-                this.autoDataLogger();
-            }
-        };
-
-        if (!this.dbLoggerTimeout) {
-            this.dbLoggerTimeout = setTimeout(() => {
-                if (!this.loggerIsRunning) {
-                    this.loggerIsRunning = true;
-                    this.getLastEntryID().then((lastId) => {
-                        debug('periodic polling on device :' + this.id);
-                        debug('returned: ' + lastId);
-                        return this.logUntil(lastId);
-                    }).then(reSchedule, reSchedule);
-                }
-            }, 20000);
-        }
-    }
-
-
-    //autoEpoch every 2 minutes (make the interval time a argument of the function)
-    autoSetEpoch(interval = 120) {
-        this.setEpochNow();
-        clearInterval(this.autoEpochInterval);
-        this.autoEpochInterval = setInterval(() => {
-            // is 'this' not correct ?
-            this.setEpochNow();
-        }, interval * 1000);
-    }
-
-    clearAutoEpoch() {
-        clearInterval(this.autoEpochInterval);
-        this.autoEpochInterval = undefined;
-    }
 }
 
 module.exports = OpenBio;
