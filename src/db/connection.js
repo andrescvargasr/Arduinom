@@ -32,9 +32,8 @@ module.exports = {
     async getEntries(collectionName, options) {
         options = Object.assign({}, getEntriesDefaultOptions, options);
         const parameters = options.parameters.split(',');
-        const projection = {_id: 0, event: 1, eventValue: 1, epoch: 1};
+        const projection = {_id: 0, event: 1, eventValue: 1, epoch: 1, id: 1};
         parameters.forEach(p => projection[`parameters.${p}`] = 1);
-        console.log(projection);
         if(options.sort === 'desc') {
             var sort = {epoch: -1, id: -1};
         } else {
