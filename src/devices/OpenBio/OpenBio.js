@@ -30,11 +30,11 @@ class OpenBio extends AbstractDevice {
     }
 
     getLastLog() {
-        return this.addRequest('l');
+        return this.addRequest('ll');
     }
 
     getLastEntryID() {
-        return this.addRequest('m');
+        return this.addRequest('lm');
     }
 
     getI2C() {
@@ -46,7 +46,7 @@ class OpenBio extends AbstractDevice {
     }
 
     getMultiLog(entry) {
-        var cmd = 'm' + ((entry === undefined) ? '' : entry);
+        var cmd = 'lm' + ((entry === undefined) ? '' : entry);
         return this.addRequest(cmd);
     }
 
