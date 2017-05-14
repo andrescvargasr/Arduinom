@@ -3,7 +3,9 @@
 const DeviceFactory = require('../src/devices/DeviceFactory');
 
 DeviceFactory.on('newDevice', device => {
-    console.log('New device');
+    console.log('New device', device);
+
+
 
     device.getParsedCompactLog().then(data => {
         console.log(data);

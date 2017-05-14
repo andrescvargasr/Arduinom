@@ -6,7 +6,7 @@ const deviceManager = new DeviceManager({
         if (portInfo.manufacturer === 'Arduino_LLC' || portInfo.manufacturer === 'SparkFun') {
             return {
                 baudrate: 38400,
-                getIdCommand: 'q\n',
+                getIdCommand: 'uq\n',
                 getIdResponseParser: function (buffer) {
                     if (!buffer.match(/^\d{1,5}\r\n\r\n$/)) {
                         throw new Error('invalid qualifier');

@@ -3,16 +3,15 @@ var util = require('../utilities/util');
 const EventEmitter = require('events');
 const deviceManagerInstance = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
-
+const deepcopy = require('deepcopy');
 
 class AbstractDevice extends EventEmitter {
 
     constructor(id) {
         super();
-        var qualifierReg = /^([\x21-\x7A])([\x21-\x7A])$/;
         var idString = util.deviceIdNumberToString(id);
-        var m = qualifierReg.exec(idString);
-        if (!m) {
+        var parameters=[];
+        if (! idString.match(/^([\x21-\x7A])([\x21-\x7A])$/)) {
             debug('The id did not match the regex. Id was: ' + idString);
             throw new Error('Invalid device id');
         }
@@ -21,11 +20,6 @@ class AbstractDevice extends EventEmitter {
         this.pending = false; //flag to check if an experiment is currently running
         this.status = 'connect';
     }
-
-    static getParamConfig() {
-        throw new Error('getParamConfig not implemented');
-    }
-
 
     //private methods
     _init() {
@@ -62,38 +56,66 @@ class AbstractDevice extends EventEmitter {
         return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
     }
 
+    getParameters() {
+        return this.parameters;
+    }
+
+    setParameter(param, value) {
+        return this.addRequest(param + value).then((buff) => {
+            if (buff === value.toString()) {
+                debug('written:', buff);
+                return buff;
+            } else {
+                debug('error writing to param:', buff);
+                return Promise.reject('Param may not have been written');
+            }
+        });
+    }
+
+    getParameter(param) {
+        return this.addRequest(param + value).then((buff) => {
+            if (buff === value.toString()) {
+                debug('written:', buff);
+                return buff;
+            } else {
+                debug('error writing to param:', buff);
+                return Promise.reject('Param may not have been written');
+            }
+        });
+    }
+
     // Device utilities
     getHelp() {
         return this.addRequest('h');
-    }
-
-    getFreeMem() {
-        return this.addRequest('f');
-    }
-
-    getQualifier() {
-        return this.addRequest('q');
-    }
-
-    getEEPROM() {
-        return this.addRequest('z', {timeout: 500});
     }
 
     getSettings() {
         this.addRequest('s');
     }
 
-    getCompactLog() {
-        return this.addRequest('c');
+    getFreeMemory() {
+        return this.addRequest('uf');
+    }
+
+    getQualifier() {
+        return this.addRequest('uq');
+    }
+
+    getEEPROM() {
+        return this.addRequest('uz', {timeout: 500});
+    }
+
+    getCompactSettings() {
+        return this.addRequest('uc');
     }
 
     // Time utilities
     getEpoch() {
-        return this.addRequest('e');
+        return this.addRequest('ue');
     }
 
     setEpoch(time) {
-        var cmd = 'e' + time;
+        var cmd = 'ue' + time;
         return this.addRequest(cmd);
     }
 
@@ -102,7 +124,6 @@ class AbstractDevice extends EventEmitter {
         var time = Math.round(Date.now() / 1000);
         return this.setEpoch(time);
     }
-
 }
 
 module.exports = AbstractDevice;

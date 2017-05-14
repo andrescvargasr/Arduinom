@@ -4,9 +4,8 @@ process.on('unhandledRejection', e => {
 });
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:openspectro');
-const paramConfig = require('./params');
+const parameters = require('./parameters');
 const parser = require('../../utilities/parser');
-const deepcopy = require('deepcopy');
 
 
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
@@ -14,18 +13,16 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         super(id);
         this.type = 'OpenSpectro';
         this.numberParameters = 26;
+        this.parameters = parameters;
     }
 
 
-    static getParamConfig() {
-        return deepcopy(paramConfig);
-    }
 
     // Device specific utilities
-    getParsedCompactLog() {
+    getSettings() {
         var that = this;
         var type = OpenSpectro.getDeviceType();
-        return this.getCompactLog()
+        return this.getCompactSettings()
             .then((buff) => {
                 return parser.parse('c', buff, {devicetype: type, nbParamCompact: that.maxParam})[0];
             });

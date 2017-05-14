@@ -1,7 +1,7 @@
 'use strict';
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
-const paramConfig = require('./params');
+const parameters = require('./parameters');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
 
@@ -14,14 +14,9 @@ class OpenBio extends AbstractDevice {
         this.numberLogParameters = 26;
     }
 
-
-    static getParamConfig() {
-        return deepcopy(paramConfig);
-    }
-
     // Device specific utilities
     getParsedCompactLog() {
-        return this.getCompactLog().then((buff) => {
+        return this.getCompactSettings().then((buff) => {
             debug('parsing compact log');
             return parser.parseCompactLog(buff, {
                 numberParameters: this.numberParameters
@@ -59,17 +54,7 @@ class OpenBio extends AbstractDevice {
         });
     }
 
-    setParameter(param, value) {
-        return this.addRequest(param + value).then((buff) => {
-            if (buff === value.toString()) {
-                debug('written:', buff);
-                return buff;
-            } else {
-                debug('error writing to param:', buff);
-                return Promise.reject('Param may not have been written');
-            }
-        });
-    }
+
 }
 
 module.exports = OpenBio;
