@@ -9,20 +9,7 @@ const deepcopy = require('deepcopy');
 class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
-        this.type = 'OpenBio';
-        this.numberParameters = 52;
-        this.numberLogParameters = 26;
         this.deviceInformation=deviceInformation;
-    }
-
-    // Device specific utilities
-    getParsedCompactLog() {
-        return this.getCompactSettings().then((buff) => {
-            debug('parsing compact log');
-            return parser.parseCompactLog(buff, {
-                numberParameters: this.numberParameters
-            });
-        });
     }
 
     getLastLog() {
@@ -54,7 +41,6 @@ class OpenBio extends AbstractDevice {
             });
         });
     }
-
 
 }
 

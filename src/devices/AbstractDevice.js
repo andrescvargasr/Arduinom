@@ -4,13 +4,13 @@ const EventEmitter = require('events');
 const deviceManagerInstance = require('./DeviceManager');
 const debug = require('debug')('main:abstractDevice');
 const deepcopy = require('deepcopy');
+const parser = require('../utilities/parser');
 
 class AbstractDevice extends EventEmitter {
 
     constructor(id) {
         super();
         var idString = util.deviceIdNumberToString(id);
-        var parameters=[];
         if (! idString.match(/^([\x21-\x7A])([\x21-\x7A])$/)) {
             debug('The id did not match the regex. Id was: ' + idString);
             throw new Error('Invalid device id');
@@ -38,6 +38,14 @@ class AbstractDevice extends EventEmitter {
                 this.emit('disconnect');
             }
         });
+    }
+
+    get numberParameters() {
+        return this.deviceInformation.numberParameters;
+    }
+
+    get type() {
+        return this.deviceInformation.type;
     }
 
     //public methods
@@ -84,7 +92,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     getSettings() {
-        this.addRequest('s');
+        return this.addRequest('s');
     }
 
     getFreeMemory() {
@@ -103,7 +111,13 @@ class AbstractDevice extends EventEmitter {
         return this.addRequest('uc');
     }
 
-    // Time utilities
+    getFormattedSettings() {
+        return this.getCompactSettings().then(settings => {
+                return parser.parseCompactLog(settings, this.numberParameters);
+            }
+        );
+    }
+
     getEpoch() {
         return this.addRequest('ue');
     }

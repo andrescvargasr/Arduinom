@@ -8,9 +8,9 @@
             addMessage(data);
         });
 
-        socket.on('deviceConnected',  data => addMessage(data));
-        socket.on('deviceDisconnected', data => addMessage(data));
-        socket.on('newDevice', data => addMessage(data));
+        socket.on('deviceConnected',  data => console.log('connected',data));
+        socket.on('deviceDisconnected', data => console.log('disconnected',data));
+        socket.on('newDevice', data => console.log('newDevice', data));
 
 
         //socket.on('message', console.log.bind(console));

@@ -25,6 +25,16 @@ DeviceFactory.on('newDevice', device => {
          We can now call all the 'default' methods. Those methods are
          expected to be implemented in all our devices
          */
+        console.log(separator,'runExperiment',separator);
+        var experiment=await device.runExperiment();
+        console.log(experiment);
+
+        return;
+
+        console.log(separator,'getFormattedSettings',separator);
+        var settings=await device.getFormattedSettings();
+        console.log(settings);
+
         console.log(separator,'getHelp',separator);
         var data = await device.getHelp()
         console.log(data);
@@ -49,10 +59,11 @@ DeviceFactory.on('newDevice', device => {
         var settings=await device.getSettings();
         console.log(settings);
 
+
+
         console.log(separator,'runAndParseExperiment',separator);
         var experiment=await device.runAndParseExperiment();
         console.log(experiment);
-
     }
 
 });

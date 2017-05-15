@@ -11,34 +11,22 @@ const parser = require('../../utilities/parser');
 class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     constructor(id) {
         super(id);
-        this.type = 'OpenSpectro';
-        this.numberParameters = 26;
         this.deviceInformation = deviceInformation;
     }
 
 
-
-    // Device specific utilities
-    getSettings() {
-        var that = this;
-        var type = OpenSpectro.getDeviceType();
-        return this.getCompactSettings()
-            .then((buff) => {
-                return parser.parse('c', buff, {devicetype: type, nbParamCompact: that.maxParam})[0];
-            });
-    }
-
     calibrate() {
-        return this.addRequest('k\n', {timeout: 500});
+        return this.addRequest('k', {timeout: 500});
     }
 
 
-
-
-    //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
-    //request exceeding maxQueue length will be disregarded
+    /*
+     Be careful, the data acquisition on the openspectro requires time,
+     sending to many requests can overfill the queue
+     request exceeding maxQueue length will be disregarded
+     */
     getRGB() {
-        var getRGB = this.addRequest('a\n', {timeout: 5000}).then((buff) => {
+        var getRGB = this.addRequest('a', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('rgb data: ', buff);
         });
@@ -48,7 +36,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
 
 
     testAll() {
-        var testAll = this.addRequest('t\n', {timeout: 5000}).then((buff) => {
+        var testAll = this.addRequest('t', {timeout: 5000}).then((buff) => {
             this.pending = false;
             debug('test all: ', buff);
         });
@@ -57,10 +45,11 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
     }
 
     runExperiment() {
-        var experiment = this.addRequest('I\n', {timeout: 500})
+        var experiment = this.addRequest('I', {timeout: 500})
             .then((delay) => {
                 debug('experiment delay in ms :', parseInt(delay));
-                return this.addRequest('r\n', {timeout: (parseInt(delay) * 1000 + 5000)});
+                console.log(parseInt(delay)*1000+5000);
+                return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
             })
             .then(buff => {
                 this.pending = false;
@@ -69,15 +58,6 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         this.pending = true;
         return experiment;
     }
-
-    runAndParseExperiment() {
-        return this.runExperiment()
-            .then(buffer => {
-                var type = OpenSpectro.getDeviceType();
-                return parser.parse('r\n', buffer, {devicetype: type});
-            });
-    }
-
 }
 
 module.exports = OpenSpectro;

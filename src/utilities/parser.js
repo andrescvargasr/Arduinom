@@ -5,20 +5,12 @@ var util = require('./util');
 
 // TODO: review this file completly!!
 module.exports = {
-    parseMultiLog(buffer, options) {
-        var numberLogParameters = options.numberLogParameters;
-        var lineLength = numberLogParameters * 4 + 22 + 8;
-        return processMultilog(buffer, lineLength, numberLogParameters);
-    },
-    parseCompactLog(line, options) {
-        var numberParameters = options.numberParameters;
-        var lineLength = numberParameters * 4 + 14;
-        return processStatusLine(line, lineLength, numberParameters);
-    }
+    parseMultiLog,
+    parseCompactLog
 };
 
-
-function processMultilog(buffer, lineLength, numberLogParameters) {
+function parseMultiLog(buffer, numberLogParameters) {;
+    var lineLength = numberLogParameters * 4 + 22 + 8;
     var lines = buffer.split(/[\r\n]+/);
     var entries = [];
     for (var line of lines) {
@@ -39,7 +31,9 @@ function processMultilog(buffer, lineLength, numberLogParameters) {
 }
 
 
-function processStatusLine(line, lineLength, numberParameters) {
+function parseCompactLog(line, numberParameters) {
+    var lineLength = numberParameters * 4 + 14;
+
     // this line contains the 26 parameters as well as the check digit. We should
     // only consider the line if the check digit is ok
     const entry = {};

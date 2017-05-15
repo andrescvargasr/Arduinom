@@ -2,7 +2,8 @@
 
 module.exports = {
     name: 'Open spectrophotometer',
-    maxParameters: 26,
+    type: 'OpenSpectro',
+    numberParameters: 26,
     description: '',
     url: '',
     parameters: [

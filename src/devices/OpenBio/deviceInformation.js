@@ -2,9 +2,11 @@
 
 module.exports = {
     name: 'Open bioreactor',
+    type: 'OpenBio',
     description: '',
     url: '',
-    maxParameters: 26,
+    numberParameters: 52,
+    numberLogParameters: 26,
     parameters: [
         {
             parameter: 'A', label: 'T°LIQ', description: 'Temperature of the bioreactor solution',
