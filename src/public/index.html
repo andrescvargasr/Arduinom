@@ -8,8 +8,15 @@
             addMessage(data);
         });
 
-        socket.on('message', console.log.bind(console));
+        socket.on('deviceConnected',  data => addMessage(data));
+        socket.on('deviceDisconnected', data => addMessage(data));
+        socket.on('newDevice', data => addMessage(data));
+
+
+        //socket.on('message', console.log.bind(console));
+
         function addMessage(message) {
+            console.log(message);
             var text = document.createTextNode(message),
                     el = document.createElement('li'),
                     messages = document.getElementById('messages');

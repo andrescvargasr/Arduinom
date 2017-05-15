@@ -4,7 +4,7 @@ process.on('unhandledRejection', e => {
 });
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:openspectro');
-const parameters = require('./parameters');
+const deviceInformation = require('./deviceInformation');
 const parser = require('../../utilities/parser');
 
 
@@ -13,7 +13,7 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         super(id);
         this.type = 'OpenSpectro';
         this.numberParameters = 26;
-        this.parameters = parameters;
+        this.deviceInformation = deviceInformation;
     }
 
 
@@ -32,9 +32,8 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return this.addRequest('k\n', {timeout: 500});
     }
 
-    initializeParameters() {
-        return this.addRequest('i\n');
-    }
+
+
 
     //careful, the data acquisition on the openspectro require time, sending to many requests can overfill the queue
     //request exceeding maxQueue length will be disregarded

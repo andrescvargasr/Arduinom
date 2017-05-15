@@ -33,19 +33,27 @@ DeviceFactory.on('newDevice', device => {
         var freeMemory=await device.getFreeMemory();
         console.log(freeMemory);
 
-        console.log(separator,'getParameters',separator);
-        var parameters=await device.getParameters();
+        console.log(separator,'getDeviceInformation',separator);
+        var parameters=await device.getDeviceInformation();
         console.log(parameters);
 
         console.log(separator,'getEpoch',separator);
         var epoch=await device.getEpoch();
         console.log(epoch);
 
-    };
+        console.log(separator,'getParameter A',separator);
+        var a=await device.getParameter('A');
+        console.log(a);
 
+        console.log(separator,'getSettings',separator);
+        var settings=await device.getSettings();
+        console.log(settings);
 
+        console.log(separator,'runAndParseExperiment',separator);
+        var experiment=await device.runAndParseExperiment();
+        console.log(experiment);
 
-
+    }
 
 });
 

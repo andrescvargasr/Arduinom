@@ -1,7 +1,7 @@
 'use strict';
 const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('main:OpenBio');
-const parameters = require('./parameters');
+const deviceInformation = require('./deviceInformation');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
 
@@ -12,6 +12,7 @@ class OpenBio extends AbstractDevice {
         this.type = 'OpenBio';
         this.numberParameters = 52;
         this.numberLogParameters = 26;
+        this.deviceInformation=deviceInformation;
     }
 
     // Device specific utilities

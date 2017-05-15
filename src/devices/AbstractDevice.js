@@ -56,31 +56,25 @@ class AbstractDevice extends EventEmitter {
         return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
     }
 
-    getParameters() {
-        return this.parameters;
+    getDeviceInformation() {
+        return this.deviceInformation;
     }
 
     setParameter(param, value) {
-        return this.addRequest(param + value).then((buff) => {
-            if (buff === value.toString()) {
-                debug('written:', buff);
-                return buff;
+        return this.addRequest(param + value).then((buffer) => {
+            if (buffer === value.toString()) {
+                debug('written:', buffer);
+                return buffer;
             } else {
-                debug('error writing to param:', buff);
-                return Promise.reject('Param may not have been written');
+                debug('error writing the parameter:', buffer);
+                return Promise.reject('Parameter may not have been written');
             }
         });
     }
 
-    getParameter(param) {
-        return this.addRequest(param + value).then((buff) => {
-            if (buff === value.toString()) {
-                debug('written:', buff);
-                return buff;
-            } else {
-                debug('error writing to param:', buff);
-                return Promise.reject('Param may not have been written');
-            }
+    getParameter(parameter) {
+        return this.addRequest(parameter).then((buffer) => {
+            return buffer;
         });
     }
 
