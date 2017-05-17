@@ -17,7 +17,7 @@ class AbstractDevice extends EventEmitter {
         }
         this._init();
         this.id = id;
-        this.pending = false; //flag to check if an experiment is currently running
+        // TODO: Is this necessary ? Then it should be a boolean I think
         this.status = 'connect';
     }
 
@@ -52,17 +52,10 @@ class AbstractDevice extends EventEmitter {
     addRequest(cmd, options) {
         //check here that the command does match the expected standard
         if (!isCommandValid(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
-        if (this.pending) return this._pendingExperiment();
-        debug('adding a new request to queue via abstract device class');
+         debug('adding a new request to queue via abstract device class');
         return deviceManagerInstance.addRequest(this.id, cmd + '\n', options).then(res => res.replace(/[\r\n]*$/, ''));
     }
 
-
-    //safety to prevent command of being received while an slow experiment is running
-    _pendingExperiment() {
-        debug('rejected request, wait for completion of the experiment running on device  :', this.id);
-        return Promise.reject(new Error('rejected request, wait for completion of the experiment running on openspectro :' + this.id));
-    }
 
     getDeviceInformation() {
         return this.deviceInformation;
@@ -104,6 +97,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     getEEPROM() {
+        // TODO hwy timeout ? We don't delay each time we receive ?
         return this.addRequest('uz', {timeout: 500});
     }
 
