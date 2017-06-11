@@ -49,11 +49,14 @@ class AbstractDevice extends EventEmitter {
     }
 
     //public methods
-    addRequest(cmd, options) {
+    async addRequest(cmd, options) {
         //check here that the command does match the expected standard
-        if (!isCommandValid(cmd)) return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
-         debug('adding a new request to queue via abstract device class');
-        return deviceManagerInstance.addRequest(this.id, cmd + '\n', options).then(res => res.replace(/[\r\n]*$/, ''));
+        if (!isCommandValid(cmd)) {
+            return Promise.reject(new Error('Invalid command. Command was:' + JSON.stringify(cmd)));
+        }
+        debug('adding a new request to queue via abstract device class');
+        var result = await deviceManagerInstance.addRequest(this.id, cmd + '\n', options);
+        return result.replace(/[\r\n]*$/, '');
     }
 
 
@@ -97,19 +100,16 @@ class AbstractDevice extends EventEmitter {
     }
 
     getEEPROM() {
-        // TODO hwy timeout ? We don't delay each time we receive ?
-        return this.addRequest('uz', {timeout: 500});
+        return this.addRequest('uz');
     }
 
     getCompactSettings() {
         return this.addRequest('uc');
     }
 
-    getFormattedSettings() {
-        return this.getCompactSettings().then(settings => {
-                return parser.parseCompactLog(settings, this.numberParameters);
-            }
-        );
+    async getFormattedSettings() {
+        var settings = await this.getCompactSettings();
+        return parser.parseCompactLog(settings, this.numberParameters);
     }
 
     getEpoch() {

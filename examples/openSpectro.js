@@ -15,57 +15,33 @@ DeviceFactory.on('newDevice', device => {
     */
 
     console.log('We found a new device of type:',device.type);
-
     if (device.type !== 'OpenSpectro') return;
+    console.log('We found an OpenSpectro');
 
-    generalMethods();
 
-    async function generalMethods() {
-        /*
-         We can now call all the 'default' methods. Those methods are
-         expected to be implemented in all our devices
-         */
+    spectroMethods();
+
+    async function spectroMethods() {
+        console.log(separator,'setExperimentDelay',separator);
+        var delay=await device.setExperimentDelay(1000);
+        console.log(delay);
+
         console.log(separator,'runExperiment',separator);
         var experiment=await device.runExperiment();
         console.log(experiment);
 
-        return;
+        console.log(separator,'getExperimentDelay',separator);
+        var delay=await device.getExperimentDelay();
+        console.log(delay);
 
-        console.log(separator,'getFormattedSettings',separator);
-        var settings=await device.getFormattedSettings();
-        console.log(settings);
-
-        console.log(separator,'getHelp',separator);
-        var data = await device.getHelp()
-        console.log(data);
-
-        console.log(separator,'getFreeMemmory',separator);
-        var freeMemory=await device.getFreeMemory();
-        console.log(freeMemory);
-
-        console.log(separator,'getDeviceInformation',separator);
-        var parameters=await device.getDeviceInformation();
-        console.log(parameters);
-
-        console.log(separator,'getEpoch',separator);
-        var epoch=await device.getEpoch();
-        console.log(epoch);
-
-        console.log(separator,'getParameter A',separator);
-        var a=await device.getParameter('A');
-        console.log(a);
-
-        console.log(separator,'getSettings',separator);
-        var settings=await device.getSettings();
-        console.log(settings);
-
-
+        console.log(separator,'setExperimentDelay',separator);
+        var delay=await device.setExperimentDelay(1000);
+        console.log(delay);
 
         console.log(separator,'runAndParseExperiment',separator);
         var experiment=await device.runAndParseExperiment();
         console.log(experiment);
     }
-
 });
 
 DeviceFactory.on('error', err => console.log);
