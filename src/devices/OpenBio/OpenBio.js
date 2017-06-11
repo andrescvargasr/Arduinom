@@ -12,14 +12,6 @@ class OpenBio extends AbstractDevice {
         this.deviceInformation=deviceInformation;
     }
 
-    getLastLog() {
-        return this.addRequest('ll');
-    }
-
-    getLastEntryID() {
-        return this.addRequest('lm');
-    }
-
     getI2C() {
         return this.addRequest('i');
     }
@@ -28,17 +20,24 @@ class OpenBio extends AbstractDevice {
         return this.addRequest('o');
     }
 
+    getLastLog() {
+        return this.addRequest('ll');
+    }
+
+    getLastEntryID() {
+        return this.addRequest('lm');
+    }
+
     getMultiLog(entry) {
         var cmd = 'lm' + ((entry === undefined) ? '' : entry);
         return this.addRequest(cmd);
     }
 
-    getParsedMultiLog(entry) {
-        return this.getMultiLog(entry).then((buff) => {
-            debug('Parsing MultiLog');
-            return parser.parseMultiLog(buff, {
-                numberLogParameters: this.numberLogParameters
-            });
+    async getParsedMultiLog(entry) {
+        var buffer=await this.getMultiLog(entry);
+        debug('Parsing MultiLog');
+        return parser.parseMultiLog(buffer, {
+            numberLogParameters: this.getNumberLogParameters()
         });
     }
 

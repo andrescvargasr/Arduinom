@@ -16,11 +16,21 @@ DeviceFactory.on('newDevice', device => {
 
     console.log('We found a new device of type:',device.type);
     if (device.type !== 'Solar') return;
-    console.log('We found an OpenSpectro');
+    console.log('We found a Solars');
 
     solarMethods();
 
     async function solarMethods() {
+
+        console.log(separator,'getMultiLog',separator);
+        var lastLog=await device.getMultiLog();
+        console.log(lastLog);
+
+        console.log(separator,'getParsedMultiLog',lastLog,separator);
+        var multilog=await device.getParsedMultiLog(lastLog-10, {
+            hasEvent:false
+        });
+        console.log(multilog);
 
         console.log(separator,'getTemperature',separator);
         var temperature=await device.getTemperature();
@@ -37,6 +47,12 @@ DeviceFactory.on('newDevice', device => {
         console.log(separator,'getPressure',separator);
         var pressure=await device.getPressure();
         console.log(pressure);
+
+
+        console.log(separator,'getMultiLog',lastLog,separator);
+        var multilog=await device.getMultiLog(lastLog-10);
+        console.log(multilog);
+
 
 
     }

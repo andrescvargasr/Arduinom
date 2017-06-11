@@ -63,13 +63,17 @@ class AbstractDevice extends EventEmitter {
         return this.deviceInformation;
     }
 
+    getNumberLogParameters() {
+        return this.getDeviceInformation().numberLogParameters;
+    }
+
     getFactor(label) {
         for (var parameter of this.deviceInformation.parameters) {
             if (label===parameter.label) {
-                return parameter;
+                return parameter.factor || 1;
             }
         }
-        return;
+        return 1;
     }
 
     setParameter(param, value) {
@@ -89,9 +93,8 @@ class AbstractDevice extends EventEmitter {
     }
 
     // we take into account conversion factor
-    async getRealParameter(parameter) {
-        let value = await this.addRequest(parameter);
-        console.log(this.deviceInformation);
+    async getParameterValue(label) {
+        return (await this.addRequest(label)) / this.getFactor(label);
     }
 
 
