@@ -18,25 +18,26 @@ DeviceFactory.on('newDevice', device => {
     if (device.type !== 'OpenSpectro') return;
     console.log('We found an OpenSpectro');
 
-
     spectroMethods();
 
     async function spectroMethods() {
-        console.log(separator,'setExperimentDelay',separator);
-        var delay=await device.setExperimentDelay(1000);
-        console.log(delay);
 
-        console.log(separator,'runExperiment',separator);
-        var experiment=await device.runExperiment();
-        console.log(experiment);
+        console.log(separator,'setExperimentDelay',separator);
+        var delay=await device.setExperimentDelay(1);
+        console.log(delay);
 
         console.log(separator,'getExperimentDelay',separator);
         var delay=await device.getExperimentDelay();
         console.log(delay);
 
-        console.log(separator,'setExperimentDelay',separator);
-        var delay=await device.setExperimentDelay(1000);
-        console.log(delay);
+        /*
+         console.log(separator,'runExperiment',separator);
+         var experiment=await device.runExperiment();
+         console.log(experiment);
+         */
+
+
+
 
         console.log(separator,'runAndParseExperiment',separator);
         var experiment=await device.runAndParseExperiment();
