@@ -2,6 +2,7 @@
 var util = require('./../utilities/util');
 const OpenBio = require('./OpenBio/OpenBio');
 const OpenSpectro = require('./OpenSpectro/OpenSpectro');
+const Solar = require('./Solar/Solar');
 const DeviceManager = require('./DeviceManager');
 const debug = require('debug')('main:DeviceFactory');
 const EventEmitter = require('events');
@@ -53,6 +54,10 @@ function createDevice(data) {
         case 'S':
             debug('detected spectrophotometer with id:', idString); //then create a filter fo device objects
             this._createDevice(id, OpenSpectro);
+            break;
+        case '#':
+            debug('detected solar with id:', idString); //then create a filter fo device objects
+            this._createDevice(id, Solar);
             break;
         default:
             debug('detected unknown device with id:', idString);

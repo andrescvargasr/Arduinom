@@ -59,9 +59,17 @@ class AbstractDevice extends EventEmitter {
         return result.replace(/[\r\n]*$/, '');
     }
 
-
     getDeviceInformation() {
         return this.deviceInformation;
+    }
+
+    getFactor(label) {
+        for (var parameter of this.deviceInformation.parameters) {
+            if (label===parameter.label) {
+                return parameter;
+            }
+        }
+        return;
     }
 
     setParameter(param, value) {
@@ -76,11 +84,16 @@ class AbstractDevice extends EventEmitter {
         });
     }
 
-    getParameter(parameter) {
-        return this.addRequest(parameter).then((buffer) => {
-            return buffer;
-        });
+    async getParameter(parameter) {
+        return await this.addRequest(parameter);
     }
+
+    // we take into account conversion factor
+    async getRealParameter(parameter) {
+        let value = await this.addRequest(parameter);
+        console.log(this.deviceInformation);
+    }
+
 
     // Device utilities
     getHelp() {

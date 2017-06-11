@@ -22,6 +22,12 @@ DeviceFactory.on('newDevice', device => {
 
     async function spectroMethods() {
 
+        console.log(separator,'calibrate',separator);
+        var delay=await device.calibrate();
+        console.log(delay);
+
+        return;
+
         console.log(separator,'setExperimentDelay',separator);
         var delay=await device.setExperimentDelay(1);
         console.log(delay);
@@ -30,14 +36,17 @@ DeviceFactory.on('newDevice', device => {
         var delay=await device.getExperimentDelay();
         console.log(delay);
 
-        /*
-         console.log(separator,'runExperiment',separator);
-         var experiment=await device.runExperiment();
-         console.log(experiment);
-         */
+        console.log(separator,'testAllColors',separator);
+        var allColors=await device.testAllColors();
+        console.log(allColors);
 
+        console.log(separator,'testAllColors',separator);
+        var allColors=await device.testAndParseAllColors();
+        console.log(allColors);
 
-
+        console.log(separator,'runExperiment',separator);
+        var experiment=await device.runExperiment();
+        console.log(experiment);
 
         console.log(separator,'runAndParseExperiment',separator);
         var experiment=await device.runAndParseExperiment();
