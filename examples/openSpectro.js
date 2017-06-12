@@ -51,6 +51,10 @@ DeviceFactory.on('newDevice', device => {
         console.log(separator,'runAndParseExperiment',separator);
         var experiment=await device.runAndParseExperiment();
         console.log(experiment);
+
+        console.log(separator,'getRGB',separator);
+        var experiment=await device.getRGB();
+        console.log(experiment);
     }
 });
 
