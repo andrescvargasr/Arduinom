@@ -53,7 +53,7 @@
     "node-watch": "npm run node-build -- --watch",
     "prepublish": "npm run build",
     "start": "node src/server/server.js --sync-db",
-    "test": "jest",
+    "test": "jest --testPathPattern='src/.*__tests__'",
     "electron": "./node_modules/electron/dist/electron ./src/electron/"
   },
   "keywords": [

@@ -4,12 +4,10 @@ const PouchDB = require('pouchdb');
 
 class Pouch {
     constructor(deviceID, options={}) {
-
         if (options.adapter==='memory') {
             PouchDB.plugin(require('pouchdb-adapter-memory'));
         }
-
-        this.db = new PouchDB(`device`, options);
+        this.db = new PouchDB(`device${deviceID}`, options);
         this.initialized=false;
     }
 
@@ -19,6 +17,8 @@ class Pouch {
         if (! info.doc_count) await addDesignDoc(this.db);
         this.initialized=true;
     }
+
+
 
     async getLastSequenceId() {
         await this.init();
@@ -36,6 +36,7 @@ class Pouch {
     async getNumberEntries() {
         await this.init();
         let rows = (await this.db.query('my_index/number_entries')).rows;
+        console.log(rows);
         switch (rows.length) {
             case 0:
                 return 0;
