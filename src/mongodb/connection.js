@@ -10,7 +10,7 @@ const getEntriesDefaultOptions = {
 };
 
 module.exports = {
-    async getCollection(collectionName) {
+    async getDatabase(collectionName) {
         await getDb();
         const collection = db.collection(`device${collectionName}`);
         await collection.createIndex({epoch: -1, id: -1});
@@ -18,14 +18,14 @@ module.exports = {
     },
 
     async getLastSeqId(collectionName) {
-        const collection = await module.exports.getCollection(collectionName);
+        const collection = await module.exports.getDatabase(collectionName);
         const res = await collection.find({}).sort({epoch: -1, id: -1}).limit(1).toArray();
         if (!res.length) return 0;
         return res[0].id + 1;
     },
 
     async saveEntries(collectionName, entries) {
-        const collection = await module.exports.getCollection(collectionName);
+        const collection = await module.exports.getDatabase(collectionName);
         await collection.insertMany(entries);
     },
 
@@ -39,7 +39,7 @@ module.exports = {
         } else {
             sort = {epoch: 1, id: 1};
         }
-        const collection = await module.exports.getCollection(collectionName);
+        const collection = await module.exports.getDatabase(collectionName);
         return await collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
     }
 };
