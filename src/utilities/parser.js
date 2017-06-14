@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require('debug')('main: parser');
+var debug = require('debug')('arduimon:main:utilities');
 var util = require('./util');
 
 // TODO: review this file completly!!

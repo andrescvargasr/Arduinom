@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('debug')('arduimon:db:sync');
 const PouchDB = require('pouchdb');
 
 class Pouch {
@@ -14,15 +15,28 @@ class Pouch {
     async init() {
         if (this.initialized) return;
         let info = await this.db.info();
-        if (! info.doc_count) await addDesignDoc(this.db);
+        debug(`Info from db`,info);
+        if (! info.doc_count) {
+            debug(`Adding design docs`);
+            await addDesignDoc(this.db);
+        }
         this.initialized=true;
     }
+
+    async getAllEntries() {
+        await this.init();
+        return (await this.db.allDocs({
+            include_docs:true
+        })).rows;
+    }
+
 
 
 
     async getLastSequenceId() {
         await this.init();
         let rows = (await this.db.query('my_index/id_max')).rows;
+        debug('Answer to getLastSequenceId', rows);
         switch (rows.length) {
             case 0:
                 return 0;
@@ -53,9 +67,23 @@ class Pouch {
         await this.db.bulkDocs(entries);
     }
 
+
+
+
     async getEntries(options={}) {
+        /*
+        startKey
+        endKey
+        limit
+        skip
+        key
+        keys
+         */
+        let options = Object.assign({}, options, {
+            include_docs: true
+        })
         await this.init();
-        return await this.db.query();
+        return await this.db.allDocs(options);
     }
 }
 

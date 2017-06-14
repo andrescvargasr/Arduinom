@@ -4,7 +4,7 @@ process.on('unhandledRejection', e => {
 });
 
 const AbstractDevice = require('../AbstractDevice');
-const debug = require('debug')('main:openspectro');
+const debug = require('debug')('arduimon:main:openspectro');
 const deviceInformation = require('./deviceInformation');
 const parser = require('../../utilities/parser');
 

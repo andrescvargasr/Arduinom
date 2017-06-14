@@ -3,7 +3,7 @@ process.on('unhandledRejection', e => {
     throw e;
 });
 const AbstractDevice = require('../AbstractDevice');
-const debug = require('debug')('main:openspectro');
+const debug = require('debug')('arduimon:main:openspectro');
 const deviceInformation = require('./deviceInformation');
 const parse = require('open-spectro').parse;
 

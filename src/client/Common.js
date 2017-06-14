@@ -1,5 +1,5 @@
 'use strict';
-const debug = require('debug')('client: common');
+const debug = require('debug')('arduimon:client:common');
 const EventEmitter = require('events');
 class Common extends EventEmitter {
     constructor(id, socket) {

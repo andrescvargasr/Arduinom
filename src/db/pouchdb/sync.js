@@ -2,18 +2,20 @@
 
 // Sync all connected devices with database
 
-const deviceFactory = require('../devices/DeviceFactory');
-const connection = require('./Pouch');
+const deviceFactory = require('../../devices/DeviceFactory');
+const Pouch = require('./Pouch');
 const debug = require('debug')('db:sync');
-const IncPoll = require('../utilities/IncPoll');
+const IncPoll = require('../../utilities/IncPoll');
 const MAX_UINT32 = Math.pow(2,32) - 1;
 
 deviceFactory.on('newDevice', async function (device) {
     // Get start
     // ignore devices that don't have multilog
     if (!device.getParsedMultiLog) return;
-    let deviceId = device.id;
-    const start = await connection.getLastSeqId(deviceId);
+
+    let db = new Pouch(device.id);
+    const start = await db.getLastSequenceId();
+
     const incPoll = new IncPoll({
         task: async function (inc) {
             debug(`get multiLog and save to db (inc: ${inc})`);
@@ -22,7 +24,7 @@ deviceFactory.on('newDevice', async function (device) {
 
             // Make sure we don't save entries with abnormal id
             const toSave = parsed.filter(p => parsed.id !== MAX_UINT32);
-            await connection.saveEntries(deviceId, toSave);
+            await db.saveEntries(toSave);
             return parsed;
         },
         chunk: 10,

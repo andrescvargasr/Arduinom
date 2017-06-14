@@ -2,7 +2,7 @@
 var util = require('../utilities/util');
 const EventEmitter = require('events');
 const deviceManagerInstance = require('./DeviceManager');
-const debug = require('debug')('main:abstractDevice');
+const debug = require('debug')('arduimon:main:abstractDevice');
 const deepcopy = require('deepcopy');
 const parser = require('../utilities/parser');
 

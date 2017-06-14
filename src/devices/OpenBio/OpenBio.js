@@ -1,6 +1,6 @@
 'use strict';
 const AbstractDevice = require('../AbstractDevice');
-const debug = require('debug')('main:OpenBio');
+const debug = require('debug')('arduimon:main:OpenBio');
 const deviceInformation = require('./deviceInformation');
 const parser = require('../../utilities/parser');
 const deepcopy = require('deepcopy');
@@ -39,6 +39,15 @@ class OpenBio extends AbstractDevice {
         return parser.parseMultiLog(buffer, {
             numberLogParameters: this.getNumberLogParameters()
         });
+    }
+
+    async dbParsedMultiLog(entry) {
+        var entries = await this.getParsedMultiLog(entry);
+        return entries.map( e => {
+            let newEntry={};
+
+            return newEntry;
+        })
     }
 
 }

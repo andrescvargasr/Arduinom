@@ -4,7 +4,7 @@ const OpenBio = require('./OpenBio/OpenBio');
 const OpenSpectro = require('./OpenSpectro/OpenSpectro');
 const Solar = require('./Solar/Solar');
 const DeviceManager = require('./DeviceManager');
-const debug = require('debug')('main:DeviceFactory');
+const debug = require('debug')('arduimon:main:DeviceFactory');
 const EventEmitter = require('events');
 var deviceList = {};
 

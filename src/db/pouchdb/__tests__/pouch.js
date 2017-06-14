@@ -17,10 +17,12 @@ test('pouch database', async () => {
         });
     }
 
-   await db.saveEntries(data);
+    await db.saveEntries(data);
+
+    await expect(db.getNumberEntries()).resolves.toBe(100);
+
+    await expect(db.getLastSequenceId()).resolves.toBe(99);
 
 
-
-    expect(await db.getNumberEntries()).toBe(100);
 
 });

@@ -1,6 +1,6 @@
 'use strict';
 const DeviceFactory = require('../../devices/DeviceFactory');
-const debug = require('debug')('socketio:devices');
+const debug = require('debug')('arduimon:socketio:devices');
 
 
 module.exports = function (io) {
