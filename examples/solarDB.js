@@ -11,9 +11,9 @@ async function dbInfo() {
 
     let entries = await db.getAllEntries();
 
-    entries=entries.slice(0,5);
+    // entries=entries.slice(0,5);
 
-    console.log(entries);
-    entries.forEach(a => console.log(a.value))
+    // console.log(entries);
+   //  entries.forEach(a => console.log(a.value))
 
 }

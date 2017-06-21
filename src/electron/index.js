@@ -10,11 +10,14 @@ let mainWindow;
 app.on('ready', function() {
   express(); // we start our internal we bserver
   mainWindow = new BrowserWindow({
-      width: 1280,
-      height: 720,
-      autoHideMenuBar: true,
+      width: 1600,
+      height: 1000,
+      autoHideMenuBar: false,
       useContentSize: true,
-      resizable: false,
+      resizable: true,
+      webPreferences: {
+          nodeIntegration: false
+      }
   });
 
   mainWindow.webContents.openDevTools()

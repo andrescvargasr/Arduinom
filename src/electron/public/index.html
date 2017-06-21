@@ -1,26 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+
 </head>
 <body>
-My home page
+<ul>
+    <li>
+        <a href="./ws.html">Test web socket</a>
+    </li>
+    <li>
+        <a href="./visualizer.html">Test visualizer</a>
+    </li>
+    <li>
+        <a href="./empty.html">Empty page to check what electron defines</a>
+    </li>
+</ul>
 </body>
-
-<script>
-    var host = window.document.location.host.replace(/:.*/, '');
-    var secure = window.document.location.protocol.replace('http','');
-    var port = window.document.location.port;
-    if (port) port = ':'+port;
-    var ws = new WebSocket('ws'+secure+'//' + host + port);
-    ws.onmessage = function (event) {
-
-        var div = document.createElement('DIV');
-        div.innerHTML=event.data;
-        document.body.appendChild(div);
-
-    };
-</script>
-
 </html>

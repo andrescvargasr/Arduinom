@@ -1,0 +1,189 @@
+{
+  "version": "2.81.3",
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "modules": [
+    {
+      "url": "modules/types/edition/rich_text/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                [
+                  "isEditable"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "modifyInVariable": [
+                []
+              ],
+              "storeInView": [
+                [
+                  "yes"
+                ]
+              ],
+              "autoHeight": [
+                []
+              ],
+              "bgColor": [
+                [
+                  255,
+                  255,
+                  255,
+                  1
+                ]
+              ],
+              "postit": [
+                []
+              ],
+              "html": [
+                [
+                  "yes"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 30,
+            "top": 5
+          },
+          "size": {
+            "width": 51,
+            "height": 30
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 19,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "richtext": "<p>Hello world</p>\n\n<p>&nbsp;</p>\n",
+      "title": ""
+    }
+  ],
+  "variables": [
+    {
+      "varname": "molfile",
+      "jpath": [
+        "molfile"
+      ]
+    },
+    {
+      "varname": "nmrSimulationOptions",
+      "jpath": [
+        "nmrSimulationOptions"
+      ]
+    },
+    {
+      "varname": "template",
+      "jpath": [
+        "template"
+      ]
+    },
+    {
+      "varname": "nmr",
+      "jpath": [
+        "nmr"
+      ]
+    },
+    {
+      "varname": "mass",
+      "jpath": [
+        "mass"
+      ]
+    },
+    {
+      "varname": "ir",
+      "jpath": [
+        "ir"
+      ]
+    },
+    {
+      "varname": "diaIDs",
+      "jpath": [
+        "diaIDs"
+      ]
+    },
+    {
+      "varname": "newMolfile",
+      "jpath": [
+        "newMolfile"
+      ]
+    }
+  ],
+  "aliases": [],
+  "configuration": {
+    "title": "No title"
+  }
+}

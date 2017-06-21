@@ -79,11 +79,11 @@ class Pouch {
         key
         keys
          */
-        let options = Object.assign({}, options, {
+        let realOptions = Object.assign({}, options, {
             include_docs: true
-        })
+        });
         await this.init();
-        return await this.db.allDocs(options);
+        return await this.db.allDocs(realOptions);
     }
 }
 
