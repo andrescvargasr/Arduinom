@@ -16,6 +16,7 @@ app.on('ready', function() {
       useContentSize: true,
       resizable: true,
       webPreferences: {
+          zoomFactor: 1.5,
           nodeIntegration: false
       }
   });
