@@ -50,7 +50,7 @@ class Mongo {
 
     async saveEntries(entries) {
         await this.init();
-        let result = await this.collection.insertMany(entries);
+        await this.collection.insertMany(entries);
     }
 
     async getEntries(options = {}) {

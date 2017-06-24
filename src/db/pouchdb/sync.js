@@ -3,7 +3,7 @@
 // Sync all connected devices with database
 
 const deviceFactory = require('../../devices/DeviceFactory');
-const Pouch = require('./Pouch');
+const DB = require('./Pouch');
 const debug = require('debug')('db:sync');
 const IncPoll = require('../../utilities/IncPoll');
 const MAX_UINT32 = Math.pow(2,32) - 1;
@@ -13,7 +13,7 @@ deviceFactory.on('newDevice', async function (device) {
     // ignore devices that don't have multilog
     if (!device.getParsedMultiLog) return;
 
-    let db = new Pouch(device.id);
+    let db = new DB(device.id);
     const start = await db.getLastSequenceId();
 
     const incPoll = new IncPoll({
