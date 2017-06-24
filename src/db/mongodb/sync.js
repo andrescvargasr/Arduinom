@@ -3,7 +3,7 @@
 // Sync all connected devices with database
 
 const deviceFactory = require('../devices/DeviceFactory');
-const connection = require('./connection');
+const connection = require('./Mongo');
 const debug = require('debug')('arduimon:db:sync');
 const IncPoll = require('../utilities/IncPoll');
 const MAX_UINT32 = Math.pow(2,32) - 1;

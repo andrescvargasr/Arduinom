@@ -1,10 +1,10 @@
-const Pouch = require('../Pouch');
+const Mongo = require('../Mongo');
 
-test('pouch database', async () => {
+test('mongo database', async () => {
 
-    var db=new Pouch(1234, {
-        adapter: 'memory'
-    });
+    var db=new Mongo(1234567890, {});
+    await db.drop();
+
     await expect(db.getLastSequenceId()).resolves.toBe(0);
 
     // insert some data
@@ -24,6 +24,12 @@ test('pouch database', async () => {
 
     await expect(db.getLastSequenceId()).resolves.toBe(99);
 
+    var entries = await db.getAllEntries();
+    expect(entries.length).toBe(100);
 
+    await expect(entries[0]).toEqual({_id: '10',
+        id: 0,
+        A:1,
+        B:2});
 
 });
