@@ -7,29 +7,29 @@ const defaultOptions = {
     errorTimeout: 0
 };
 
-class IncPoll extends EventEmitter {
+class IncrementalPoll extends EventEmitter {
     constructor(options) {
         super();
         options = Object.assign({}, defaultOptions, options);
-        this.startInc = options.start || 0;
-        this.inc = this.startInc;
+        this.startIncrement = options.start || 0;
+        this.nextStep = this.startIncrement;
         this.task = options.task;
         this.chunk = options.chunk;
         this.pollTimeout = options.pollTimeout;
         if (!this.chunk || this.pollTimeout == null || !this.task) {
-            throw new Error('IncPoll bad arguments');
+            throw new Error('IncrementalPoll bad arguments');
         }
     }
 
     start() {
         if (this.started) return;
         this.started = true;
-        this.cont();
+        this.doStep();
     }
 
-    async cont() {
+    async doStep() {
         try {
-            var data = await this.task(this.inc);
+            var result = await this.task(this.nextStep);
         } catch (e) {
             if (this.errorTimeout > 0) {
                 retry(this, this.errorTimeout);
@@ -37,26 +37,17 @@ class IncPoll extends EventEmitter {
             return;
         }
 
-        if (Array.isArray(data)) {
-            var inc = data.length;
-            if (inc) {
-                this.emit('data', data);
-            }
-        } else if (typeof data === 'number') {
-            inc = data;
-        }
-
-        this.inc += inc;
-        if (inc) {
+        if (result.next) {
+            this.nextStep=result.next;
             this.emit('progress', {
-                inc: this.inc,
-                done: this.inc - this.startInc
+                nextStep: this.nextStep,
+                done: this.nextStep - this.startIncrement
             });
         }
 
         if (this.started) {
-            if (inc >= this.chunk) { // continue because hit response's maximum length
-                await this.cont();
+            if (result.increment >= this.chunk) { // continue because hit response's maximum length
+                await this.doStep();
             } else { // Stop because below response's maximum length, retry later
                 retry(this, this.pollTimeout);
             }
@@ -70,7 +61,7 @@ class IncPoll extends EventEmitter {
 }
 
 function retry(ctx, timeout) {
-    ctx.timeoutId = setTimeout(() => ctx.cont(), timeout);
+    ctx.timeoutId = setTimeout(() => ctx.doStep(), timeout);
 }
 
-module.exports = IncPoll;
+module.exports = IncrementalPoll;
