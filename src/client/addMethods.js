@@ -1,6 +1,6 @@
 'use strict';
 
-function _setMethods(methods, constructor, socket) {
+function setMethods(methods, constructor, socket) {
     for (let method of methods) {
         if (!(method.startsWith('_') || method === 'constructor')) {
             constructor.prototype[method] = function () {
@@ -27,7 +27,7 @@ function _setMethods(methods, constructor, socket) {
     }
 }
 
-function _setStaticMethods(staticMethods, constructor, socket) {
+function setStaticMethods(staticMethods, constructor, socket) {
     for (let method of staticMethods) {
         if (!(method.startsWith('_') || method === 'constructor')) {
             constructor[method] = function () {
@@ -53,5 +53,5 @@ function _setStaticMethods(staticMethods, constructor, socket) {
 
 }
 
-exports.staticMethods = _setStaticMethods;
-exports.methods = _setMethods;
+exports.staticMethods = setStaticMethods;
+exports.methods = setMethods;
