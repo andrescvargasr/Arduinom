@@ -20,10 +20,8 @@ app.use(koaStatic(path.join(__dirname, '../public')));
 // Emit welcome message on connection
 ioDevices(io);
 
-if(argv['sync-db']) {
+if (argv['sync-db']) {
     // Launch db sync
     require('../db/sync');
 }
-
-
 

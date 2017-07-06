@@ -18,13 +18,11 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
         return this.addRequest('c', {timeout: 5000});
     }
 
-    /**
+    /*
      * Set the delay for changing the sample in seconds
-     * @param delay
-     * @returns {Promise}
      */
     async setExperimentDelay(delay) {
-        let newDelay = await this.addRequest('I'+delay);
+        let newDelay = await this.addRequest('I' + delay);
         return newDelay;
     }
 
@@ -38,34 +36,28 @@ class OpenSpectro extends AbstractDevice { //issue with extends EventEmitter
      sending to many requests can overfill the queue
      request exceeding maxQueue length will be disregarded
      */
-    async getRGB() {
-        return await this.addRequest('a', {timeout: 5000});
+    getRGB() {
+        return this.addRequest('a', {timeout: 5000});
     }
 
 
-    async testAllColors() {
-        return await this.addRequest('t', {timeout: 5000});
+    testAllColors() {
+        return this.addRequest('t', {timeout: 5000});
     }
 
     async testAndParseAllColors() {
-        var result = await this.testAllColors();
+        const result = await this.testAllColors();
         return parse(result);
     }
 
-    runExperiment() {
-        var experiment = this.addRequest('I', {timeout: 500})
-            .then((delay) => {
-                debug('experiment delay in ms :', parseInt(delay));
-                return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
-            })
-            .then(buff => {
-                return buff;
-            });
-        return experiment;
+    async runExperiment() {
+        const delay = this.addRequest('I', {timeout: 500});
+        debug('experiment delay in ms :', parseInt(delay));
+        return this.addRequest('r', {timeout: (parseInt(delay) * 1000 + 5000)});
     }
 
     async runAndParseExperiment() {
-        var result=await this.runExperiment();
+        const result = await this.runExperiment();
         return parse(result);
     }
 

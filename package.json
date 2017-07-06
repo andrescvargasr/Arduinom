@@ -7,7 +7,6 @@
     "bson": "^0.5.7",
     "debug": "^2.2.0",
     "electron": "^1.6.10",
-    "express": "^4.15.3",
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "https": "^1.0.0",

@@ -36,7 +36,7 @@ module.exports = {
 
         {
             label: 'Z',
-                name: 'Bioreactor Status',
+            name: 'Bioreactor Status',
             description: 'Status of the Bioreactor, the bits of this integer code' +
         'for the state of specific elements of the reactor (eg. motor ON/OFF, PUMP ON/OFF etc.)',
             factor: 1,
@@ -46,7 +46,7 @@ module.exports = {
 
         {
             label: 'AA',
-                name: 'T°C Target',
+            name: 'T°C Target',
             description: 'Desired regulated Temperature of the liquid in°C, reliable if the' +
         'desired temperature is at least a few degrees above room temperature.',
             max: 65.0,
@@ -65,7 +65,7 @@ module.exports = {
 
         {
             label: 'AC',
-                name: 'T°C PID Time',
+            name: 'T°C PID Time',
             description: 'Regulation Time windows for the temperature PID control in' +
         'ms, typically set to 2000 but can be set as desired between to 500-20000 ms, serves as a base time for the duty cycle',
             factor: 1,

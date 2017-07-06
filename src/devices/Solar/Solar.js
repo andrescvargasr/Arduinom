@@ -41,7 +41,7 @@ class Solar extends AbstractDevice { //issue with extends EventEmitter
     }
 
     async getParsedMultiLog(entry) {
-        var buffer=await this.getMultiLog(entry);
+        var buffer = await this.getMultiLog(entry);
         debug('Parsing MultiLog');
         return parser.parseMultiLog(buffer, {
             numberLogParameters: this.getNumberLogParameters(),

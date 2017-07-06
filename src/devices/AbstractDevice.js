@@ -10,7 +10,7 @@ class AbstractDevice extends EventEmitter {
     constructor(id) {
         super();
         var idString = util.deviceIdNumberToString(id);
-        if (! idString.match(/^([\x21-\x7A])([\x21-\x7A])$/)) {
+        if (!idString.match(/^([\x21-\x7A])([\x21-\x7A])$/)) {
             debug('The id did not match the regex. Id was: ' + idString);
             throw new Error('Invalid device id');
         }
@@ -68,7 +68,7 @@ class AbstractDevice extends EventEmitter {
 
     getFactor(label) {
         for (var parameter of this.deviceInformation.parameters) {
-            if (label===parameter.label) {
+            if (label === parameter.label) {
                 return parameter.factor || 1;
             }
         }
@@ -88,7 +88,7 @@ class AbstractDevice extends EventEmitter {
     }
 
     async getParameter(parameter) {
-        return await this.addRequest(parameter);
+        return this.addRequest(parameter);
     }
 
     // we take into account conversion factor

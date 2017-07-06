@@ -4,3 +4,5 @@ parserOptions:
 rules:
   camelcase: ['error', {properties: never}]
   require-yield: 'off'
+env:
+  jest: true

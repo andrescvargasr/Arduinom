@@ -8,7 +8,7 @@ const parser = require('../../utilities/parser');
 class OpenBio extends AbstractDevice {
     constructor(id) {
         super(id);
-        this.deviceInformation=deviceInformation;
+        this.deviceInformation = deviceInformation;
     }
 
     getI2C() {
@@ -33,22 +33,12 @@ class OpenBio extends AbstractDevice {
     }
 
     async getParsedMultiLog(entry) {
-        var buffer=await this.getMultiLog(entry);
+        var buffer = await this.getMultiLog(entry);
         debug('Parsing MultiLog');
         return parser.parseMultiLog(buffer, {
             numberLogParameters: this.getNumberLogParameters()
         });
     }
-
-    async dbParsedMultiLog(entry) {
-        var entries = await this.getParsedMultiLog(entry);
-        return entries.map( e => {
-            let newEntry={};
-
-            return newEntry;
-        })
-    }
-
 }
 
 module.exports = OpenBio;

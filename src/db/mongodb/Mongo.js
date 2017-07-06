@@ -30,7 +30,7 @@ class Mongo {
 
     async getAllEntries() {
         await this.init();
-        return await this.collection.find({}).sort({id: 1}).toArray();
+        return this.collection.find({}).sort({id: 1}).toArray();
     }
 
     async getLastSequenceId() {
@@ -66,7 +66,7 @@ class Mongo {
         } else {
             sort = {epoch: 1, id: 1};
         }
-        return await this.collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
+        return this.collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
     }
 }
 

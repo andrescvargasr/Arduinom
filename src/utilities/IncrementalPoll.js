@@ -38,7 +38,7 @@ class IncrementalPoll extends EventEmitter {
         }
 
         if (result.next) {
-            this.nextStep=result.next;
+            this.nextStep = result.next;
             this.emit('progress', {
                 nextStep: this.nextStep,
                 done: this.nextStep - this.startIncrement
