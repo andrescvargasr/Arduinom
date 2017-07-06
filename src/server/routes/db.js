@@ -1,10 +1,11 @@
 'use strict';
 
 const router = require('koa-router')({prefix: '/db'});
-const connection = require('../../db/connection');
+const collections = require('../../db/collections');
 
 router.get('/:collection/entries', async function(ctx) {
-    ctx.body = await connection.getEntries(ctx.params.collection, ctx.query);
+    const collection = await collections(ctx.params.collection);
+    ctx.body = await collection.getEntries(ctx.query);
 });
 
 module.exports = router;

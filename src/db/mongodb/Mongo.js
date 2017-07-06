@@ -5,7 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const MONGO_DB_URL = 'mongodb://localhost:27017/arduino_devices';
 
 class Mongo {
-    constructor(deviceID, options = {}) {
+    constructor(deviceID) {
         this.db = null;
         this.collection = null;
         this.initialized = false;
@@ -53,8 +53,8 @@ class Mongo {
         await this.collection.insertMany(entries);
     }
 
-    async getEntries(options = {}) {
-        options = Object.assign({}, {
+    async getEntries(options) {
+        options = Object.assign({
             limit: 200,
             parameters: 'A,B,C,D'
         }, options);
@@ -66,8 +66,7 @@ class Mongo {
         } else {
             sort = {epoch: 1, id: 1};
         }
-        const collection = await module.exports.getDatabase(collectionName);
-        return await collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
+        return await this.collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
     }
 }
 

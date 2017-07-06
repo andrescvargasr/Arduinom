@@ -6,7 +6,6 @@
   "dependencies": {
     "bson": "^0.5.7",
     "debug": "^2.2.0",
-    "deepcopy": "^0.6.3",
     "electron": "^1.6.10",
     "express": "^4.15.3",
     "fs": "0.0.1-security",
@@ -44,8 +43,7 @@
     "watchify": "^3.8.0"
   },
   "scripts": {
-    "browser-build": "mkdir -p src/public/browserified; browserify src/client/index.js -o src/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
-    "browser-watch": "mkdir -p src/public/browserified; watchify src/client/index.js -v -o src/public/browserified/index.js --standalone=arduinom --global-transform [ babelify --sourceMap ]",
+    "browser-build": "webpack",
     "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix",

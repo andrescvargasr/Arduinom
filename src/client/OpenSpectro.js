@@ -1,6 +1,7 @@
 'use strict';
 const Common = require('./Common');
 const addMethods = require('./addMethods');
+const methods = require('./openSpectroMethods.json');
 
 module.exports = function (socket) {
 
@@ -11,13 +12,7 @@ module.exports = function (socket) {
         }
     }
 
-    var methods = ['getParsedCompactLog', 'getLastLog', 'getI2C',
-        'compactLogToDB', 'setParameter', 'getDB',
-        'autoSetEpoch', 'clearAutoEpoch', 'addRequest', 'getHelp', 'getFreeMem', 'getQualifier', 'getEEPROM',
-        'getSettings', 'getCompactLog', 'getEpoch', 'setEpoch', 'setEpochNow'];
-    var staticMethods = ['getParamConfig', 'getMaxParam', 'getNbParamLog', 'getDeviceType'];
-
-    addMethods.methods(methods, OpenSpectro, socket);
-    addMethods.staticMethods(staticMethods, OpenSpectro, socket);
+    addMethods.methods(methods.methods, OpenSpectro, socket);
+    addMethods.staticMethods(methods.static, OpenSpectro, socket);
     return OpenSpectro;
 };

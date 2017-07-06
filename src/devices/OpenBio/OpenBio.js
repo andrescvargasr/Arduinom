@@ -3,7 +3,6 @@ const AbstractDevice = require('../AbstractDevice');
 const debug = require('debug')('arduimon:main:OpenBio');
 const deviceInformation = require('./deviceInformation');
 const parser = require('../../utilities/parser');
-const deepcopy = require('deepcopy');
 
 
 class OpenBio extends AbstractDevice {

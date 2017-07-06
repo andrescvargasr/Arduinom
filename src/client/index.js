@@ -1,12 +1,14 @@
 'use strict';
+const OpenBio = require('./OpenBio');
+const OpenSpectro = require('./OpenSpectro');
 
 module.exports = function (socket) {
     const devices = {};
     const EventEmitter = require('events');
 
     const deviceTypes = {
-        OpenBio: require('./OpenBio')(socket),
-        OpenSpectro: require('./OpenSpectro')(socket)
+        OpenBio: OpenBio(socket),
+        OpenSpectro: OpenSpectro(socket)
     };
 
     var arduino = new EventEmitter();

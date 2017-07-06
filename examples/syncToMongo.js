@@ -2,5 +2,5 @@
 
 // Just need to load this script ...
 
-require('../src/db/mongodb/sync');
+require('../src/db/sync');
 
