@@ -13,7 +13,7 @@ class Mongo {
     }
 
     async drop() {
-        if(this.collection) {
+        if (this.collection) {
             await this.collection.drop();
         }
     }

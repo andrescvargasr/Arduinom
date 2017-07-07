@@ -46,7 +46,7 @@ class IncrementalPoll extends EventEmitter {
 
         debug('task succeeded');
         if (result.next) {
-            this.nextStep = result.next
+            this.nextStep = result.next;
             debug(`next step will be: ${this.nextStep}`);
             this.emit('progress', {
                 nextStep: this.nextStep,
