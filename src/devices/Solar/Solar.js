@@ -32,11 +32,11 @@ class Solar extends AbstractDevice { //issue with extends EventEmitter
     }
 
     getLastEntryID() {
-        return this.addRequest('m');
+        return this.addRequest('lm');
     }
 
     getMultiLog(entry) {
-        var cmd = 'm' + ((entry === undefined) ? '' : entry);
+        var cmd = 'lm' + ((entry === undefined) ? '' : entry);
         return this.addRequest(cmd);
     }
 

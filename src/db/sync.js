@@ -33,7 +33,7 @@ deviceFactory.on('newDevice', async function (device) {
         chunk: 10,
         start: start + 1,
         pollTimeout: 20000,
-        errorTimeout: 1000
+        errorTimeout: 3000
     });
 
     debug(`start multilog polling (inc: ${start})`);

@@ -31,6 +31,7 @@ class DeviceFactory extends EventEmitter {
         }
         this.emit('newDevice', deviceList[id]);
         this.emit('devices', deviceList);
+        this.emit('connect', deviceList[id]);
     }
 
     getDeviceList() {
