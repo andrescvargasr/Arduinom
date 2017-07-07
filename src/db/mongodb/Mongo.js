@@ -13,19 +13,19 @@ class Mongo {
     }
 
     async drop() {
-        await this.init();
-        this.collection.drop();
-        await this.init();
+        if(this.collection) {
+            await this.collection.drop();
+        }
     }
 
     async init() {
-        if (this.initialized) return;
         if (!this.db) {
+            debug(`create mongo connection and initialize collection (${this.deviceID})`);
             this.db = await MongoClient.connect(MONGO_DB_URL);
+            this.collection = this.db.collection(`device${this.deviceID}`);
+            // Create the index if it does not exist
+            await this.collection.createIndex({epoch: -1, id: -1});
         }
-        this.collection = this.db.collection(`device${this.deviceID}`);
-        await this.collection.createIndex('epoch', {epoch: -1, id: -1});
-        this.initialized = true;
     }
 
     async getAllEntries() {
