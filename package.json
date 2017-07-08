@@ -21,7 +21,7 @@
     "path": "^0.12.7",
     "pouchdb": "^6.2.0",
     "pouchdb-adapter-memory": "^6.2.0",
-    "serial-requests": "^0.1.4",
+    "serial-requests": "^0.1.6",
     "socket.io": "^1.6.0"
   },
   "devDependencies": {
