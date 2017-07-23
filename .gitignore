@@ -1,4 +1,5 @@
 node_modules
 .idea
 src/public/browserified
+src/public/app.js
 lib
