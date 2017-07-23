@@ -1,0 +1,32 @@
+{
+	"static": [],
+	"methods": [
+		"calibrate",
+		"setExperimentDelay",
+		"getExperimentDelay",
+		"getRGB",
+		"testAllColors",
+		"testAndParseAllColors",
+		"runExperiment",
+		"runAndParseExperiment",
+		"numberParameters",
+		"type",
+		"addRequest",
+		"getDeviceInformation",
+		"getNumberLogParameters",
+		"getFactor",
+		"setParameter",
+		"getParameter",
+		"getParameterValue",
+		"getHelp",
+		"getSettings",
+		"getFreeMemory",
+		"getQualifier",
+		"getEEPROM",
+		"getCompactSettings",
+		"getFormattedSettings",
+		"getEpoch",
+		"setEpoch",
+		"setEpochNow"
+	]
+}

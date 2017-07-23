@@ -40,7 +40,7 @@
     "webpack": "^3.1.0"
   },
   "scripts": {
-    "browser-build": "webpack",
+    "browser-build": "node src/build/copyMethods.js && webpack",
     "build": "npm run browser-build && npm run node-build",
     "eslint": "eslint src",
     "eslint-fix": "eslint src --fix",

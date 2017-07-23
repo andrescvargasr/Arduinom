@@ -6,6 +6,8 @@ const OpenBio = require('../devices/OpenBio/OpenBio');
 const OpenSpectro = require('../devices/OpenSpectro/OpenSpectro');
 
 const getMethodNames = require('./getMethodNames');
-fs.writeFileSync(path.join(__dirname, '../client/openBioMethods.json'), JSON.stringify(getMethodNames(OpenBio)));
-fs.writeFileSync(path.join(__dirname, '../client/openSpectroMethods.json'), JSON.stringify(getMethodNames(OpenSpectro)));
+
+console.log('Generate device API json');
+fs.writeFileSync(path.join(__dirname, '../client/openBioMethods.json'), JSON.stringify(getMethodNames(OpenBio), null, '\t'));
+fs.writeFileSync(path.join(__dirname, '../client/openSpectroMethods.json'), JSON.stringify(getMethodNames(OpenSpectro), null, '\t'));
 process.exit(0);

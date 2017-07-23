@@ -1,0 +1,30 @@
+{
+	"static": [],
+	"methods": [
+		"getI2C",
+		"getOneWire",
+		"getLastLog",
+		"getLastEntryID",
+		"getMultiLog",
+		"getParsedMultiLog",
+		"numberParameters",
+		"type",
+		"addRequest",
+		"getDeviceInformation",
+		"getNumberLogParameters",
+		"getFactor",
+		"setParameter",
+		"getParameter",
+		"getParameterValue",
+		"getHelp",
+		"getSettings",
+		"getFreeMemory",
+		"getQualifier",
+		"getEEPROM",
+		"getCompactSettings",
+		"getFormattedSettings",
+		"getEpoch",
+		"setEpoch",
+		"setEpochNow"
+	]
+}
