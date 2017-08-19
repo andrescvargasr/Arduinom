@@ -13,12 +13,9 @@
     "koa-cors": "^0.0.16",
     "koa-router": "^7.0.0",
     "koa-static": "^3.0.0",
-    "leveldown": "^1.7.2",
-    "linvodb3": "^3.25.0",
     "minimist": "^1.2.0",
     "mongodb": "^2.2.30",
     "open-spectro": "0.0.7",
-    "path": "^0.12.7",
     "pouchdb": "^6.2.0",
     "pouchdb-adapter-memory": "^6.2.0",
     "serial-requests": "^0.1.6",
@@ -50,7 +47,8 @@
     "prepublish": "npm run build",
     "start": "node src/server/server.js --sync-db",
     "test": "jest --testPathPattern='src/.*__tests__'",
-    "electron": "./node_modules/electron/dist/electron ./src/electron/"
+    "electron": "./node_modules/electron/dist/electron ./src/electron/",
+    "electron-rebuild": "./node_modules/.bin/electron-rebuild"
   },
   "keywords": [
     "serial",

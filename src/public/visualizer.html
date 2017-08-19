@@ -1,8 +1,13 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Serial Node Interface</title>
+    <meta charset="utf-8" />
+    <title>Visualizer</title>
+    <script src="/app.js" />
+    <script>
+        if (typeof require !== 'undefined') require=undefined;
+    </script>
+    <script data-main="https://www.lactame.com/visualizer/latest/init" src="https://www.lactame.com/visualizer/latest/components/requirejs/require.js"></script>
+
     <style>
         #ci-visualizer {
             min-height: 100vh;
@@ -11,9 +16,15 @@
             margin: 0;
         }
     </style>
-    <script data-main="https://www.lactame.com/visualizer/latest/init.js" src="https://www.lactame.com/visualizer/latest/components/requirejs/require.js"></script>
+    <script>
+        /*
+         * Do not remove. This is to make sure bluebird is correctly loaded
+         * for browsers that don't have the Promise global.
+         */
+        window.Promise = undefined;
+    </script>
 </head>
 <body>
-<div id="ci-visualizer"></div>
+<div id="ci-visualizer" style="margin-top: 15px" viewURL="/views/bioreactor.json"></div>
 </body>
 </html>
