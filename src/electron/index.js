@@ -8,6 +8,7 @@ let mainWindow;
 
 
 app.on('ready', function () {
+    process.argv.push('--sync-db');
     require('../server/server');
     mainWindow = new BrowserWindow({
         width: 1600,
@@ -27,7 +28,7 @@ app.on('ready', function () {
         mainWindow = null;
     });
 
-    mainWindow.loadURL('http://localhost:8080/');
+    mainWindow.loadURL('http://localhost:3000/');
     mainWindow.focus();
 });
 

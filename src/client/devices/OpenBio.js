@@ -1,7 +1,7 @@
 'use strict';
-const Common = require('./Common');
-const addMethods = require('./addMethods');
-const methods = require('./openBioMethods.json');
+const Common = require('./../Common');
+const addMethods = require('./../addMethods');
+const methods = require('./OpenBioMethods.json');
 
 module.exports = function (socket) {
     class OpenBio extends Common {

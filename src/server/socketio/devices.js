@@ -11,6 +11,7 @@ module.exports = function (io) {
         // the ready event ensures the code init in the visualizer is served before the events
 
         socket.on('ready', function () {
+            debug('ready');
             var deviceList = DeviceFactory.getDeviceList();
             for (let key in deviceList) {
                 socket.emit('newDevice', {id: parseInt(key), type: deviceList[key].type, status: deviceList[key].status});

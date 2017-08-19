@@ -1,0 +1,1545 @@
+{
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      },
+      "Admin": {
+        "name": "Admin"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "version": "2.82.4",
+  "modules": [
+    {
+      "url": "modules/types/edition/svg_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                []
+              ],
+              "sanitize": [
+                []
+              ],
+              "svgcode": [
+                "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"482\" height=\"500\" enable-background=\"new 0 0 482.688 500.875\" xml:space=\"preserve\" style=\"display: block;\">\n<linearGradient id=\"SVGID_1_\" gradientUnits=\"userSpaceOnUse\" x1=\"243.8896\" y1=\"270.6035\" x2=\"243.0107\" y2=\"378.7963\">\n\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n</linearGradient>\n<rect id=\"liquid-rect\" x=\"154.703\" y=\"286.4\" fill=\"url(#SVGID_1_)\" stroke=\"#ABC837\" stroke-width=\"0.6246\" width=\"177.829\" height=\"105.6\"><animate attributeName=\"y\" to=\"216\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"176\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"216\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"176\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"309.8\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"82.2\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"392\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"0\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"y\" to=\"286.4\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"height\" to=\"105.6\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate></rect>\n<g id=\"svg2\" inkscape:version=\"0.48.0 r9654\" sodipodi:docname=\"dessin-1.svg\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\">\n\t\n\t\t<sodipodi:namedview fit-margin-top=\"0\" fit-margin-left=\"0\" fit-margin-bottom=\"0\" inkscape:guide-bbox=\"true\" showguides=\"true\" inkscape:window-maximized=\"1\" inkscape:window-y=\"26\" inkscape:window-x=\"0\" inkscape:window-height=\"695\" inkscape:window-width=\"1024\" showgrid=\"false\" inkscape:current-layer=\"layer1\" pagecolor=\"#ffffff\" inkscape:document-units=\"px\" inkscape:cx=\"248.90367\" id=\"base\" inkscape:zoom=\"1\" inkscape:pageshadow=\"2\" fit-margin-right=\"0\" inkscape:pageopacity=\"0.0\" inkscape:cy=\"169.88279\" bordercolor=\"#666666\" borderopacity=\"1.0\">\n\t\t</sodipodi:namedview>\n\t<g id=\"layer1\" transform=\"translate(-113.75,-92.8125)\" inkscape:groupmode=\"layer\" inkscape:label=\"Calque 1\">\n\t\t\n\t\t\t<path id=\"rect3903\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\tM202.738,213.208h82.121v14.812h-82.121\"></path>\n\t\t<path id=\"rect2993\" inkscape:connector-curvature=\"0\" fill=\"#666666\" d=\"M414.936,492.945c41.408,0,39.158,2.305,39.158-39.623\n\t\t\tV303.877c0-20.08-14.933-36.679-34.301-39.278v-7.609c0-1.912-1.547-3.443-3.459-3.443h-23.91c-1.912,0-3.443,1.531-3.443,3.443\n\t\t\tv7.263H372.77v-7.263c0-1.912-1.545-3.443-3.457-3.443h-23.911c-1.912,0-3.443,1.531-3.443,3.443v7.263h-16.481v-7.263\n\t\t\tc0-1.912-1.546-3.443-3.459-3.443h-23.91l0,0c-1.913,0-3.444,1.531-3.444,3.444v7.654c-19.239,2.712-34.03,19.244-34.03,39.233\n\t\t\tv149.445c0,43.427-1.791,39.624,39.158,39.624 M300.243,272.088H414.47c17.688,0,31.812,14.106,31.812,31.79v149.445\n\t\t\tc0,32.427,0.062,31.788-31.812,31.788H300.243c-33.399,0-31.79,0.639-31.79-31.788V303.877\n\t\t\tC268.454,286.194,282.56,272.088,300.243,272.088z\"></path>\n\t\t<g>\n\t\t\t\n\t\t\t\t<linearGradient id=\"SVGID_2_\" gradientUnits=\"userSpaceOnUse\" x1=\"1257.3906\" y1=\"1867.5029\" x2=\"1255.8201\" y2=\"1623.9031\" gradientTransform=\"matrix(-1 0 0 1 1613.7266 -1413.5605)\">\n\t\t\t\t<stop offset=\"0\" style=\"stop-color:#000000\"></stop>\n\t\t\t\t<stop offset=\"1\" style=\"stop-color:#CCCCCC\"></stop>\n\t\t\t</linearGradient>\n\t\t\t<path fill=\"url(#SVGID_2_)\" d=\"M349.644,203.187c0-2.2,1.8-4,4-4h7c2.191,0,4,1.8,4,4v250.411c0,2.2-1.809,4-4,4h-7\n\t\t\t\tc-2.2,0-4-1.8-4-4V203.187z\"></path>\n\t\t\t<path fill=\"none\" stroke=\"#000000\" stroke-width=\"0.7399\" d=\"M349.644,203.187c0-2.2,1.8-4,4-4h7c2.191,0,4,1.8,4,4v250.411\n\t\t\t\tc0,2.2-1.809,4-4,4h-7c-2.2,0-4-1.8-4-4V203.187z\"></path>\n\t\t</g>\n\t\t\n\t\t\t<path id=\"rect3884\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\tM303.436,289.078v-46.14 M318.248,242.938v46.14\"></path>\n\t\t<g id=\"water-in\">\n\t\t\t\n\t\t\t\t<linearGradient id=\"path4327_1_\" gradientUnits=\"userSpaceOnUse\" x1=\"2411.3896\" y1=\"1988.3486\" x2=\"2409.6218\" y2=\"1932.5325\" gradientTransform=\"matrix(1 0 0 1 -2100.5 -1682.625)\">\n\t\t\t\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t\t\t\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n\t\t\t</linearGradient>\n\t\t\t<path id=\"path4327\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccccc\" fill=\"url(#path4327_1_)\" d=\"\n\t\t\t\tM304.446,244.083v44.927l-2,15.229h16.792l-2-15.229v-44.927H304.446L304.446,244.083z\"></path>\n\t\t\t\n\t\t\t\t<linearGradient id=\"path4343_2_\" gradientUnits=\"userSpaceOnUse\" x1=\"3555.3623\" y1=\"-283.3486\" x2=\"3555.5591\" y2=\"-324.696\" gradientTransform=\"matrix(0 1 -1 0 -50.9658 -3334.9141)\">\n\t\t\t\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t\t\t\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n\t\t\t</linearGradient>\n\t\t\t<path id=\"path4343\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccc\" fill=\"url(#path4343_2_)\" d=\"M279.514,214.094\n\t\t\t\th-76.927v12.792h76.927V214.094z\"></path>\n\t\t\t\n\t\t\t\t<linearGradient id=\"path4339_2_\" gradientUnits=\"userSpaceOnUse\" x1=\"2411.2236\" y1=\"1973.8398\" x2=\"2411.4202\" y2=\"1932.4917\" gradientTransform=\"matrix(1 0 0 1 -2100.5 -1676.4053)\">\n\t\t\t\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t\t\t\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n\t\t\t</linearGradient>\n\t\t\t<path id=\"path4339\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccc\" fill=\"url(#path4339_2_)\" d=\"M304.445,250.302\n\t\t\t\tv44.927h12.792v-44.927H304.445z\"></path>\n\t\t\t\n\t\t\t\t<path id=\"path4585\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" inkscape:transform-center-x=\"-0.025718508\" inkscape:transform-center-y=\"-4.7490598\" fill=\"#F6FFD5\" d=\"\n\t\t\t\tM185.938,237.127c-0.029-11.019,0.03-22.038,0-33.057c9.558,5.483,19.071,11.044,28.628,16.528\n\t\t\t\tC205.039,226.134,195.466,231.592,185.938,237.127z\"></path>\n\t\t</g>\n\t\t<path id=\"path3907\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"M261.15,220.615c0,10.321-8.367,18.688-18.688,18.688\n\t\t\tc-10.321,0-18.688-8.367-18.688-18.688c0-10.321,8.367-18.688,18.688-18.688C252.784,201.927,261.15,210.293,261.15,220.615\n\t\t\tL261.15,220.615z\"></path>\n\t\t\n\t\t\t<path id=\"path3909\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" inkscape:transform-center-x=\"-2.1959249\" inkscape:transform-center-y=\"0.011889062\" stroke=\"#000000\" stroke-width=\"0.3537\" d=\"\n\t\t\tM246.369,228.257c-0.014-5.095,0.014-10.19,0-15.285c4.419,2.536,8.818,5.107,13.237,7.643\n\t\t\tC255.2,223.174,250.774,225.698,246.369,228.257z\"></path>\n\t\t\n\t\t\t<linearGradient id=\"path4257_1_\" gradientUnits=\"userSpaceOnUse\" x1=\"3603.3896\" y1=\"5889.5967\" x2=\"3611.1377\" y2=\"5891.5337\" gradientTransform=\"matrix(0.3068 0 0 0.3068 -681.4507 -1431.6987)\">\n\t\t\t<stop offset=\"0\" style=\"stop-color:#FFFFFF\"></stop>\n\t\t\t<stop offset=\"1\" style=\"stop-color:#FFFFFF;stop-opacity:0\"></stop>\n\t\t</linearGradient>\n\t\t<path id=\"path4257\" fill=\"url(#path4257_1_)\" d=\"M426.53,375.398c0,0.979-0.797,1.783-1.781,1.783s-1.782-0.808-1.782-1.783\n\t\t\tc0-0.983,0.798-1.781,1.782-1.781S426.53,374.415,426.53,375.398z\"></path>\n\t\t\n\t\t\t<linearGradient id=\"path3886_2_\" gradientUnits=\"userSpaceOnUse\" x1=\"2399.043\" y1=\"1891.9541\" x2=\"2401.821\" y2=\"1928.3204\" gradientTransform=\"matrix(1 0 0 1 -2100.5 -1682.625)\">\n\t\t\t<stop offset=\"0\" style=\"stop-color:#BFBFBF\"></stop>\n\t\t\t<stop offset=\"1\" style=\"stop-color:#969696\"></stop>\n\t\t</linearGradient>\n\t\t\n\t\t\t<path id=\"path3886\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccccccccccc\" fill=\"url(#path3886_2_)\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\tM280.507,210.752v20.031h6.906v-2.812c8.022,0.897,14.429,6.811,16,14.594h-2.688v6.938h20.031v-6.938h-3.812\n\t\t\tc-1.791-15.095-14.221-27.049-29.531-28.062v-3.75L280.507,210.752L280.507,210.752z\"></path>\n\t\t\n\t\t\t<linearGradient id=\"path3886_3_\" gradientUnits=\"userSpaceOnUse\" x1=\"519.5215\" y1=\"804.8301\" x2=\"522.299\" y2=\"841.1896\" gradientTransform=\"matrix(-4.371139e-08 -1 1 -4.371139e-08 -411.4961 751.7339)\">\n\t\t\t<stop offset=\"0\" style=\"stop-color:#BFBFBF\"></stop>\n\t\t\t<stop offset=\"1\" style=\"stop-color:#969696\"></stop>\n\t\t</linearGradient>\n\t\t\n\t\t\t<path id=\"path3886_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccccccccccc\" fill=\"url(#path3886_3_)\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\tM394.713,250.252h20.031v-6.906h-2.812c0.897-8.021,6.812-14.429,14.603-16v2.688h6.938v-20.031h-6.938v3.812\n\t\t\tc-15.104,1.791-27.058,14.221-28.062,29.531h-3.75L394.713,250.252L394.713,250.252z\"></path>\n\t\t\n\t\t\t<path id=\"rect3903_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\tM515.584,227.267h-82.121v-14.812h82.121\"></path>\n\t\t<g id=\"water-out\">\n\t\t\t<g>\n\t\t\t\t\n\t\t\t\t\t<path id=\"rect3884_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"\n\t\t\t\t\tM396.936,297.23v-46.14 M411.748,251.091v46.14\"></path>\n\t\t\t\t\n\t\t\t\t\t<linearGradient id=\"path4339_3_\" gradientUnits=\"userSpaceOnUse\" x1=\"2504.7246\" y1=\"1975.2373\" x2=\"2504.9209\" y2=\"1933.8898\" gradientTransform=\"matrix(1 0 0 1 -2100.5 -1676.4053)\">\n\t\t\t\t\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t\t\t\t\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n\t\t\t\t</linearGradient>\n\t\t\t\t<path id=\"path4339_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccc\" fill=\"url(#path4339_3_)\" d=\"\n\t\t\t\t\tM397.945,251.697v44.927h12.793v-44.927L397.945,251.697L397.945,251.697z\"></path>\n\t\t\t</g>\n\t\t\t\n\t\t\t\t<linearGradient id=\"path4343_3_\" gradientUnits=\"userSpaceOnUse\" x1=\"487.3291\" y1=\"427.875\" x2=\"487.5364\" y2=\"384.2344\" gradientTransform=\"matrix(0 -1 1 0 56.2695 707.3574)\">\n\t\t\t\t<stop offset=\"0\" style=\"stop-color:#F6FFD5\"></stop>\n\t\t\t\t<stop offset=\"1\" style=\"stop-color:#EEFFAA\"></stop>\n\t\t\t</linearGradient>\n\t\t\t<path id=\"path4343_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"ccccc\" fill=\"url(#path4343_3_)\" d=\"\n\t\t\t\tM434.388,226.381h81.196v-12.792h-81.196V226.381z\"></path>\n\t\t\t\n\t\t\t\t<path id=\"path4585_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" inkscape:transform-center-x=\"-0.025718508\" inkscape:transform-center-y=\"-4.7490598\" fill=\"#F6FFD5\" d=\"\n\t\t\t\tM532.384,203.348c0.029,11.019-0.03,22.038,0,33.057c-9.558-5.483-19.071-11.044-28.628-16.528\n\t\t\t\tC513.283,214.341,522.855,208.883,532.384,203.348z\"></path>\n\t\t</g>\n\t\t<path id=\"path3907_1_\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" d=\"M457.172,219.86c0-10.321,8.367-18.688,18.688-18.688\n\t\t\tc10.312,0,18.688,8.367,18.688,18.688c0,10.321-8.366,18.688-18.688,18.688C465.538,238.548,457.172,230.182,457.172,219.86\n\t\t\tL457.172,219.86z\"></path>\n\t\t\n\t\t\t<path id=\"path3909_1_\" inkscape:connector-curvature=\"0\" sodipodi:nodetypes=\"cccc\" inkscape:transform-center-x=\"-2.1959249\" inkscape:transform-center-y=\"0.011889062\" stroke=\"#000000\" stroke-width=\"0.3537\" d=\"\n\t\t\tM480.182,227.505c-0.015-5.095,0.021-10.19,0-15.285c4.418,2.536,8.817,5.107,13.236,7.643\n\t\t\tC489.013,222.421,484.586,224.945,480.182,227.505z\"></path>\n\t\t<path id=\"heat-plate\" fill=\"#006d6d\" d=\"M250.831,492.945c11.564,0,203.615,0,213.078,0c0,0,0,8.256,0,16.971\n\t\t\tc0,0-209.222,0-213.078,0\"><animate attributeName=\"fill\" to=\"#8d2a2a\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#b31b1b\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#314b4b\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#314b4b\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#007272\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#007171\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#007171\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#007070\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006f6f\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006e6e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006e6e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006c6c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006c6c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006b6b\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006a6a\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006969\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006969\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006868\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006868\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006767\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006666\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006565\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006565\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006464\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006363\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006262\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006262\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006262\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006161\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006161\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006060\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006060\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005f5f\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005f5f\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005f5f\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#025c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#015c5c\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005e5e\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#005d5d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006d6d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate><animate attributeName=\"fill\" to=\"#006d6d\" fill=\"freeze\" dur=\"1s\" begin=\"indefinite\"></animate></path>\n\t\t<line fill=\"none\" stroke=\"#000000\" x1=\"304.445\" y1=\"501.432\" x2=\"290.259\" y2=\"521.083\"></line>\n\t\t\n\t\t\t<text id=\"plate-temperature\" transform=\"matrix(1 0 0 1 271.0498 546.709)\" font-family=\"'MyriadPro-Regular'\" font-size=\"25.9254\">29.1 ºC</text>\n\t\t\n\t\t\t<text id=\"liquid-temperature\" transform=\"matrix(1 0 0 1 370.9053 356.0557)\" font-family=\"'MyriadPro-Regular'\" font-size=\"21.9227\">29.1 ºC</text>\n\t\t\n\t\t\t<text id=\"stir-motor-status\" transform=\"matrix(1 0 0 1 341.7319 162.0557)\" font-family=\"'MyriadPro-Regular'\" font-size=\"21.9227\" fill=\"green\">ON</text>\n\t\t<text id=\"pump-out-status\" transform=\"matrix(1 0 0 1 461.3916 195.75)\" font-family=\"'MyriadPro-Regular'\" font-size=\"21.9227\" fill=\"red\">OFF</text>\n\t\t<text id=\"pump-in-status\" transform=\"matrix(1 0 0 1 228.7559 195.75)\" font-family=\"'MyriadPro-Regular'\" font-size=\"21.9227\" fill=\"red\">OFF</text>\n\t\t<text id=\"liquid-weight\" transform=\"matrix(1 0 0 1 168.7559 401.0176)\" font-family=\"'MyriadPro-Regular'\" font-size=\"21.9227\">260 g</text>\n\t\t<text id=\"liquid-ph\" transform=\"matrix(1 0 0 1 276.3828 384.6904)\" font-family=\"'MyriadPro-Regular'\" font-size=\"20.3837\">pH: 7.2</text>\n\t\t<rect x=\"328.927\" y=\"171.083\" fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" width=\"58\" height=\"37.333\"></rect>\n\t\t<g>\n\t\t\t<circle fill=\"#FFFFFF\" stroke=\"#000000\" stroke-width=\"2\" cx=\"357.927\" cy=\"189.75\" r=\"14.5\"></circle>\n\t\t\t<text transform=\"matrix(1 0 0 1 350.4951 195.75)\" font-family=\"'Helvetica'\" font-size=\"18.2205\">M</text>\n\t\t</g>\n\t</g>\n  <path id=\"spatula-right\" d=\"M251,341h32l4,2v14l-4,2l-19-4l-13-2V341z\t\" style=\"display:none\"></path>\n\t<path id=\"animated-spatula-right\" style=\"display:inline\" d=\"M 240.67 341 L 225.448 341 L 223.546 343 L 223.546 357 L 225.448 359 L 234.486 355 L 240.67 353 Z\">\n<animate fill=\"remove\" accumulate=\"none\" repeatCount=\"indefinite\" calcMode=\"linear\" to=\"M 251,341, L 283,341, L 287,343, L 287,357, L 283,359, L 264,355, L 251,353 Z\" restart=\"always\" dur=\"1s\" values=\"M 251,341, L 283,341, L 287,343, L 287,357, L 283,359, L 264,355, L 251,353 Z;M 249.66311896062464,341, L 275.55166278062296,341, L 278.78773075812273,343, L 278.78773075812273,357, L 275.55166278062296,359, L 260.180339887499,355, L 249.66311896062464,353 Z;M 246.16311896062464,341, L 256.05166278062296,341, L 257.28773075812273,343, L 257.28773075812273,357, L 256.05166278062296,359, L 250.18033988749895,355, L 246.16311896062464,353 Z;M 241.83688103937536,341, L 231.94833721937707,341, L 230.71226924187727,343, L 230.71226924187727,357, L 231.94833721937707,359, L 237.81966011250105,355, L 241.83688103937536,353 Z;M 238.33688103937536,341, L 212.44833721937704,341, L 209.21226924187727,343, L 209.21226924187727,357, L 212.44833721937704,359, L 227.81966011250105,355, L 238.33688103937536,353 Z;M 237,341, L 205,341, L 201,343, L 201,357, L 205,359, L 224,355, L 237,353 Z;M 238.33688103937536,341, L 212.44833721937704,341, L 209.21226924187727,343, L 209.21226924187727,357, L 212.44833721937704,359, L 227.81966011250105,355, L 238.33688103937536,353 Z;M 241.83688103937536,341, L 231.94833721937704,341, L 230.71226924187727,343, L 230.71226924187727,357, L 231.94833721937704,359, L 237.81966011250105,355, L 241.83688103937536,353 Z;M 246.16311896062464,341, L 256.05166278062296,341, L 257.28773075812273,343, L 257.28773075812273,357, L 256.05166278062296,359, L 250.18033988749895,355, L 246.16311896062464,353 Z;M 249.66311896062464,341, L 275.55166278062296,341, L 278.78773075812273,343, L 278.78773075812273,357, L 275.55166278062296,359, L 260.1803398874989,355, L 249.66311896062464,353 Z;M 251,341, L 283,341, L 287,343, L 287,357, L 283,359, L 264,355, L 251,353 Z\" additive=\"replace\" attributeName=\"d\" begin=\"0s\" from=\"M 251,341, L 283,341, L 287,343, L 287,357, L 283,359, L 264,355, L 251,353 Z\">\n\t\t\t</animate>\n\t</path>\n  <path id=\"spatula-left\" d=\"M237,341h-32l-4,2v14l4,2l19-4l13-2V341z\t\" style=\"display:none\"></path>\n\t<path style=\"display:inline\" id=\"animated-spatula-left\" d=\"M 247.33 341 L 262.552 341 L 264.454 343 L 264.454 357 L 262.552 359 L 253.514 355 L 247.33 353 Z\">\n<animate fill=\"remove\" accumulate=\"none\" repeatCount=\"indefinite\" calcMode=\"linear\" to=\"M 237,341, L 205,341, L 201,343, L 201,357, L 205,359, L 224,355, L 237,353 Z\" restart=\"always\" dur=\"1s\" values=\"M 237,341, L 205,341, L 201,343, L 201,357, L 205,359, L 224,355, L 237,353 Z;M 238.33688103937536,341, L 212.44833721937704,341, L 209.21226924187727,343, L 209.21226924187727,357, L 212.44833721937704,359, L 227.81966011250105,355, L 238.33688103937536,353 Z;M 241.83688103937536,341, L 231.94833721937704,341, L 230.71226924187727,343, L 230.71226924187727,357, L 231.94833721937704,359, L 237.81966011250105,355, L 241.83688103937536,353 Z;M 246.16311896062464,341, L 256.05166278062296,341, L 257.28773075812273,343, L 257.28773075812273,357, L 256.05166278062296,359, L 250.18033988749895,355, L 246.16311896062464,353 Z;M 249.66311896062464,341, L 275.55166278062296,341, L 278.78773075812273,343, L 278.78773075812273,357, L 275.55166278062296,359, L 260.1803398874989,355, L 249.66311896062464,353 Z;M 251,341, L 283,341, L 287,343, L 287,357, L 283,359, L 264,355, L 251,353 Z;M 249.66311896062464,341, L 275.55166278062296,341, L 278.78773075812273,343, L 278.78773075812273,357, L 275.55166278062296,359, L 260.180339887499,355, L 249.66311896062464,353 Z;M 246.16311896062464,341, L 256.05166278062296,341, L 257.28773075812273,343, L 257.28773075812273,357, L 256.05166278062296,359, L 250.18033988749895,355, L 246.16311896062464,353 Z;M 241.83688103937536,341, L 231.94833721937707,341, L 230.71226924187727,343, L 230.71226924187727,357, L 231.94833721937707,359, L 237.81966011250105,355, L 241.83688103937536,353 Z;M 238.33688103937536,341, L 212.44833721937704,341, L 209.21226924187727,343, L 209.21226924187727,357, L 212.44833721937704,359, L 227.81966011250105,355, L 238.33688103937536,353 Z;M 237,341, L 205,341, L 201,343, L 201,357, L 205,359, L 224,355, L 237,353 Z\" additive=\"replace\" attributeName=\"d\" begin=\"0s\" from=\"M 237,341, L 205,341, L 201,343, L 201,357, L 205,359, L 224,355, L 237,353 Z\">\n\t\t\t</animate>\n\t</path>\n</g>\n<g id=\"Layer_2\">\n</g>\n<polyline fill=\"#FFFFFF\" stroke=\"#000000\" stroke-miterlimit=\"10\" points=\"139.235,215.938 127.301,215.938 127.301,392.299 \n\t139.235,392.299 \"></polyline>\n</svg>"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "right": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 56,
+            "height": 52
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Bioreactor svg",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ]
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "right": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 56,
+            "height": 52
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Bioreactor svg",
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ]
+        }
+      },
+      "id": 1,
+      "vars_in": [
+        {
+          "rel": "svgModifier",
+          "name": "svgmodifier"
+        }
+      ],
+      "actions_in": {},
+      "title": "Bioreactor svg",
+      "vars_out": [
+        {
+          "event": "onChange",
+          "rel": "svgString",
+          "jpath": [],
+          "name": "thesvg"
+        },
+        {
+          "event": "onHover",
+          "rel": "info",
+          "jpath": [
+            "timestamp"
+          ],
+          "name": "atimestamp"
+        }
+      ],
+      "actions_out": {},
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "url": "modules/types/edition/filter_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "script": [
+                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\n//resolve(value);\nvar minWeight = 200;\nvar maxWeight = 300;\nvar maxHeight = 176;\nvar liquidY = 216;\n\nvar plateColor1 = hexToRgb('#444444');\nvar plateColor2 = hexToRgb('#ff0000');\n\nfunction hexToRgb(hex) {\n  // Expand shorthand form (e.g. \"03F\") to full form (e.g. \"0033FF\")\n  var shorthandRegex = /^#?([a-f\\d])([a-f\\d])([a-f\\d])$/i;\n  hex = hex.replace(shorthandRegex, function(m, r, g, b) {\n      return r + r + g + g + b + b;\n  });\n\n  var result = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex);\n  return result ? {\n      r: parseInt(result[1], 16),\n      g: parseInt(result[2], 16),\n      b: parseInt(result[3], 16)\n  } : null;\n}\n\nfunction makeGradientColor(color1, color2, percent) {\n    var newColor = {};\n\n    function makeChannel(a, b) {\n        return(a + Math.round((b-a)*(percent/100)));\n    }\n\n    function makeColorPiece(num) {\n        num = Math.min(num, 255);   // not more than 255\n        num = Math.max(num, 0);     // not less than 0\n        var str = num.toString(16);\n        if (str.length < 2) {\n            str = \"0\" + str;\n        }\n        return(str);\n    }\n\n    newColor.r = makeChannel(color1.r, color2.r);\n    newColor.g = makeChannel(color1.g, color2.g);\n    newColor.b = makeChannel(color1.b, color2.b);\n    newColor.cssColor = \"#\" + \n                        makeColorPiece(newColor.r) + \n                        makeColorPiece(newColor.g) + \n                        makeColorPiece(newColor.b);\n    return(newColor);\n}\n\nif(!value) return;\n\nvar textOn = {\n    innerVal: 'ON',\n    attributes: {\n        fill: 'green'\n    }\n}\n\nvar onAttr = {\n    fill: 'green'\n};\n\nvar offAttr = {\n    fill: 'red'\n}\n\nvar textOff = {\n    innerVal: 'OFF',\n    attributes: {\n        fill: 'red'\n    }\n}\n\nvar hiddenAttr = {\n    style: 'display:none'\n};\n\nvar visibleAttr = {\n    style: 'display:inline'\n}\nvar hidden = {\n    attributes: {\n        style: 'display:none'\n    }\n};\n\nvar visible = {\n    attributes: {\n        style: 'display:inline'\n    }\n}\n\nfunction weightToHeight(weight) {\n    var w = (weight-minWeight)/(maxWeight-minWeight)*maxHeight;\n    return Math.round(w*10)/10;\n}\n\nfunction weightToY(weight) {\n    var height = weightToHeight(weight);\n    return liquidY + maxHeight - height;\n}\n\nvar result = {};\nvar svgmodifier = [];\n\n// =======================================================\n// Pump in\n// =======================================================\nif(value.pumpIn) {\n    svgmodifier.push(\n        {\n            selector: '#pump-in-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#pump-in-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        }\n    );\n}\n\n// =======================================================\n// Pump out\n// =======================================================\nif(value.pumpOut) {\n    svgmodifier.push(\n        {\n            selector: '#pump-out-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#pump-out-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        }\n    );\n}\n\n// =======================================================\n// Agitation\n// =======================================================\nif(value.agitation) {\n    svgmodifier.push(\n        {\n            selector: '#stir-motor-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        },\n        {\n            selector: '#animated-spatula-right, #animated-spatula-left',\n            attributes: visibleAttr\n        },\n        {\n            selector: '#spatula-left, #spatula-right',\n            attributes: hiddenAttr\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#stir-motor-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        },\n        {\n            selector: '#animated-spatula-right, #animated-spatula-left',\n            attributes: hiddenAttr\n        },\n        {\n            selector: '#spatula-left, #spatula-right',\n            attributes: visibleAttr\n        }\n    );\n}\n\n\n// =======================================================\n// Other\n// =======================================================\nsvgmodifier.push(\n    {\n        selector: '#liquid-rect',\n        attributes: {\n          y:  weightToY(value.weight),\n          height: weightToHeight(value.weight)\n        },\n        animation: {\n            fill: \"freeze\",\n            dur: \"1s\",\n            options: {\n                persistOnEnd: true,\n                clearOnEnd: true\n            }\n        }\n    },\n    {\n        selector: 'liquid-weight',\n        innerVal: value.weight.toString() + ' g'\n    },\n    {\n        selector: '#plate-temperature',\n        innerVal: Math.round(value.plateTemperature*10)/10  + ' ºC'\n    },\n    {\n        selector: 'heat-plate',\n        attributes: {\n            fill: makeGradientColor(plateColor1, plateColor2, (value.plateTemperature-34)/8*100).cssColor\n        },\n        animation: {\n            fill: 'freeze',\n            dur: '1s',\n            options: {\n                clearOnEnd: true,\n                persistOnEnd: true\n            }\n        }\n    },\n    {\n        selector: '#liquid-temperature',\n        innerVal: Math.round(value.liquidTemperature*10)/10 + ' ºC'\n    },\n    {\n        selector: 'liquid-ph',\n        innerVal: 'pH: ' + Math.round(value.liquidPH*10)/10\n    }\n);\n\n\nAPI.createData('svgmodifier', svgmodifier);"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 114,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 66
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Translation of data to svg modification",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 66
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Translation of data to svg modification",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "dataobject",
+          "name": "filterObj"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "Translation of data to svg modification",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/display/single_value/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "append": [
+                []
+              ],
+              "maxEntries": [
+                1
+              ],
+              "editable": [
+                [
+                  "yes"
+                ]
+              ],
+              "debounce": [
+                0
+              ],
+              "defaultvalue": [
+                null
+              ],
+              "font": [
+                null
+              ],
+              "fontcolor": [
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "fontsize": [
+                "36pt"
+              ],
+              "align": [
+                null
+              ],
+              "valign": [
+                null
+              ],
+              "rendererOptions": [
+                ""
+              ],
+              "forceType": [
+                ""
+              ],
+              "sprintf": [
+                null
+              ],
+              "sprintfOrder": [
+                null
+              ],
+              "preformatted": [
+                []
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 57,
+            "top": 0
+          },
+          "size": {
+            "width": 27,
+            "height": 9
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Target temperature",
+          "bgColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 57,
+            "top": 0
+          },
+          "size": {
+            "width": 27,
+            "height": 9
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Target temperature",
+          "bgColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "targetTemperature"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Target temperature",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {
+          "graph": [
+            {
+              "sections": {},
+              "groups": {
+                "graph": [
+                  {
+                    "url": [
+                      ""
+                    ],
+                    "zoom": [
+                      "xy"
+                    ],
+                    "wheelAction": [
+                      "none"
+                    ],
+                    "wheelbaseline": [
+                      0
+                    ],
+                    "fullOut": [
+                      "both"
+                    ],
+                    "legend": [
+                      null
+                    ],
+                    "legendOptions": [
+                      [
+                        "isSerieHideable",
+                        "isSerieSelectable"
+                      ]
+                    ],
+                    "mouseTracking": [
+                      []
+                    ],
+                    "selectScatter": [
+                      []
+                    ],
+                    "independantYZoom": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "axis": [
+            {
+              "sections": {},
+              "groups": {
+                "xAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "Time"
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "axismodification": [
+                      "timestamptotime"
+                    ]
+                  }
+                ],
+                "yAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      "Temperature (°C)"
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      "18"
+                    ],
+                    "max": [
+                      "35"
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "fitToAxisOnFromTo": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variables": [
+            {
+              "sections": {},
+              "groups": {
+                "variables": [
+                  [
+                    {
+                      "variable": "temperature",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        255,
+                        5,
+                        1,
+                        0.48
+                      ],
+                      "strokewidth": "3",
+                      "strokestyle": "1",
+                      "plotcontinuous": "continuous",
+                      "peakpicking": [],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "none",
+                      "optimizeSlots": [],
+                      "degrade": 0,
+                      "monotoneous": [],
+                      "tracking": []
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {}
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 57,
+            "top": 10
+          },
+          "size": {
+            "width": 55,
+            "height": 42
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Temperature",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 57,
+            "top": 10
+          },
+          "size": {
+            "width": 55,
+            "height": 42
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Temperature",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "xyArray",
+          "name": "temperatures"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Temperature",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/display/single_value/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "append": [
+                []
+              ],
+              "maxEntries": [
+                1
+              ],
+              "editable": [
+                []
+              ],
+              "debounce": [
+                0
+              ],
+              "defaultvalue": [
+                null
+              ],
+              "font": [
+                null
+              ],
+              "fontcolor": [
+                [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              "fontsize": [
+                "36pt"
+              ],
+              "align": [
+                null
+              ],
+              "valign": [
+                null
+              ],
+              "rendererOptions": [
+                ""
+              ],
+              "forceType": [
+                ""
+              ],
+              "sprintf": [
+                null
+              ],
+              "sprintfOrder": [
+                null
+              ],
+              "preformatted": [
+                []
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 85,
+            "top": 0
+          },
+          "size": {
+            "width": 27,
+            "height": 9
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Current temperature",
+          "bgColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 85,
+            "top": 0
+          },
+          "size": {
+            "width": 27,
+            "height": 9
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Current temperature",
+          "bgColor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "currentTemperature"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Current temperature",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                [
+                  "yes"
+                ]
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "var arduinom = API.cache('arduinom');\n\nif(this.event === 'load') {\n    var socket = io.connect('http://localhost:3000');\n    var arduinom = arduino(socket);\n    API.cache('arduinom', arduinom);\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        API.cache(`device${device.id}`, device);\n        \n        if(device.id === 9293) {\n            API.cache('device', device);\n            await device.setEpochNow();\n            const res = await superagent\n                .get('http://localhost:3000/db/9293/entries?limit=500&sort=desc');\n            \n            // Convert to chart\n            const serie = [];\n            res.body.reverse().forEach(data => {\n                serie.push(data.epoch*1000);\n                serie.push(data.parameters.A/100);\n            });\n            \n            API.createData('temperatures', serie);\n            \n            await updateFromLog(device, {\n                updateGraph: true\n            });\n            setInterval(async function ()  {\n                await updateFromLog(device, {\n                    updateGraph: true\n                });\n            }, 1000);\n        }\n    });    \n}\n\n\nif(this.action) {\n    const device = API.cache('device');\n    switch(this.action.name) {\n        case 'paramEdited': {\n            await device.setParameter('AA', Number(this.action.value.targetTemp)*100);\n            await updateFromLog(device, {\n                updateGraph: false\n            });\n            break;\n        }\n    }\n}\n\nfunction isEnabled(status, bit) {\n    return !!(status & (1<<bit))\n}\n\nasync function updateFromLog(device, options) {\n    const log = await device.getParsedCompactLog();\n    const temp = log.parameters.A/100;\n    const targetTemp = log.parameters.AA/100;\n    const epoch = log.epoch * 1000;\n    const paramStatus = log.parameters.Z;\n    \n    if(options.updateGraph) {\n        var temperatures = API.getData('temperatures');\n        temperatures.push(epoch);\n        temperatures.push(temp);\n        temperatures.triggerChange();    \n    }\n    \n    \n    // API.createData('filterObj', {\n    //     pumpIn: isEnabled(paramStatus, 8),\n    //     pumpOut: isEnabled(paramStatus, 9),\n    //     agitation: isEnabled(paramStatus, 0),\n    //     weight: 260,\n    //     plateTemperature: temp,\n    //     liquidTemperature: temp,\n    //     liquidPH: 7.2\n    // });\n    \n    API.createData('currentTemperature', temp);\n    API.createData('targetTemperature', targetTemp);\n}\n\narduinom.ready();\n\n\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "io",
+                "alias": "io"
+              },
+              {
+                "lib": "arduino",
+                "alias": "arduino"
+              },
+              {
+                "lib": "superagent",
+                "alias": "superagent"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 113,
+            "top": 0
+          },
+          "size": {
+            "width": 70,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {
+          "rel": "execute",
+          "name": "paramEdited"
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "var device = API.cache('device9293');\nconsole.log(device);\n\n// const q = await device.getQualifier();\n// console.log(q);\n\nconst log = await device.getParsedCompactLog();\nconsole.log(log);\n\n// await device.setParameter('AA', 2500);\n// console.log(await device.getParsedCompactLog());"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "superagent",
+                "alias": "superagent"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 113,
+            "top": 42
+          },
+          "size": {
+            "width": 38,
+            "height": 23
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "selectable": [
+                []
+              ],
+              "template": [
+                ""
+              ],
+              "modifyInForm": [
+                []
+              ],
+              "debouncing": [
+                0
+              ],
+              "formOptions": [
+                [
+                  "keepFormValueIfDataUndefined"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 53
+          },
+          "size": {
+            "width": 56,
+            "height": 29
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Edit parameters",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 56,
+            "top": 0
+          },
+          "size": {
+            "width": 34,
+            "height": 38
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Edit parameters",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {
+          "rel": "tpl",
+          "name": "editParamTemplate"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "event": "onFormSubmitted",
+          "rel": "form",
+          "jpath": [],
+          "name": "paramEdited"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Edit parameters",
+      "zindex": 8
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "html"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "<form>\n    <table>\n        <tr>\n            <td>\n                Target temperature (Celsius)\n            </td>\n            <td>\n                <input type=\"text\" name=\"targetTemp\"/>\n            </td>\n        </tr>\n    </table>\n    <br>\n    <input type=\"submit\">\n</form>"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 96,
+            "top": 3
+          },
+          "size": {
+            "width": 36,
+            "height": 40
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 9,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onEditorChange",
+          "rel": "data",
+          "jpath": [],
+          "name": "editParamTemplate"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    }
+  ],
+  "variables": [
+    {
+      "varname": "exercises",
+      "jpath": [
+        "exercises"
+      ]
+    },
+    {
+      "varname": "molfile",
+      "jpath": [
+        "molfile"
+      ]
+    },
+    {
+      "varname": "options",
+      "jpath": [
+        "options"
+      ]
+    },
+    {
+      "varname": "twigTemplate",
+      "jpath": [
+        "twigTemplate"
+      ]
+    },
+    {
+      "varname": "result",
+      "jpath": [
+        "result"
+      ]
+    }
+  ],
+  "configuration": {
+    "title": "Bioreactor control demonstration"
+  },
+  "aliases": [
+    {
+      "path": "http://localhost:3000/socket-io",
+      "alias": "io"
+    },
+    {
+      "path": "http://localhost:3000/browserified/index",
+      "alias": "arduino"
+    }
+  ],
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              "\nAPI.createData('targetTemperature', 37);\nAPI.createData('currentTemperature', 37.12);\n\n\nvar temperature={x:[], y:[]};\nvar now=0;\nvar change=0.01;\nvar temp=37;\nfor (var i=0; i<1000; i++) {\n    temp+=change;\n    if (Math.random()>0.98) change=Math.random()/100-0.005; \n    temperature.x.push(now-10*1000+i*10);\n    temperature.y.push(temp);\n}\nAPI.createData('temperature', temperature);"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 'use strict';
-const Common = require('./Common');
-const addMethods = require('./addMethods');
-const methods = require('./openSpectroMethods.json');
+const Common = require('./../Common');
+const addMethods = require('./../addMethods');
+const methods = require('./OpenSpectroMethods.json');
 
 module.exports = function (socket) {
 

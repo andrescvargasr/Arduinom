@@ -2,31 +2,24 @@
 <html>
 <head>
     <script src='/socket-io.js'></script>
+    <script src='/app.js'></script>
     <script>
-        socket = io.connect('http://localhost:3000');
-        socket.on('devices', function(data) {
-            addMessage(data);
+        var socket = io.connect('http://localhost:3000');
+        //socket.emit('ready');
+
+        var a = window.arduinom(socket);
+        a.on('newDevice', device => {
+            window.device = device;
+            console.log('new device', device);
+            device.on('connect', () => console.log('device connected'));
+            device.on('disconnect', () => console.log('device disconnected'));
         });
-
-        socket.on('deviceConnected',  data => console.log('connected',data));
-        socket.on('deviceDisconnected', data => console.log('disconnected',data));
-        socket.on('newDevice', data => console.log('newDevice', data));
-
-
-        //socket.on('message', console.log.bind(console));
-
-        function addMessage(message) {
-            console.log(message);
-            var text = document.createTextNode(message),
-                    el = document.createElement('li'),
-                    messages = document.getElementById('messages');
-
-            el.appendChild(text);
-            messages.appendChild(el);
-        }
+        // Start to receive event! Don't forget to add that!!
+        a.ready();
     </script>
 </head>
 <body>
+Hello
 <ul id='messages'/>
 </body>
 </html>

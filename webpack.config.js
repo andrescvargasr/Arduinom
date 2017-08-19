@@ -6,7 +6,9 @@ module.exports = {
     entry: './src/client/index.js',
     output: {
         path: path.join(__dirname, 'src/public/'),
-        filename: 'app.js'
+        filename: 'app.js',
+        libraryTarget: 'window',
+        library: 'arduinom'
     },
     module: {
         rules: [
