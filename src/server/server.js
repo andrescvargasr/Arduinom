@@ -12,7 +12,7 @@ const io = require('socket.io')(server);
 const ioDevices = require('./socketio/devices');
 const dbRouter = require('./routes/db');
 
-    server.listen(3000);
+server.listen(3000);
 
 app.use(koaCors());
 app.use(dbRouter.routes());
