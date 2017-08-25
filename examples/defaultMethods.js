@@ -2,7 +2,6 @@
 
 const DeviceFactory = require('../src/devices/DeviceFactory');
 const separator='='.repeat(30);
-
 DeviceFactory.on('newDevice', device => {
     /*
      Device type is based on the 'qualifier'. All our programs
@@ -14,8 +13,6 @@ DeviceFactory.on('newDevice', device => {
      it is and know the corresponding functions.
     */
 
-    console.log('We found a new device of type:',device.type);
-
     generalMethods();
 
     async function generalMethods() {
@@ -24,6 +21,20 @@ DeviceFactory.on('newDevice', device => {
          expected to be implemented in all our devices
          */
 
+        console.log(separator,'setParameterValue A',separator);
+        var a=await device.setParameterValue('A',12.345);
+        console.log(a);
+
+        console.log(separator,'getParameterValue A',separator);
+        var a=await device.getParameterValue('A');
+        console.log(a);
+
+        return;
+
+        console.log(separator,'getCurrentDeviceInformation',separator);
+        var status = await device.getCurrentDeviceInformation()
+        console.log(status);
+        return;
         console.log(separator,'getHelp',separator);
         var data = await device.getHelp()
         console.log(data);

@@ -53,20 +53,35 @@ class Mongo {
         await this.collection.insertMany(entries);
     }
 
-    async getEntries(options) {
+    /**
+     *
+     * @param options
+     * @param options.parameters : comma separated list of parameters
+     * @returns {Promise}
+     */
+    async getEntries(options = {}) {
         options = Object.assign({
             limit: 200,
-            parameters: 'A,B,C,D'
+            sort: 'desc',
+            since: 0,
+            count: false
         }, options);
-        const parameters = options.parameters.split(',');
-        const projection = {_id: 0, event: 1, eventValue: 1, epoch: 1, id: 1};
-        parameters.forEach(p => projection[`parameters.${p}`] = 1);
-        if (options.sort === 'desc') {
-            var sort = {epoch: -1, id: -1};
-        } else {
-            sort = {epoch: 1, id: 1};
+        const projection = '';
+        if (options.parameters) {
+            const parameters = options.parameters.split(',');
+            projection = {_id: 0, event: 1, eventValue: 1, epoch: 1, id: 1};
+            parameters.forEach(p => projection[`parameters.${p}`] = 1);
         }
-        return this.collection.find({}, projection).sort(sort).limit(parseInt(options.limit)).toArray();
+        var sort = {epoch: 1, id: 1};
+        if (options.sort === 'desc') {
+            sort = {epoch: -1, id: -1};
+        }
+        var find = {};
+        if (options.since) {
+            find = {"epoch": {$gt: Number(options.since)}};
+        }
+
+        return this.collection.find(find, projection).sort(sort).limit(parseInt(options.limit)).toArray();
     }
 }
 

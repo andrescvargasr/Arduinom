@@ -62,21 +62,27 @@ class AbstractDevice extends EventEmitter {
         return this.deviceInformation;
     }
 
+   initParametersInformation() {
+       if (this.parametersInformation) return;
+        let parameters=this.getDeviceInformation().parameters;
+        let info={};
+        parameters.forEach( (parameter) => {
+            info[parameter.label]=parameter;
+        });
+        this.parametersInformation=info;
+    }
+
+    getFactor(label) {
+        this.initParametersInformation();
+        return this.parametersInformation[label].factor || 1;
+    }
+
     getNumberLogParameters() {
         return this.getDeviceInformation().numberLogParameters;
     }
 
-    getFactor(label) {
-        for (var parameter of this.deviceInformation.parameters) {
-            if (label === parameter.label) {
-                return parameter.factor || 1;
-            }
-        }
-        return 1;
-    }
-
-    setParameter(param, value) {
-        return this.addRequest(param + value).then((buffer) => {
+    setParameter(label, value) {
+        return this.addRequest(label + value).then((buffer) => {
             if (buffer === value.toString()) {
                 debug('written:', buffer);
                 return buffer;
@@ -85,6 +91,10 @@ class AbstractDevice extends EventEmitter {
                 return Promise.reject('Parameter may not have been written');
             }
         });
+    }
+
+    setParameterValue(label, value) {
+        return this.setParameter(label, Math.round(value * this.getFactor(label)));
     }
 
     async getParameter(parameter) {
@@ -125,6 +135,16 @@ class AbstractDevice extends EventEmitter {
     async getFormattedSettings() {
         var settings = await this.getCompactSettings();
         return parser.parseCompactLog(settings, this.numberParameters);
+    }
+
+    async getCurrentDeviceInformation() {
+        let deviceInformation=JSON.parse(JSON.stringify(this.getDeviceInformation()));
+        var settings = (await this.getFormattedSettings()).parameters;
+        for (let parameter of deviceInformation.parameters) {
+            parameter.value=settings[parameter.label];
+            parameter.realValue=settings[parameter.label]/(parameter.factor || 1);
+        }
+        return deviceInformation;
     }
 
     getEpoch() {
