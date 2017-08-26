@@ -62,6 +62,7 @@ class AbstractDevice extends EventEmitter {
         return this.deviceInformation;
     }
 
+
    initParametersInformation() {
        if (this.parametersInformation) return;
         let parameters=this.getDeviceInformation().parameters;

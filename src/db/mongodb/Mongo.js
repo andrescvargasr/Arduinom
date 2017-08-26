@@ -66,6 +66,9 @@ class Mongo {
             since: 0,
             count: false
         }, options);
+
+        console.log(options);
+
         const projection = '';
         if (options.parameters) {
             const parameters = options.parameters.split(',');
@@ -80,7 +83,6 @@ class Mongo {
         if (options.since) {
             find = {"epoch": {$gt: Number(options.since)}};
         }
-
         return this.collection.find(find, projection).sort(sort).limit(parseInt(options.limit)).toArray();
     }
 }

@@ -22,7 +22,7 @@ module.exports = {
 
         {
             label: 'C', name: 'Weight', description: 'Weight of the bioreactor tank, in gr if calibrated',
-            factor: 1, unit: 'gr',
+            factor: 1, unit: 'g',
             writable: false
         },
 
@@ -78,14 +78,14 @@ module.exports = {
             label: 'AD', name: 'Max Weight', description: 'Maximum tank Weight, the Weight state machine' +
         'will go in standby mod if exceeded (internal tolerance is  considered on the circuit). to be set to 0-1500 gr',
             min: 0, max: 1500,
-            factor: 1, unit: 'gr',
+            factor: 1, unit: 'g',
             writable: true
         },
         {
             label: 'AE', name: 'Min Weight', description: 'Minimum tank Weight, the Weight state machine' +
         'will go in standby mod if exceeded (internal tolerance is  considered on the circuit). To be set between 100-1500 gr',
             min: 100, max: 1500,
-            factor: 1, unit: 'gr',
+            factor: 1, unit: 'g',
             writable: true
         },
         {
@@ -94,7 +94,7 @@ module.exports = {
             description: 'Sedimentation time in min after Semi-batch operation,' +
         'corresponds to the waiting time without stirring before emptying the reactor to the minimum level',
             min: 0,
-            max: 32768,
+            max: 32767,
             factor: 1,
             unit: 'min',
             writable: true
@@ -104,7 +104,7 @@ module.exports = {
             label: 'AK', name: 'Filled Time', description: 'Filled time in min after Semi-batch operation,' +
         'corresponds to the total time with and without stirring before emptying the reactor to the minimum level' +
         'must be set longer than the sedimentation time if stirring is desired',
-            min: 0, max: 32768,
+            min: 0, max: 32767,
             factor: 1, unit: 'min',
             writable: true
         }

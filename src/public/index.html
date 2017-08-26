@@ -18,8 +18,13 @@
         // Start to receive event! Don't forget to add that!!
         a.ready();
 
-        function connectDevice(device) {
+        async function connectDevice(device) {
             devices[device.id]=device;
+            var info = await device.getDeviceInformation();
+            device.parametersInformation={};
+            info.parameters.forEach( (parameter) => {
+                device.parametersInformation[parameter.label]=parameter;
+            });
             console.log('device connected')
         }
 
@@ -47,19 +52,44 @@
          * We maintain the last 1000 entries in browser
          */
         async function updateDevicesLogs() {
+            var limit=500;
             for (var key of Object.keys(devices)) {
                 var device = devices[key];
                 if (!device.logs) device.logs=[];
-
-                var logs = await fetch('/db/'+device.id+'/entries?limit=500&sort=500');
-                console.log(logs);
-
+                var lastEpoch=0;
+                if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;
+                var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);
+                var result= await httpRequest.json();
+                device.logs=device.logs.concat(result);
+                device.logs.sort( (a,b) => a.epoch - b.epoch );
+                if (device.logs.length>limit) {
+                    device.logs=device.logs.slice(device.logs.length-limit);
+                }
+                console.log(getChart(device, 'A,B'))
             }
         }
         window.setInterval( updateDevicesLogs, 10000);
 
-
-
+        function getChart(device, group) {
+            if (typeof group === 'string') {
+                group=group.split(/,/);
+            }
+            var series=[];
+            var epochs=device.logs.map( log => log.epoch );
+            for (var key of group) {
+                var serie={};
+                var factor=device.parametersInformation[key].factor || 1;
+                if (device.parametersInformation[key] && device.parametersInformation[key].name) {
+                    serie.name=device.parametersInformation[key].name;
+                } else {
+                    serie.name=key;
+                }
+                serie.x=epochs;
+                serie.y=device.logs.map( log => log.parameters[key]/factor);
+                series.push(serie);
+            }
+            return series;
+        }
     </script>
 
 
