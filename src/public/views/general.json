@@ -1,0 +1,1822 @@
+{
+  "grid": {
+    "layers": {
+      "Default layer": {
+        "name": "Default layer"
+      },
+      "Admin": {
+        "name": "Admin"
+      }
+    },
+    "xWidth": 10,
+    "yHeight": 10
+  },
+  "version": "2.82.4",
+  "modules": [
+    {
+      "url": "modules/types/edition/filter_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "script": [
+                "//When the result is ready, use resolve(result) to send it.\n//In case of an error, use reject(error)\n//resolve(value);\nvar minWeight = 200;\nvar maxWeight = 300;\nvar maxHeight = 176;\nvar liquidY = 216;\n\nvar plateColor1 = hexToRgb('#444444');\nvar plateColor2 = hexToRgb('#ff0000');\n\nfunction hexToRgb(hex) {\n  // Expand shorthand form (e.g. \"03F\") to full form (e.g. \"0033FF\")\n  var shorthandRegex = /^#?([a-f\\d])([a-f\\d])([a-f\\d])$/i;\n  hex = hex.replace(shorthandRegex, function(m, r, g, b) {\n      return r + r + g + g + b + b;\n  });\n\n  var result = /^#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})$/i.exec(hex);\n  return result ? {\n      r: parseInt(result[1], 16),\n      g: parseInt(result[2], 16),\n      b: parseInt(result[3], 16)\n  } : null;\n}\n\nfunction makeGradientColor(color1, color2, percent) {\n    var newColor = {};\n\n    function makeChannel(a, b) {\n        return(a + Math.round((b-a)*(percent/100)));\n    }\n\n    function makeColorPiece(num) {\n        num = Math.min(num, 255);   // not more than 255\n        num = Math.max(num, 0);     // not less than 0\n        var str = num.toString(16);\n        if (str.length < 2) {\n            str = \"0\" + str;\n        }\n        return(str);\n    }\n\n    newColor.r = makeChannel(color1.r, color2.r);\n    newColor.g = makeChannel(color1.g, color2.g);\n    newColor.b = makeChannel(color1.b, color2.b);\n    newColor.cssColor = \"#\" + \n                        makeColorPiece(newColor.r) + \n                        makeColorPiece(newColor.g) + \n                        makeColorPiece(newColor.b);\n    return(newColor);\n}\n\nif(!value) return;\n\nvar textOn = {\n    innerVal: 'ON',\n    attributes: {\n        fill: 'green'\n    }\n}\n\nvar onAttr = {\n    fill: 'green'\n};\n\nvar offAttr = {\n    fill: 'red'\n}\n\nvar textOff = {\n    innerVal: 'OFF',\n    attributes: {\n        fill: 'red'\n    }\n}\n\nvar hiddenAttr = {\n    style: 'display:none'\n};\n\nvar visibleAttr = {\n    style: 'display:inline'\n}\nvar hidden = {\n    attributes: {\n        style: 'display:none'\n    }\n};\n\nvar visible = {\n    attributes: {\n        style: 'display:inline'\n    }\n}\n\nfunction weightToHeight(weight) {\n    var w = (weight-minWeight)/(maxWeight-minWeight)*maxHeight;\n    return Math.round(w*10)/10;\n}\n\nfunction weightToY(weight) {\n    var height = weightToHeight(weight);\n    return liquidY + maxHeight - height;\n}\n\nvar result = {};\nvar svgmodifier = [];\n\n// =======================================================\n// Pump in\n// =======================================================\nif(value.pumpIn) {\n    svgmodifier.push(\n        {\n            selector: '#pump-in-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#pump-in-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        }\n    );\n}\n\n// =======================================================\n// Pump out\n// =======================================================\nif(value.pumpOut) {\n    svgmodifier.push(\n        {\n            selector: '#pump-out-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#pump-out-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        }\n    );\n}\n\n// =======================================================\n// Agitation\n// =======================================================\nif(value.agitation) {\n    svgmodifier.push(\n        {\n            selector: '#stir-motor-status',\n            attributes: onAttr,\n            innerVal: 'ON'\n        },\n        {\n            selector: '#animated-spatula-right, #animated-spatula-left',\n            attributes: visibleAttr\n        },\n        {\n            selector: '#spatula-left, #spatula-right',\n            attributes: hiddenAttr\n        }\n    );\n}\nelse {\n    svgmodifier.push(\n        {\n            selector: '#stir-motor-status',\n            attributes: offAttr,\n            innerVal: 'OFF'\n        },\n        {\n            selector: '#animated-spatula-right, #animated-spatula-left',\n            attributes: hiddenAttr\n        },\n        {\n            selector: '#spatula-left, #spatula-right',\n            attributes: visibleAttr\n        }\n    );\n}\n\n\n// =======================================================\n// Other\n// =======================================================\nsvgmodifier.push(\n    {\n        selector: '#liquid-rect',\n        attributes: {\n          y:  weightToY(value.weight),\n          height: weightToHeight(value.weight)\n        },\n        animation: {\n            fill: \"freeze\",\n            dur: \"1s\",\n            options: {\n                persistOnEnd: true,\n                clearOnEnd: true\n            }\n        }\n    },\n    {\n        selector: 'liquid-weight',\n        innerVal: value.weight.toString() + ' g'\n    },\n    {\n        selector: '#plate-temperature',\n        innerVal: Math.round(value.plateTemperature*10)/10  + ' ºC'\n    },\n    {\n        selector: 'heat-plate',\n        attributes: {\n            fill: makeGradientColor(plateColor1, plateColor2, (value.plateTemperature-34)/8*100).cssColor\n        },\n        animation: {\n            fill: 'freeze',\n            dur: '1s',\n            options: {\n                clearOnEnd: true,\n                persistOnEnd: true\n            }\n        }\n    },\n    {\n        selector: '#liquid-temperature',\n        innerVal: Math.round(value.liquidTemperature*10)/10 + ' ºC'\n    },\n    {\n        selector: 'liquid-ph',\n        innerVal: 'pH: ' + Math.round(value.liquidPH*10)/10\n    }\n);\n\n\nAPI.createData('svgmodifier', svgmodifier);"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 114,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 66
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Translation of data to svg modification",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 66
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Translation of data to svg modification",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        }
+      },
+      "id": 1,
+      "vars_in": [
+        {
+          "rel": "dataobject",
+          "name": "filterObj"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "title": "Translation of data to svg modification",
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "zindex": 2,
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ]
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                [
+                  "yes"
+                ]
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            await device.setEpochNow();\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.on('connect', () => {\n                console.log('Connected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n        \n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n\n    updateDevicesArray();\n    \n    \n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        var devices = API.cache('devices');\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            console.log('update info for ',device.id, device.status);\n            if (device.status==='connect') {\n                device.info = await device.getCurrentDeviceInformation()\n            }\n        }\n        updateDevicesArray();\n    }\n    getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n    \n    /**\n     * We maintain the last 1000 entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        var devices = API.cache('devices');\n        var limit=10000;\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            if (!device.logs) device.logs=[];\n            var lastEpoch=0;\n           \n            if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n            var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n            var result= await httpRequest.json();\n            device.logs=device.logs.concat(result);\n            device.logs.sort( (a,b) => a.epoch - b.epoch );\n            if (device.logs.length>limit) {\n                device.logs=device.logs.slice(device.logs.length-limit);\n            }\n            updateDevicesArray();\n            \n            updateChart();\n        }\n    }\n    API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n}\n\nfunction updateChart() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    \n    var group=['A'];\n    var selectedParameters=API.getData('selectedParameters');\n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label ).join(',');\n    }\n\n    var series=[];\n    var epochs=device.logs.map( log => log.epoch * 1000 );\n    for (var key of group) {\n        var serie={};\n        var factor=device.parametersInformation[key].factor || 1;\n        if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n            serie.label=device.parametersInformation[key].name;\n        } else {\n            serie.label=key;\n        }\n        serie.x=epochs;\n        serie.y=device.logs.map( log => log.parameters[key]/factor);\n        series.push(serie);\n    }\n            \n    API.createData('chart',{\n        data: series\n    });\n}"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "io",
+                "alias": "io"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "execute",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 63,
+            "height": 60
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 2,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "selectedParameters"
+        }
+      ],
+      "actions_in": [
+        {
+          "rel": "execute",
+          "name": "paramEdited"
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "",
+      "zindex": 0
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "html"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                [
+                  "button"
+                ]
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "<form>\n    <table>\n        <tr>\n            <td>\n                Target temperature (Celsius)\n            </td>\n            <td>\n                <input type=\"text\" name=\"targetTemp\"/>\n            </td>\n        </tr>\n    </table>\n    <br>\n    <input type=\"submit\">\n</form>"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 96,
+            "top": 3
+          },
+          "size": {
+            "width": 36,
+            "height": 40
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 3,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onEditorChange",
+          "rel": "data",
+          "jpath": [],
+          "name": "editParamTemplate"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "editable"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/9220df906db163190d73bd0852d1ae63221ddbfc/src/modules/types/edition/slick_grid/view.js#L1264-L1300"
+              ],
+              "customJpaths": [
+                "info.parameters,logs"
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "ID",
+                "jpath": [
+                  "id"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Type",
+                "jpath": [
+                  "type"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Status",
+                "jpath": [
+                  "status"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Type",
+                "jpath": [
+                  "info"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  0
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 64,
+            "top": 0
+          },
+          "size": {
+            "width": 44,
+            "height": 12
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 4,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "devices"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "event": "onRowActive",
+          "rel": "row",
+          "jpath": [
+            "info",
+            "parameters"
+          ],
+          "name": "parameters"
+        },
+        {
+          "event": "onRowActive",
+          "rel": "row",
+          "jpath": [
+            "logs"
+          ],
+          "name": "logs"
+        },
+        {
+          "event": "onRowActive",
+          "rel": "row",
+          "jpath": [
+            "id"
+          ],
+          "name": "deviceID"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "searchBox": [
+                [
+                  "search"
+                ]
+              ],
+              "sendButton": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 109,
+            "top": 0
+          },
+          "size": {
+            "width": 42,
+            "height": 16
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 5,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "chart"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "editable"
+                ]
+              ],
+              "autoColumns": [
+                [
+                  "select"
+                ]
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/9220df906db163190d73bd0852d1ae63221ddbfc/src/modules/types/edition/slick_grid/view.js#L1264-L1300"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "Label",
+                "jpath": [
+                  "label"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 67,
+                "hideColumn": []
+              },
+              {
+                "name": "Name",
+                "jpath": [
+                  "name"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 101,
+                "hideColumn": []
+              },
+              {
+                "name": "Description",
+                "jpath": [
+                  "description"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 84,
+                "hideColumn": []
+              },
+              {
+                "name": "Writable",
+                "jpath": [
+                  "writable"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 84,
+                "hideColumn": []
+              },
+              {
+                "name": "Value",
+                "jpath": [
+                  "value"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 84,
+                "hideColumn": []
+              },
+              {
+                "name": "Factor",
+                "jpath": [
+                  "factor"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 84,
+                "hideColumn": []
+              },
+              {
+                "name": "Real value",
+                "jpath": [
+                  "realValue"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 83,
+                "hideColumn": []
+              },
+              {
+                "name": "Unit",
+                "jpath": [
+                  "unit"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 83,
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  0
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 64,
+            "top": 16
+          },
+          "size": {
+            "width": 67,
+            "height": 17
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 6,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "parameters"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "event": "onRowsSelect",
+          "rel": "rows",
+          "jpath": [],
+          "name": "selectedParameters"
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll",
+                  "filterColumns"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                []
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/9220df906db163190d73bd0852d1ae63221ddbfc/src/modules/types/edition/slick_grid/view.js#L1264-L1300"
+              ],
+              "customJpaths": [
+                "event,eventValue"
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "ID",
+                "jpath": [
+                  "id"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 80,
+                "hideColumn": []
+              },
+              {
+                "name": "epoch",
+                "jpath": [
+                  "epoch"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 128,
+                "hideColumn": []
+              },
+              {
+                "name": "device ID",
+                "jpath": [
+                  "deviceId"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 32,
+                "hideColumn": []
+              },
+              {
+                "name": "device Code",
+                "jpath": [
+                  "deviceCode"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 80,
+                "hideColumn": []
+              },
+              {
+                "name": "event",
+                "jpath": [
+                  "event"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 80,
+                "hideColumn": []
+              },
+              {
+                "name": "event value",
+                "jpath": [
+                  "eventValue"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "width": 80,
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  0
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 112,
+            "top": 35
+          },
+          "size": {
+            "width": 48,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 7,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "logs"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/science/spectra/spectra_displayer/",
+      "configuration": {
+        "sections": {
+          "graph": [
+            {
+              "sections": {},
+              "groups": {
+                "graph": [
+                  {
+                    "url": [
+                      ""
+                    ],
+                    "zoom": [
+                      "x"
+                    ],
+                    "wheelAction": [
+                      "none"
+                    ],
+                    "wheelbaseline": [
+                      0
+                    ],
+                    "fullOut": [
+                      "both"
+                    ],
+                    "legend": [
+                      "bottom"
+                    ],
+                    "legendOptions": [
+                      [
+                        "isSerieHideable",
+                        "isSerieSelectable"
+                      ]
+                    ],
+                    "mouseTracking": [
+                      []
+                    ],
+                    "selectScatter": [
+                      []
+                    ],
+                    "independantYZoom": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "axis": [
+            {
+              "sections": {},
+              "groups": {
+                "xAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      ""
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "axismodification": [
+                      "timestamptotime"
+                    ]
+                  }
+                ],
+                "yAxis": [
+                  {
+                    "checkboxes": [
+                      [
+                        "display"
+                      ]
+                    ],
+                    "label": [
+                      ""
+                    ],
+                    "beforeSpacing": [
+                      "0"
+                    ],
+                    "afterSpacing": [
+                      0
+                    ],
+                    "min": [
+                      ""
+                    ],
+                    "max": [
+                      ""
+                    ],
+                    "nbTicksPrimary": [
+                      5
+                    ],
+                    "fitToAxisOnFromTo": [
+                      []
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variables": [
+            {
+              "sections": {},
+              "groups": {
+                "variables": [
+                  [
+                    {
+                      "variable": "",
+                      "axis": "0",
+                      "adaptTo": "none",
+                      "plotcolor": [
+                        1,
+                        1,
+                        255,
+                        1
+                      ],
+                      "strokewidth": "1",
+                      "strokestyle": "1",
+                      "plotcontinuous": "continuous",
+                      "peakpicking": [],
+                      "markers": [],
+                      "markerShape": "1",
+                      "markerSize": 2,
+                      "normalize": "none",
+                      "optimizeSlots": [],
+                      "degrade": 0,
+                      "monotoneous": [],
+                      "tracking": []
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "groups": {}
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 64,
+            "top": 35
+          },
+          "size": {
+            "width": 47,
+            "height": 39
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 8,
+      "vars_in": [
+        {
+          "rel": "chart",
+          "name": "chart"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    }
+  ],
+  "variables": [
+    {
+      "jpath": [
+        ""
+      ]
+    }
+  ],
+  "configuration": {
+    "title": "Bioreactor control demonstration"
+  },
+  "aliases": [
+    {
+      "path": "/socket-io",
+      "alias": "io"
+    },
+    {
+      "path": "/app",
+      "alias": "Arduinom"
+    }
+  ],
+  "actionscripts": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          {
+            "name": [
+              null
+            ],
+            "script": [
+              null
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "init_script": [
+    {
+      "sections": {},
+      "groups": {
+        "general": [
+          {
+            "script": [
+              "window.devices={};\nAPI.createData('devices', []);\nAPI.cache('devices', window.devices);\n"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "custom_filters": [
+    {
+      "sections": {
+        "modules": [
+          {
+            "sections": {},
+            "groups": {
+              "modules": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filtersLib": [
+          {
+            "sections": {},
+            "groups": {
+              "filters": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ],
+        "filters": [
+          {
+            "sections": {},
+            "groups": {
+              "filter": [
+                {
+                  "name": [
+                    null
+                  ],
+                  "script": [
+                    null
+                  ]
+                }
+              ],
+              "libs": [
+                [
+                  {}
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "groups": {}
+    }
+  ],
+  "actionfiles": [
+    {
+      "sections": {},
+      "groups": {
+        "action": [
+          [
+            {}
+          ]
+        ]
+      }
+    }
+  ]
+}

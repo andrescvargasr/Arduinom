@@ -54,8 +54,6 @@ module.exports = function (io) {
                         .catch((err) => fn({status: 'error', error: err.message}));
                 }
             }
-
-
         });
 
         socket.on('disconnect', function () {

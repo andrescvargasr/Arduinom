@@ -42,7 +42,10 @@
         async function getDevicesInfo() {
             for (var key of Object.keys(devices)) {
                 var device = devices[key];
-                device.info = await device.getCurrentDeviceInformation()
+                console.log('update info for ',device.id, device.status);
+                if (device.status==='connect') {
+                    device.info = await device.getCurrentDeviceInformation()
+                }
             }
         }
         window.setInterval( getDevicesInfo, 10000);
@@ -95,7 +98,15 @@
 
 </head>
 <body>
-Hello
-<ul id='messages'/>
+Open console to have a look what's going on in this view.
+<ul>
+    <li>
+        <a href="/visualizer.html?view=bioreactor">Bioreactor</a>
+    </li>
+    <li>
+        <a href="/visualizer.html?view=general">general</a>
+    </li>
+</ul>
+
 </body>
 </html>

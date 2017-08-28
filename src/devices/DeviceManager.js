@@ -31,6 +31,6 @@ const deviceManager = new DeviceManager({
 
 // Search for devices now and then every x seconds
 deviceManager.refresh();
-setInterval(() => deviceManager.refresh(), 8000);
+setInterval(() => deviceManager.refresh(), 6000);
 
 module.exports = deviceManager;
