@@ -9,34 +9,68 @@ module.exports = {
     numberLogParameters: 26,
     parameters: [
         {
-            label: 'A', name: 'T°LIQ', description: 'Temperature of the bioreactor solution',
+            label: 'A', name: 'T° LIQ', description: 'Temperature of the bioreactor solution',
             factor: 100, unit: '°C',
             writable: false
         },
 
         {
-            label: 'B', name: 'T°PCB', description: 'Temperature of the bioreactor circuit',
+            label: 'B', name: 'T° PCB', description: 'Temperature of the bioreactor circuit',
             factor: 100, unit: '°C',
             writable: false
         },
 
         {
-            label: 'C', name: 'Weight', description: 'Weight of the bioreactor tank, in gr if calibrated',
+            label: 'C', name: 'Pid', description: 'PID absolute value',
+            factor: 1, unit: '',
+            writable: false
+        },
+
+        {
+            label: 'D', name: 'T° target', description: 'Target temperature',
+            factor: 100, unit: '°C',
+            writable: false
+        },
+
+        {
+            label: 'E', name: 'Weight', description: 'Weight of the bioreactor tank, in internal value',
+            factor: 1, unit: '',
+            writable: false
+        },
+
+        {
+            label: 'F', name: 'Weight', description: 'Weight of the bioreactor tank, in gr if calibrated',
             factor: 1, unit: 'g',
             writable: false
         },
 
         {
-            label: 'X', name: 'Weight Status', description: 'Status of the Weight control finite states machine, ' +
-        ' the format is 0b BBBAAAAA AAAAAAAA where BBB codes the state of the machine and AAAAA AAAAAAAA the waiting ' +
-        'time in minutes since the last status change',
+            label: 'G', name: 'Weight since last event', description: 'Time in min since last weight event',
+            factor: 1, unit: 'min',
+            writable: false
+        },
+
+        {
+            label: 'H', name: 'Weight min', description: 'Weight min in internal unit',
+            factor: 1, unit: '',
+            writable: false
+        },
+
+        {
+            label: 'I', name: 'Weight max', description: 'Weight max in internal unit',
+            factor: 1, unit: '',
+            writable: false
+        },
+
+        {
+            label: 'Y', name: 'Error', description: '',
             factor: 1, unit: '',
             writable: false
         },
 
         {
             label: 'Z',
-            name: 'Bioreactor Status',
+            name: 'Status',
             description: 'Status of the Bioreactor, the bits of this integer code' +
         'for the state of specific elements of the reactor (eg. motor ON/OFF, PUMP ON/OFF etc.)',
             factor: 1,
@@ -46,53 +80,27 @@ module.exports = {
 
         {
             label: 'AA',
-            name: 'T°C Target',
-            description: 'Desired regulated Temperature of the liquid in°C, reliable if the' +
-        'desired temperature is at least a few degrees above room temperature.',
-            max: 65.0,
-            factor: 100,
-            unit: '°C',
-            writable: true
-        },
-
-        {
-            label: 'AB', name: 'MAX T°C', description: 'Maximum temperature for the liquid and the circuit, the PID' +
-        'heating regulation loop will stop if this temperature is exceeded.',
-            max: 70,
-            factor: 100, unit: '°C',
-            writable: true
-        },
-
-        {
-            label: 'AC',
-            name: 'T°C PID Time',
-            description: 'Regulation Time windows for the temperature PID control in' +
-        'ms, typically set to 2000 but can be set as desired between to 500-20000 ms, serves as a base time for the duty cycle',
+            name: 'Stepper speed',
+            description: '',
             factor: 1,
-            unit: 'ms',
+            unit: 'RPM',
             writable: true
         },
 
+        {
+            label: 'AB',
+            name: 'Stepper steps',
+            description: 'Number of step before changing diretion. 1 tour = 200 step',
+            factor: 1,
+            unit: '',
+            writable: true
+        },
 
         {
-            label: 'AD', name: 'Max Weight', description: 'Maximum tank Weight, the Weight state machine' +
-        'will go in standby mod if exceeded (internal tolerance is  considered on the circuit). to be set to 0-1500 gr',
-            min: 0, max: 1500,
-            factor: 1, unit: 'g',
-            writable: true
-        },
-        {
-            label: 'AE', name: 'Min Weight', description: 'Minimum tank Weight, the Weight state machine' +
-        'will go in standby mod if exceeded (internal tolerance is  considered on the circuit). To be set between 100-1500 gr',
-            min: 100, max: 1500,
-            factor: 1, unit: 'g',
-            writable: true
-        },
-        {
-            label: 'AJ',
+            label: 'AF',
             name: 'Sedimentation Time',
             description: 'Sedimentation time in min after Semi-batch operation,' +
-        'corresponds to the waiting time without stirring before emptying the reactor to the minimum level',
+            'corresponds to the waiting time without stirring before emptying the reactor to the minimum level',
             min: 0,
             max: 32767,
             factor: 1,
@@ -101,12 +109,33 @@ module.exports = {
         },
 
         {
-            label: 'AK', name: 'Filled Time', description: 'Filled time in min after Semi-batch operation,' +
+            label: 'AG', name: 'Filled Time', description: 'Filled time in min after Semi-batch operation,' +
         'corresponds to the total time with and without stirring before emptying the reactor to the minimum level' +
         'must be set longer than the sedimentation time if stirring is desired',
             min: 0, max: 32767,
             factor: 1, unit: 'min',
             writable: true
+        },
+
+        {
+            label: 'AH', name: 'Weight factor', description: 'Factor allowing to convert the internal weight value to g',
+            factor: 1,
+            unit: '',
+            writable: false
+        },
+
+        {
+            label: 'AI', name: 'Weight offset', description: '',
+            factor: 1,
+            unit: '',
+            writable: false
+        },
+
+        {
+            label: 'AZ', name: 'Enable', description: '',
+            factor: 1,
+            unit: '',
+            writable: false
         }
 
     ]

@@ -48,7 +48,7 @@ function createDevice(data) {
     const idString = util.deviceIdNumberToString(id);
     debug('new device was connected, calling instantiator createDevice()');
     switch (idString[0]) {
-        case '$':
+        case '$': // '$'.charCodeAt(0)*256+'A'.charCodeAt(0)
             debug('detected bioreactor with id:', idString); //then create a filter fo device objects
             this._createDevice(id, OpenBio);
             break;
