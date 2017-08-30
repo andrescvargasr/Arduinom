@@ -6,6 +6,9 @@
       },
       "Admin": {
         "name": "Admin"
+      },
+      "SetParam": {
+        "name": "SetParam"
       }
     },
     "xWidth": 10,
@@ -37,7 +40,7 @@
                 ]
               ],
               "script": [
-                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            await device.setEpochNow();\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.on('connect', () => {\n                console.log('Connected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n        \n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n\n    updateDevicesArray();\n    \n    \n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        var devices = API.cache('devices');\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            console.log('update info for ',device.id, device.status);\n            if (device.status==='connect') {\n                device.info = await device.getCurrentDeviceInformation()\n            }\n        }\n        updateDevicesArray();\n    }\n    getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n    \n    /**\n     * We maintain the last 1000 entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        var devices = API.cache('devices');\n        var limit=10000;\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            if (!device.logs) device.logs=[];\n            var lastEpoch=0;\n           \n            if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n            var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n            var result= await httpRequest.json();\n            result.forEach( a => a.epoch*=1000 );\n            device.logs=device.logs.concat(result);\n            device.logs.sort( (a,b) => a.epoch - b.epoch );\n            if (device.logs.length>limit) {\n                device.logs=device.logs.slice(device.logs.length-limit);\n            }\n            updateDevicesArray();\n            \n            updateChart();\n        }\n    }\n    API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n}\n\nfunction updateChart() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    \n    var group=['A'];\n    var selectedParameters=API.getData('selectedParameters');\n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label ).join(',');\n    }\n\n    var series=[];\n    var epochs=device.logs.map( log => log.epoch * 1000 );\n    for (var key of group) {\n        var serie={};\n        var factor=device.parametersInformation[key].factor || 1;\n        if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n            serie.label=device.parametersInformation[key].name;\n        } else {\n            serie.label=key;\n        }\n        serie.x=epochs;\n        serie.y=device.logs.map( log => log.parameters[key]/factor);\n        series.push(serie);\n    }\n            \n    API.createData('chart',{\n        data: series\n    });\n}"
+                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            await device.setEpochNow();\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.on('connect', () => {\n                console.log('Connected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n        \n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n\n    updateDevicesArray();\n    \n    \n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        if (! API.getData('preferences').autoUpdateSettings.resurrect()) return;\n\n        var devices = API.cache('devices');\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            console.log('update info for ',device.id, device.status);\n            if (device.status==='connect') {\n                device.info = await device.getCurrentDeviceInformation()\n            }\n        }\n        updateDevicesArray();\n    }\n    getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n    \n    /**\n     * We maintain the last 1000 entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        if (! API.getData('preferences').autoUpdateLogs.resurrect()) return;\n        var devices = API.cache('devices');\n        var limit=10000;\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            if (!device.logs) device.logs=[];\n            var lastEpoch=0;\n           \n            if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n            var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n            var result= await httpRequest.json();\n            result.forEach( a => a.epoch*=1000 );\n            device.logs=device.logs.concat(result);\n            device.logs.sort( (a,b) => a.epoch - b.epoch );\n            if (device.logs.length>limit) {\n                device.logs=device.logs.slice(device.logs.length-limit);\n            }\n            updateDevicesArray();\n            \n            updateChart();\n        }\n    }\n    API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n}\n\nfunction updateChart() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    \n    var group=['A'];\n    var selectedParameters=API.getData('selectedParameters');\n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label ).join(',');\n    }\n\n    var series=[];\n    var epochs=device.logs.map( log => Number(log.epoch) );\n    for (var key of group) {\n        var serie={};\n        var factor=device.parametersInformation[key].factor || 1;\n        if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n            serie.label=device.parametersInformation[key].name;\n        } else {\n            serie.label=key;\n        }\n        serie.x=epochs;\n        serie.y=device.logs.map( log => log.parameters[key]/factor);\n        series.push(serie);\n    }\n            \n    API.createData('chart',{\n        data: series\n    });\n}"
               ]
             }
           ],
@@ -94,6 +97,28 @@
           },
           "zIndex": 0,
           "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 73
+          },
+          "zIndex": 0,
+          "display": false,
           "title": "",
           "bgColor": [
             255,
@@ -162,161 +187,6 @@
       ],
       "title": "",
       "zindex": 0
-    },
-    {
-      "url": "modules/types/client_interaction/code_editor/",
-      "configuration": {
-        "sections": {},
-        "groups": {
-          "group": [
-            {
-              "mode": [
-                "html"
-              ],
-              "outputType": [
-                null
-              ],
-              "btnvalue": [
-                "Send script"
-              ],
-              "iseditable": [
-                [
-                  "editable"
-                ]
-              ],
-              "hasButton": [
-                [
-                  "button"
-                ]
-              ],
-              "variable": [
-                []
-              ],
-              "storeOnChange": [
-                [
-                  "store"
-                ]
-              ],
-              "debouncing": [
-                0
-              ],
-              "script": [
-                "<form>\n    <table>\n        <tr>\n            <td>\n                Target temperature (Celsius)\n            </td>\n            <td>\n                <input type=\"text\" name=\"targetTemp\"/>\n            </td>\n        </tr>\n    </table>\n    <br>\n    <input type=\"submit\">\n</form>"
-              ]
-            }
-          ],
-          "ace": [
-            {
-              "useSoftTabs": [
-                [
-                  "yes"
-                ]
-              ],
-              "tabSize": [
-                4
-              ]
-            }
-          ]
-        }
-      },
-      "layers": {
-        "Default layer": {
-          "position": {
-            "left": 0,
-            "top": 0
-          },
-          "size": {
-            "width": 20,
-            "height": 20
-          },
-          "zIndex": 0,
-          "display": false,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Default layer"
-        },
-        "Admin": {
-          "position": {
-            "left": 107,
-            "top": 0
-          },
-          "size": {
-            "width": 36,
-            "height": 40
-          },
-          "zIndex": 0,
-          "display": true,
-          "title": "",
-          "bgColor": [
-            255,
-            255,
-            255,
-            0
-          ],
-          "wrapper": true,
-          "created": true,
-          "name": "Admin"
-        }
-      },
-      "id": 2,
-      "vars_in": [
-        {}
-      ],
-      "actions_in": [
-        {}
-      ],
-      "vars_out": [
-        {
-          "event": "onEditorChange",
-          "rel": "data",
-          "jpath": [],
-          "name": "editParamTemplate"
-        }
-      ],
-      "actions_out": [
-        {
-          "jpath": []
-        }
-      ],
-      "toolbar": {
-        "custom": [
-          [
-            {
-              "title": "",
-              "icon": "",
-              "action": "",
-              "position": "begin"
-            }
-          ]
-        ],
-        "common": [
-          {
-            "toolbar": [
-              [
-                "Open Preferences"
-              ]
-            ]
-          }
-        ]
-      },
-      "css": [
-        {
-          "fontSize": [
-            ""
-          ],
-          "fontFamily": [
-            ""
-          ]
-        }
-      ],
-      "title": ""
     },
     {
       "url": "modules/types/edition/slick_grid/",
@@ -466,7 +336,7 @@
             "top": 0
           },
           "size": {
-            "width": 44,
+            "width": 30,
             "height": 14
           },
           "zIndex": 0,
@@ -503,9 +373,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 46,
+            "height": 14
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List of devices",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 3,
+      "id": 2,
       "vars_in": [
         {
           "rel": "list",
@@ -646,7 +538,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 67,
+                "width": 63,
                 "hideColumn": []
               },
               {
@@ -660,25 +552,11 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 101,
+                "width": 159,
                 "hideColumn": []
               },
               {
-                "name": "Description",
-                "jpath": [
-                  "description"
-                ],
-                "editor": "none",
-                "forceType": "",
-                "formatter": "typerenderer",
-                "visibility": "both",
-                "rendererOptions": "",
-                "editorOptions": "",
-                "width": 84,
-                "hideColumn": []
-              },
-              {
-                "name": "Writable",
+                "name": "R/W",
                 "jpath": [
                   "writable"
                 ],
@@ -688,35 +566,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 84,
-                "hideColumn": []
-              },
-              {
-                "name": "Value",
-                "jpath": [
-                  "value"
-                ],
-                "editor": "none",
-                "forceType": "",
-                "formatter": "typerenderer",
-                "visibility": "both",
-                "rendererOptions": "",
-                "editorOptions": "",
-                "width": 84,
-                "hideColumn": []
-              },
-              {
-                "name": "Factor",
-                "jpath": [
-                  "factor"
-                ],
-                "editor": "none",
-                "forceType": "",
-                "formatter": "typerenderer",
-                "visibility": "both",
-                "rendererOptions": "",
-                "editorOptions": "",
-                "width": 84,
+                "width": 60,
                 "hideColumn": []
               },
               {
@@ -730,7 +580,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 83,
+                "width": 103,
                 "hideColumn": []
               },
               {
@@ -744,7 +594,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 83,
+                "width": 125,
                 "hideColumn": []
               }
             ]
@@ -799,11 +649,11 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 45,
+            "left": 31,
             "top": 0
           },
           "size": {
-            "width": 81,
+            "width": 48,
             "height": 31
           },
           "zIndex": 0,
@@ -840,9 +690,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 15
+          },
+          "size": {
+            "width": 46,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "List of parameters",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 4,
+      "id": 3,
       "vars_in": [
         {
           "rel": "list",
@@ -863,6 +735,12 @@
           "rel": "rows",
           "jpath": [],
           "name": "selectedParameters"
+        },
+        {
+          "event": "onRowActive",
+          "rel": "row",
+          "jpath": [],
+          "name": "parameter"
         }
       ],
       "toolbar": {
@@ -962,7 +840,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 67,
+                "width": 60,
                 "hideColumn": []
               },
               {
@@ -976,35 +854,7 @@
                 "visibility": "both",
                 "rendererOptions": "dateFormat:'MM-DD hh:mm:ss'",
                 "editorOptions": "",
-                "width": 141,
-                "hideColumn": []
-              },
-              {
-                "name": "device ID",
-                "jpath": [
-                  "deviceId"
-                ],
-                "editor": "none",
-                "forceType": "",
-                "formatter": "typerenderer",
-                "visibility": "both",
-                "rendererOptions": "",
-                "editorOptions": "",
-                "width": 32,
-                "hideColumn": []
-              },
-              {
-                "name": "device Code",
-                "jpath": [
-                  "deviceCode"
-                ],
-                "editor": "none",
-                "forceType": "",
-                "formatter": "typerenderer",
-                "visibility": "both",
-                "rendererOptions": "",
-                "editorOptions": "",
-                "width": 80,
+                "width": 122,
                 "hideColumn": []
               },
               {
@@ -1018,11 +868,11 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 80,
+                "width": 51,
                 "hideColumn": []
               },
               {
-                "name": "event value",
+                "name": "value",
                 "jpath": [
                   "eventValue"
                 ],
@@ -1032,7 +882,7 @@
                 "visibility": "both",
                 "rendererOptions": "",
                 "editorOptions": "",
-                "width": 80,
+                "width": 67,
                 "hideColumn": []
               }
             ]
@@ -1088,11 +938,11 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 15
+            "top": 32
           },
           "size": {
-            "width": 44,
-            "height": 58
+            "width": 30,
+            "height": 41
           },
           "zIndex": 0,
           "display": true,
@@ -1128,9 +978,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Detailed log",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 5,
+      "id": 4,
       "vars_in": [
         {
           "rel": "list",
@@ -1338,11 +1210,11 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 45,
+            "left": 31,
             "top": 32
           },
           "size": {
-            "width": 81,
+            "width": 91,
             "height": 41
           },
           "zIndex": 0,
@@ -1379,9 +1251,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 56,
+            "top": 29
+          },
+          "size": {
+            "width": 46,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 6,
+      "id": 5,
       "vars_in": [
         {
           "rel": "chart",
@@ -1464,13 +1358,15 @@
                 []
               ],
               "storeOnChange": [
-                []
+                [
+                  "store"
+                ]
               ],
               "debouncing": [
                 0
               ],
               "script": [
-                null
+                "\nAuto update settings: <input type='checkbox' name='autoUpdateSettings'></br>\nAuto update logs and chart: <input type='checkbox' name='autoUpdateLogs'></br>\n"
               ]
             }
           ],
@@ -1532,9 +1428,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 50,
+            "top": 44
+          },
+          "size": {
+            "width": 32,
+            "height": 14
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 7,
+      "id": 6,
       "vars_in": [
         {}
       ],
@@ -1621,14 +1539,14 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 0
+            "top": 15
           },
           "size": {
-            "width": 20,
-            "height": 20
+            "width": 30,
+            "height": 16
           },
           "zIndex": 0,
-          "display": false,
+          "display": true,
           "title": "",
           "bgColor": [
             255,
@@ -1661,9 +1579,31 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 104,
+            "top": 42
+          },
+          "size": {
+            "width": 32,
+            "height": 13
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 8,
+      "id": 7,
       "vars_in": [
         {
           "rel": "tpl",
@@ -1801,13 +1741,694 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 56,
+            "top": 61
+          },
+          "size": {
+            "width": 46,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
-      "id": 9,
+      "id": 8,
       "vars_in": [
         {
           "rel": "value",
           "name": "preferences"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "html"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                []
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                [
+                  "store"
+                ]
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                "<style>\n    #setParam h1 {\n        text-align: center;\n    }\n    #setParam .description {\n        padding-top: 10px;\n        padding-bottom: 10px;\n    }\n    #setParam th {\n        vertical-align: top;\n        text-align: left;\n    }\n    #setParam th, #setParam td {\n        padding: 2px;\n    }\n</style>\n<div id='setParam'>\n    <h1>{{parameter.label}}: {{parameter.name}}</h1>\n    <p class='description'>{{parameter.description}}</p>\n    <table>\n        <tr>\n            <th>Current value</th>\n            <td>\n                {{parameter.realValue}} {{parameter.unit}}\n            </td>\n        </tr>\n        <tr>\n            <th>Value in internal unit</th>\n            <td>\n                {{parameter.value}}\n                <span style='font-size: 0.7em'>\n                {% if parameter.min or parameter.max %} ({% endif %}\n                {% if parameter.min %}\n                min: {{parameter.min}}\n                {% endif %}\n                \n                {% if parameter.max %}\n                {% if parameter.min %} - {% endif %}\n                max: {{parameter.max}}\n                {% endif %}\n                {% if parameter.min or parameter.max %}){% endif %}\n                </span>\n            </td>\n        </tr>\n        <tr>\n            <th>Factor</th>\n            <td>{{parameter.factor}}</td>\n        </tr>\n        <tr>\n            <th>Writable</th>\n            <td>{{rendertype(parameter.writable)}}</td>\n        </tr>\n        {% if parameter.writable==true %}\n        <tr>\n            <th>New value</th>\n            <td>\n                <form>\n                    <input type='number' name='realValue'>\n                    <input type='submit' value='Set value'>\n                </form>\n                <span>Enter the new real value (not internal units)</span>\n            </td>\n        </tr>\n        {% endif %}\n    </table>\n</div>\n"
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Template for set parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 105,
+            "top": 57
+          },
+          "size": {
+            "width": 32,
+            "height": 14
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Template for set parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 47,
+            "top": 23
+          },
+          "size": {
+            "width": 66,
+            "height": 21
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Template for set parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        }
+      },
+      "id": 9,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onEditorChange",
+          "rel": "data",
+          "jpath": [],
+          "name": "editParamTemplate"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Template for set parameter form"
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "selectable": [
+                []
+              ],
+              "template": [
+                ""
+              ],
+              "modifyInForm": [
+                []
+              ],
+              "debouncing": [
+                0
+              ],
+              "formOptions": [
+                [
+                  "keepFormValueIfDataUndefined"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 80,
+            "top": 0
+          },
+          "size": {
+            "width": 42,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Set a parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Set a parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 47,
+            "top": 0
+          },
+          "size": {
+            "width": 66,
+            "height": 22
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Set a parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 10,
+      "vars_in": [
+        {
+          "rel": "tpl",
+          "name": "editParamTemplate"
+        },
+        {
+          "rel": "form",
+          "name": "parameter"
+        },
+        {
+          "rel": "value",
+          "name": "parameter"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onFormSubmitted",
+          "rel": "form",
+          "jpath": [],
+          "name": "setParameter"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Set a parameter form"
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "var parameter=API.getData('parameter');\nvar newValue=API.getData('setParameter').realValue*(parameter.factor || 1);\nvar device=API.cache('devices')[API.getData('deviceID')];\nvar minValue=parameter.min || -32768;\nvar maxValue=parameter.max || 32767;\n\nconsole.log(device);\n\nif (newValue < minValue || newValue > maxValue) {\n    UI.showNotification(`Value in internal units should be between ${minValue} and ${maxValue}`);\n} else {\n    device.setParameter(parameter.label, newValue);\n}\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {
+                "lib": "src/util/ui",
+                "alias": "UI"
+              }
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Set parameter",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Set parameter",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 47,
+            "top": 45
+          },
+          "size": {
+            "width": 66,
+            "height": 27
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Set parameter",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 11,
+      "vars_in": [
+        {
+          "rel": "inputValue",
+          "name": "setParameter"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Set parameter"
+    },
+    {
+      "url": "modules/types/edition/object_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "editable": [
+                "view"
+              ],
+              "expanded": [
+                []
+              ],
+              "storeObject": [
+                []
+              ],
+              "displayValue": [
+                []
+              ],
+              "searchBox": [
+                [
+                  "search"
+                ]
+              ],
+              "sendButton": [
+                []
+              ],
+              "output": [
+                "new"
+              ],
+              "storedObject": [
+                "{}"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 114,
+            "top": 0
+          },
+          "size": {
+            "width": 29,
+            "height": 44
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 12,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "parameter"
         }
       ],
       "actions_in": [
@@ -1901,7 +2522,7 @@
         "general": [
           {
             "script": [
-              "window.devices={};\nAPI.createData('devices', []);\nAPI.cache('devices', window.devices);\n\nAPI.createData('preferences', {\n    autoUpdateSettings: true,\n    autoUpdateChart: true,\n    fromID: '',\n    numberLogs: 10000\n});"
+              "window.devices={};\nAPI.createData('devices', []);\nAPI.cache('devices', window.devices);\n\nAPI.createData('preferences', {\n    autoUpdateSettings: true,\n    autoUpdateLogs: true,\n    fromID: '',\n    numberLogs: 10000\n});"
             ]
           }
         ]
