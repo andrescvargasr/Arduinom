@@ -9,12 +9,15 @@
       },
       "SetParam": {
         "name": "SetParam"
+      },
+      "Test": {
+        "name": "Test"
       }
     },
     "xWidth": 10,
     "yHeight": 10
   },
-  "version": "2.82.4",
+  "version": "2.83.0",
   "modules": [
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -40,7 +43,7 @@
                 ]
               ],
               "script": [
-                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            await device.setEpochNow();\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.on('connect', () => {\n                console.log('Connected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n        \n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n\n    updateDevicesArray();\n    \n    \n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        if (! API.getData('preferences').autoUpdateSettings.resurrect()) return;\n\n        var devices = API.cache('devices');\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            console.log('update info for ',device.id, device.status);\n            if (device.status==='connect') {\n                device.info = await device.getCurrentDeviceInformation()\n            }\n        }\n        updateDevicesArray();\n    }\n    getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n    \n    /**\n     * We maintain the last 1000 entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        if (! API.getData('preferences').autoUpdateLogs.resurrect()) return;\n        var devices = API.cache('devices');\n        var limit=10000;\n        for (var key of Object.keys(devices)) {\n            var device = devices[key];\n            if (!device.logs) device.logs=[];\n            var lastEpoch=0;\n           \n            if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n            var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n            var result= await httpRequest.json();\n            result.forEach( a => a.epoch*=1000 );\n            device.logs=device.logs.concat(result);\n            device.logs.sort( (a,b) => a.epoch - b.epoch );\n            if (device.logs.length>limit) {\n                device.logs=device.logs.slice(device.logs.length-limit);\n            }\n            updateDevicesArray();\n            \n            updateChart();\n        }\n    }\n    API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n}\n\nfunction updateChart() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    \n    var group=['A'];\n    var selectedParameters=API.getData('selectedParameters');\n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label ).join(',');\n    }\n\n    var series=[];\n    var epochs=device.logs.map( log => Number(log.epoch) );\n    for (var key of group) {\n        var serie={};\n        var factor=device.parametersInformation[key].factor || 1;\n        if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n            serie.label=device.parametersInformation[key].name;\n        } else {\n            serie.label=key;\n        }\n        serie.x=epochs;\n        serie.y=device.logs.map( log => log.parameters[key]/factor);\n        series.push(serie);\n    }\n            \n    API.createData('chart',{\n        data: series\n    });\n}"
+                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            var epoch = await device.setEpochNow();\n            UI.showNotification('Set epoch to '+epoch, 'info');\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.eventsInformation={};\n            info.events.forEach( (event) => {\n                device.eventsInformation[event.id]=event;\n            });\n            \n            device.on('connect', () => {\n                console.log('Conndected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n    updateDevicesArray();\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n    updateAnnotations();\n}\n\n\nfunction updateAnnotations() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    var logs=device.logs.filter( a => a.event>0 );\n    var annotations=[];\n    var colors=['red','blue','yellow','green','black'];\n    for (var i=0; i<logs.length; i++) {\n        var log=logs[i];\n        annotations.push({\n            \"fillColor\": colors[i%colors.length],\n            \"type\": \"rect\",\n            \"strokeColor\": \"red\",\n            \"strokeWidth\": \"0px\",\n            \"position\": [\n              {\n                \"x\": log.epoch,\n                \"dx\": \"-1px\",\n                \"y\": \"0px\"\n                \n              },\n              {\n                \"x\": log.epoch,\n                \"dx\": \"1px\",\n                \"y\": \"10px\"\n              }\n            ],\n            \"label\": \n              {\n                \"text\": \"\",\n                \"position\": {\n                  \"x\": log.epoch,\n                  \"y\": \"20px\"\n                }\n              },\n              \"info\":log,\n              \"_highlight\":log._highlight\n          }\n        )\n    }\n    API.createData('annotations', annotations);\n    \n}\n\nfunction updateChart() {\n    var colors=['red','blue','yellow','green','black'];\n    var device = API.cache('devices')[API.getData('deviceID')];\n\n    var group=[];\n    var selectedParameters=API.getData('selectedParameters');\n    \n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label );\n    }\n    var series=[];\n    var epochs=device.logs.map( log => Number(log.epoch) );\n    for (var i=0; i<group.length; i++) {\n        var key = group[i];\n        if (typeof device.logs[0].parameters[key]!==\"undefined\") {\n            var serie={};\n            var factor=device.parametersInformation[key].factor || 1;\n            if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n                serie.label=device.parametersInformation[key].name;\n            } else {\n                serie.label=key;\n            }\n            serie.options={\n                lineColor:colors[i%colors.length],\n                lineStyle:1\n            };\n            serie.x=epochs;\n            serie.y=device.logs.map( log => log.parameters[key]/factor);\n            series.push(serie);\n        }\n    }\n    API.createData('chart',{\n        data: series\n    });\n}\n\nvar previousDeviceID=API.cache('previousDeviceID') || -1;\nvar deviceID=Number(API.getData('deviceID'));\nif ((this.button || this.variable==='deviceID') && deviceID!=previousDeviceID) {\n    API.cache('previousDeviceID',deviceID);\n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    console.time('start');\n    async function getDevicesInfo() {\n        if (! API.getData('preferences').autoUpdateSettings.resurrect()) return;\n        var device = API.cache('devices')[API.getData('deviceID')];\n        console.log('update info for ',device.id, device.status);\n        if (device.status==='connect') {\n            device.info = await device.getCurrentDeviceInformation()\n        }\n        updateDevicesArray();\n    }\n    await getDevicesInfo();\n    console.timeEnd('start');\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n     /**\n     * We maintain the last XXX entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        if (! API.getData('preferences').autoUpdateLogs.resurrect()) return;\n        var limit=10000;\n        var device = API.cache('devices')[API.getData('deviceID')];\n\n        if (!device.logs) device.logs=[];\n        var lastEpoch=0;\n       \n        if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n        var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n        var result= await httpRequest.json();\n        result.forEach( a => {\n            a.epoch*=1000;\n            a._highlight=Math.random();\n        });\n        device.logs=device.logs.concat(result);\n        device.logs.sort( (a,b) => a.epoch - b.epoch );\n        if (device.logs.length>limit) {\n            device.logs=device.logs.slice(device.logs.length-limit);\n        }\n        \n        device.logs.forEach( a => {\n            if (a.event>0) {\n                console.log(a.event,device.eventsInformation[a.event]);\n                a.eventLabel=device.eventsInformation[a.event];\n            }\n        });\n        updateDevicesArray();\n        updateChart();\n    }\n    API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n\n    \n    \n    if (API.cache('getFreeMemory')) clearInterval(API.cache('getFreeMemory'));\n    async function getFreeMemory() {\n        var device = API.cache('devices')[API.getData('deviceID')];\n        if (device && device.status==='connect') {\n            var memory = await device.getFormattedFreeMemory();\n            API.createData('memory', memory);\n        }\n    }\n    await getFreeMemory();\n    API.cache('getFreeMemory',window.setInterval( getFreeMemory, 60000));\n\n    \n    \n    \n}\n\n"
               ]
             }
           ],
@@ -49,6 +52,10 @@
               {
                 "lib": "io",
                 "alias": "io"
+              },
+              {
+                "lib": "src/util/ui",
+                "alias": "UI"
               }
             ]
           ],
@@ -93,7 +100,7 @@
           },
           "size": {
             "width": 55,
-            "height": 73
+            "height": 61
           },
           "zIndex": 0,
           "display": true,
@@ -129,6 +136,28 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 55,
+            "height": 73
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
       "id": 1,
@@ -136,6 +165,10 @@
         {
           "rel": "inputValue",
           "name": "selectedParameters"
+        },
+        {
+          "rel": "inputValue",
+          "name": "deviceID"
         }
       ],
       "actions_in": [
@@ -385,6 +418,28 @@
           },
           "zIndex": 0,
           "display": true,
+          "title": "List of devices",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 46,
+            "height": 14
+          },
+          "zIndex": 0,
+          "display": false,
           "title": "List of devices",
           "bgColor": [
             255,
@@ -712,6 +767,28 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 15
+          },
+          "size": {
+            "width": 46,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "List of parameters",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
       "id": 3,
@@ -937,7 +1014,7 @@
       "layers": {
         "Default layer": {
           "position": {
-            "left": 0,
+            "left": 123,
             "top": 32
           },
           "size": {
@@ -980,6 +1057,28 @@
           "name": "Admin"
         },
         "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Detailed log",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "Test": {
           "position": {
             "left": 0,
             "top": 0
@@ -1069,10 +1168,10 @@
                       ""
                     ],
                     "zoom": [
-                      "xy"
+                      "x"
                     ],
                     "wheelAction": [
-                      "none"
+                      "zoomY"
                     ],
                     "wheelbaseline": [
                       0
@@ -1118,10 +1217,10 @@
                       ""
                     ],
                     "beforeSpacing": [
-                      "0"
+                      "0.1"
                     ],
                     "afterSpacing": [
-                      0
+                      "0.1"
                     ],
                     "min": [
                       ""
@@ -1177,7 +1276,7 @@
                 "variables": [
                   [
                     {
-                      "variable": "",
+                      "variable": "chart",
                       "axis": "0",
                       "adaptTo": "none",
                       "plotcolor": [
@@ -1273,6 +1372,28 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 56,
+            "top": 29
+          },
+          "size": {
+            "width": 46,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
       "id": 5,
@@ -1280,6 +1401,10 @@
         {
           "rel": "chart",
           "name": "chart"
+        },
+        {
+          "rel": "annotations",
+          "name": "annotations"
         }
       ],
       "actions_in": [
@@ -1287,7 +1412,12 @@
       ],
       "vars_out": [
         {
-          "jpath": []
+          "event": "onMouseOverShape",
+          "rel": "shapeInfos",
+          "jpath": [
+            "info"
+          ],
+          "name": "eventInfo"
         }
       ],
       "actions_out": [
@@ -1310,7 +1440,8 @@
           {
             "toolbar": [
               [
-                "Open Preferences"
+                "Open Preferences",
+                "Show fullscreen"
               ]
             ]
           }
@@ -1450,6 +1581,28 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 50,
+            "top": 44
+          },
+          "size": {
+            "width": 32,
+            "height": 14
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
       "id": 6,
@@ -1543,7 +1696,7 @@
           },
           "size": {
             "width": 30,
-            "height": 16
+            "height": 9
           },
           "zIndex": 0,
           "display": true,
@@ -1581,6 +1734,28 @@
           "name": "Admin"
         },
         "SetParam": {
+          "position": {
+            "left": 104,
+            "top": 42
+          },
+          "size": {
+            "width": 32,
+            "height": 13
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "Test": {
           "position": {
             "left": 104,
             "top": 42
@@ -1743,6 +1918,28 @@
           "name": "Admin"
         },
         "SetParam": {
+          "position": {
+            "left": 56,
+            "top": 61
+          },
+          "size": {
+            "width": 46,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "Test": {
           "position": {
             "left": 56,
             "top": 61
@@ -1938,6 +2135,28 @@
           "wrapper": true,
           "created": true,
           "name": "Admin"
+        },
+        "Test": {
+          "position": {
+            "left": 47,
+            "top": 23
+          },
+          "size": {
+            "width": 66,
+            "height": 21
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Template for set parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
         }
       },
       "id": 9,
@@ -2087,6 +2306,28 @@
           "wrapper": true,
           "created": true,
           "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 47,
+            "top": 0
+          },
+          "size": {
+            "width": 66,
+            "height": 22
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Set a parameter form",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
         }
       },
       "id": 10,
@@ -2175,7 +2416,7 @@
                 ]
               ],
               "script": [
-                "var parameter=API.getData('parameter');\nvar newValue=API.getData('setParameter').realValue*(parameter.factor || 1);\nvar device=API.cache('devices')[API.getData('deviceID')];\nvar minValue=parameter.min || -32768;\nvar maxValue=parameter.max || 32767;\n\nconsole.log(device);\n\nif (newValue < minValue || newValue > maxValue) {\n    UI.showNotification(`Value in internal units should be between ${minValue} and ${maxValue}`);\n} else {\n    device.setParameter(parameter.label, newValue);\n}\n"
+                "var parameter=API.getData('parameter');\nvar newValue=API.getData('setParameter').realValue*(parameter.factor || 1);\nvar device=API.cache('devices')[API.getData('deviceID')];\nvar minValue=parameter.min || -32768;\nvar maxValue=parameter.max || 32767;\n\nconsole.log(device);\n\nif (newValue < minValue || newValue > maxValue) {\n    UI.showNotification(`Value in internal units should be between ${minValue} and ${maxValue}`);\n} else {\n    var result = await device.setParameter(parameter.label, newValue);\n    if (Number(result) === newValue) {\n        UI.showNotification('Parameter changed successfully to '+result,'info');\n    } else {\n        UI.showNotification('Something went wrong, the new value is '+result,'error');\n    }\n    \n}\n"
               ]
             }
           ],
@@ -2264,6 +2505,28 @@
           "wrapper": true,
           "created": true,
           "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 47,
+            "top": 45
+          },
+          "size": {
+            "width": 66,
+            "height": 27
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Set parameter",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
         }
       },
       "id": 11,
@@ -2327,7 +2590,7 @@
           "group": [
             {
               "editable": [
-                "view"
+                "text"
               ],
               "expanded": [
                 []
@@ -2381,6 +2644,644 @@
         },
         "Admin": {
           "position": {
+            "left": 103,
+            "top": 0
+          },
+          "size": {
+            "width": 33,
+            "height": 38
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 12,
+      "vars_in": [
+        {
+          "rel": "value",
+          "name": "eventInfo"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/edition/slick_grid/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "slickCheck": [
+                [
+                  "enableCellNavigation",
+                  "rowNumbering",
+                  "forceFitColumns",
+                  "highlightScroll"
+                ]
+              ],
+              "autoColumns": [
+                []
+              ],
+              "toolbar": [
+                []
+              ],
+              "colorjpath": [
+                [
+                  "color"
+                ]
+              ],
+              "slick.defaultColumnWidth": [
+                null
+              ],
+              "slick.rowHeight": [
+                null
+              ],
+              "slick.headerRowHeight": [
+                30
+              ],
+              "slick.selectionModel": [
+                "row"
+              ],
+              "idProperty": [
+                ""
+              ],
+              "filterType": [
+                "pref"
+              ],
+              "filterRow": [
+                "// Documentation: https://github.com/NPellet/visualizer/blob/9220df906db163190d73bd0852d1ae63221ddbfc/src/modules/types/edition/slick_grid/view.js#L1264-L1300"
+              ],
+              "customJpaths": [
+                ""
+              ]
+            }
+          ],
+          "cols": [
+            [
+              {
+                "name": "Process",
+                "jpath": [
+                  "name"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              },
+              {
+                "name": "Free",
+                "jpath": [
+                  "free"
+                ],
+                "editor": "none",
+                "forceType": "",
+                "formatter": "typerenderer",
+                "visibility": "both",
+                "rendererOptions": "",
+                "editorOptions": "",
+                "hideColumn": []
+              }
+            ]
+          ],
+          "actionCols": [
+            [
+              {
+                "backgroundColor": [
+                  255,
+                  255,
+                  255,
+                  0
+                ],
+                "color": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "position": "end",
+                "clickMode": "text"
+              }
+            ]
+          ],
+          "groupings": [
+            [
+              {
+                "getter": []
+              }
+            ]
+          ],
+          "actionOutButtons": [
+            [
+              {}
+            ]
+          ],
+          "data": [
+            {
+              "saveInView": [
+                []
+              ],
+              "varname": [
+                ""
+              ],
+              "data": [
+                "[]"
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 123,
+            "top": 0
+          },
+          "size": {
+            "width": 30,
+            "height": 31
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Free memory",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Free memory",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Free memory",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Free memory",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 13,
+      "vars_in": [
+        {
+          "rel": "list",
+          "name": "memory"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Free memory"
+    },
+    {
+      "url": "modules/types/client_interaction/code_editor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "mode": [
+                "text"
+              ],
+              "outputType": [
+                null
+              ],
+              "btnvalue": [
+                "Send script"
+              ],
+              "iseditable": [
+                [
+                  "editable"
+                ]
+              ],
+              "hasButton": [
+                []
+              ],
+              "variable": [
+                []
+              ],
+              "storeOnChange": [
+                []
+              ],
+              "debouncing": [
+                0
+              ],
+              "script": [
+                null
+              ]
+            }
+          ],
+          "ace": [
+            {
+              "useSoftTabs": [
+                [
+                  "yes"
+                ]
+              ],
+              "tabSize": [
+                4
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 32
+          },
+          "size": {
+            "width": 30,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Command result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Command result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Command result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Command result",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 14,
+      "vars_in": [
+        {
+          "rel": "data",
+          "name": "commandResult"
+        }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Command result"
+    },
+    {
+      "url": "modules/types/display/template-twig/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "selectable": [
+                []
+              ],
+              "template": [
+                "<form>\n    Command <input type='text' name='value'><input type='submit'>\n</form>"
+              ],
+              "modifyInForm": [
+                []
+              ],
+              "debouncing": [
+                0
+              ],
+              "formOptions": [
+                [
+                  "keepFormValueIfDataUndefined"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 25
+          },
+          "size": {
+            "width": 30,
+            "height": 6
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
             "left": 0,
             "top": 0
           },
@@ -2404,11 +3305,11 @@
         "SetParam": {
           "position": {
             "left": 114,
-            "top": 0
+            "top": 30
           },
           "size": {
-            "width": 29,
-            "height": 44
+            "width": 38,
+            "height": 20
           },
           "zIndex": 0,
           "display": true,
@@ -2422,14 +3323,403 @@
           "wrapper": true,
           "created": true,
           "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
         }
       },
-      "id": 12,
+      "id": 15,
+      "vars_in": [
+        {}
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "event": "onFormSubmitted",
+          "rel": "form",
+          "jpath": [],
+          "name": "command"
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": ""
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "var command=API.getData('command').value+'';\nconsole.log(command);\nvar device = API.cache('devices')[API.getData('deviceID')];\nif (device && device.status==='connect') {\n    var result = await device.addRequest(command+'');\n    console.log(result);\n    API.createData('commandResult', result);\n}\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 31,
+            "top": 32
+          },
+          "size": {
+            "width": 29,
+            "height": 41
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Execute a command",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Execute a command",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 114,
+            "top": 0
+          },
+          "size": {
+            "width": 41,
+            "height": 29
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "Execute a command",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 114,
+            "top": 0
+          },
+          "size": {
+            "width": 42,
+            "height": 22
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "Execute a command",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        }
+      },
+      "id": 16,
       "vars_in": [
         {
-          "rel": "value",
-          "name": "parameter"
+          "rel": "inputValue",
+          "name": "command"
         }
+      ],
+      "actions_in": [
+        {}
+      ],
+      "vars_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "actions_out": [
+        {
+          "jpath": []
+        }
+      ],
+      "toolbar": {
+        "custom": [
+          [
+            {
+              "title": "",
+              "icon": "",
+              "action": "",
+              "position": "begin"
+            }
+          ]
+        ],
+        "common": [
+          {
+            "toolbar": [
+              [
+                "Open Preferences"
+              ]
+            ]
+          }
+        ]
+      },
+      "css": [
+        {
+          "fontSize": [
+            ""
+          ],
+          "fontFamily": [
+            ""
+          ]
+        }
+      ],
+      "title": "Execute a command"
+    },
+    {
+      "url": "modules/types/client_interaction/code_executor/",
+      "configuration": {
+        "sections": {},
+        "groups": {
+          "group": [
+            {
+              "display": [
+                [
+                  "editor",
+                  "buttons"
+                ]
+              ],
+              "execOnLoad": [
+                []
+              ],
+              "asyncAwait": [
+                [
+                  "top"
+                ]
+              ],
+              "script": [
+                "var device = API.cache('devices')[API.getData('deviceID')];\nif (device && device.status==='connect') {\n    var memory = await device.getFormattedFreeMemory();\n        console.log(memory);\n    API.createData('memory', memory);\n}\n\n"
+              ]
+            }
+          ],
+          "libs": [
+            [
+              {}
+            ]
+          ],
+          "buttons": [
+            [
+              {
+                "name": "button1",
+                "label": "Execute",
+                "hide": []
+              }
+            ]
+          ]
+        }
+      },
+      "layers": {
+        "Default layer": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Default layer"
+        },
+        "Admin": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Admin"
+        },
+        "SetParam": {
+          "position": {
+            "left": 0,
+            "top": 0
+          },
+          "size": {
+            "width": 20,
+            "height": 20
+          },
+          "zIndex": 0,
+          "display": false,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "SetParam"
+        },
+        "Test": {
+          "position": {
+            "left": 10,
+            "top": 10
+          },
+          "size": {
+            "width": 70,
+            "height": 54
+          },
+          "zIndex": 0,
+          "display": true,
+          "title": "",
+          "bgColor": [
+            255,
+            255,
+            255,
+            0
+          ],
+          "wrapper": true,
+          "created": true,
+          "name": "Test"
+        }
+      },
+      "id": 17,
+      "vars_in": [
+        {}
       ],
       "actions_in": [
         {}

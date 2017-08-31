@@ -46,6 +46,7 @@
     "node-watch": "npm run node-build -- --watch",
     "prepublish": "npm run build",
     "server": "node src/server/server.js --sync-db",
+    "server-only": "node src/server/server.js",
     "test": "jest --testPathPattern='src/.*__tests__'",
     "electron": "./node_modules/electron/dist/electron ./src/electron/",
     "electron-rebuild": "./node_modules/.bin/electron-rebuild"

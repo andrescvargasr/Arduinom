@@ -121,6 +121,20 @@ class AbstractDevice extends EventEmitter {
         return this.addRequest('uf');
     }
 
+    async getFormattedFreeMemory() {
+        var memory = (await this.getFreeMemory()).split(/ /).slice(2);
+        var results=[];
+        for (var i=0; i<memory.length; i++) {
+            var freeMemory=Number(memory[i]);
+            results.push({
+                name: (i!==memory.length-1) ? 'Process '+(i+1) : 'Not used',
+                free: freeMemory,
+                color: (freeMemory<4) ? 'pink' : (freeMemory<10) ? 'lightyellow' : 'lightgreen'
+            });
+        }
+        return results;
+    }
+
     getQualifier() {
         return this.addRequest('uq');
     }

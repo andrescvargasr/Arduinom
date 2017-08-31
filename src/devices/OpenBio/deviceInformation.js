@@ -27,19 +27,22 @@ module.exports = {
         },
 
         {
-            label: 'D', name: 'T° target', description: 'Target temperature',
-            factor: 100, unit: '°C',
-            writable: false
+            label: 'D', name: 'T° target',
+            description: 'Target temperature',
+            factor: 100,
+            unit: '°C',
+            writable: true
         },
 
         {
-            label: 'E', name: 'Weight', description: 'Weight of the bioreactor tank, in internal value',
+            label: 'E', name: 'Weight',
+            description: 'Weight of the bioreactor tank, in internal value',
             factor: 1, unit: '',
             writable: false
         },
 
         {
-            label: 'F', name: 'Weight', description: 'Weight of the bioreactor tank, in gr if calibrated',
+            label: 'F', name: 'Weight (g)', description: 'Weight of the bioreactor tank, in gr if calibrated',
             factor: 1, unit: 'g',
             writable: false
         },
@@ -63,19 +66,23 @@ module.exports = {
         },
 
         {
-            label: 'Y', name: 'Error', description: '',
-            factor: 1, unit: '',
-            writable: false
+            label: 'Y', name: 'Error', unit: '',
+            factor: 1, description: `
+            bit 0: pcb probe, 1: liquid probe, 2: pcb temperature,
+            3: liquid temperature, 4: target temp. range, 5: weight range`,
+            writable: true
         },
 
         {
             label: 'Z',
             name: 'Status',
-            description: 'Status of the Bioreactor, the bits of this integer code' +
-        'for the state of specific elements of the reactor (eg. motor ON/OFF, PUMP ON/OFF etc.)',
+            description: `Status of the Bioreactor, the bits of this integer code
+        for the state of specific elements of the reactor (eg. motor ON/OFF, PUMP ON/OFF etc.).
+        bits: 0: stepper, 1: weight, 2: pid, 7: sedimentation, 8: filling, 9: emptying
+        `,
             factor: 1,
             unit: '',
-            writable: false
+            writable: true
         },
 
         {
@@ -132,12 +139,111 @@ module.exports = {
         },
 
         {
-            label: 'AZ', name: 'Enable', description: '',
+            label: 'AZ',
+            name: 'Enable',
+            description: 'pid - food - stepper : ex. 1: only stepper',
             factor: 1,
             unit: '',
-            writable: false
+            writable: true
         }
 
+    ],
+    events: [
+        {
+            id: 1,
+            name: 'Arduino boot',
+            description: ''
+        },
+        {
+            id: 2,
+            name: 'Set safe mode',
+            description: ''
+        },
+        {
+            id: 3,
+            name: 'Status enable',
+            description: ''
+        },
+        {
+            id: 4,
+            name: 'Status disable',
+            description: ''
+        },
+        {
+            id: 6,
+            name: 'Error: failed',
+            description: ''
+        },
+        {
+            id: 7,
+            name: 'Error: recover',
+            description: ''
+        },
+        {
+            id: 10,
+            name: 'Pumping filling start',
+            description: ''
+        },
+        {
+            id: 11,
+            name: 'Pumping filling stop',
+            description: ''
+        },
+        {
+            id: 12,
+            name: 'Pumping filling failure',
+            description: ''
+        },
+        {
+            id: 13,
+            name: 'Pumping emptying start',
+            description: ''
+        },
+        {
+            id: 14,
+            name: 'Pumping emptying stop',
+            description: ''
+        },
+        {
+            id: 15,
+            name: 'Pumping emptying failure',
+            description: ''
+        },
+        {
+            id: 16,
+            name: 'Pumping waiting',
+            description: ''
+        },
+        {
+            id: 20,
+            name: 'Rotation start',
+            description: ''
+        },
+        {
+            id: 21,
+            name: 'Rotation stop',
+            description: ''
+        },
+        {
+            id: 150,
+            name: 'Not found log entry N',
+            description: ''
+        },
+        {
+            id: 255,
+            name: 'Save all parameters',
+            description: ''
+        },
+        {
+            id: 256,
+            name: 'Change value of A',
+            description: ''
+        },
+        {
+            id: 257,
+            name: 'Change value of B',
+            description: ''
+        }
     ]
 };
 

@@ -21,6 +21,7 @@
 		"getHelp",
 		"getSettings",
 		"getFreeMemory",
+		"getFormattedFreeMemory",
 		"getQualifier",
 		"getEEPROM",
 		"getCompactSettings",
