@@ -162,12 +162,12 @@ module.exports = {
         {
             id: 3,
             name: 'Status enable',
-            description: ''
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
         },
         {
             id: 4,
             name: 'Status disable',
-            description: ''
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
         },
         {
             id: 6,
