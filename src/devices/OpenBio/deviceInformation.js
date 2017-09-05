@@ -162,22 +162,55 @@ module.exports = {
         {
             id: 3,
             name: 'Status enable',
-            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying',
+            flags: {
+                0: 'stepper',
+                1: 'food',
+                2: 'pid',
+                7: 'sedimentation',
+                8: 'filling',
+                9: 'emptying'
+            }
         },
         {
             id: 4,
             name: 'Status disable',
-            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying',
+            flags: {
+                0: 'stepper',
+                1: 'food',
+                2: 'pid',
+                7: 'sedimentation',
+                8: 'filling',
+                9: 'emptying'
+            }
         },
         {
             id: 6,
             name: 'Error: failed',
-            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying',
+            flags: {
+                0: 'pcb temperature probe',
+                1: 'liquid temperature probe',
+                2: 'pcb temperature range',
+                3: 'liquid temperature range',
+                4: 'target temperature range',
+                5: 'weight range'
+            }
         },
         {
             id: 7,
             name: 'Error: recover',
-            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying',
+            flags: {
+                0: 'pcb temperature probe',
+                1: 'liquid temperature probe',
+                2: 'pcb temperature range',
+                3: 'liquid temperature range',
+                4: 'target temperature range',
+                5: 'weight range'
+            }
+
         },
         {
             id: 20,
