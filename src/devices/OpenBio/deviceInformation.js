@@ -172,47 +172,12 @@ module.exports = {
         {
             id: 6,
             name: 'Error: failed',
-            description: ''
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
         },
         {
             id: 7,
             name: 'Error: recover',
-            description: ''
-        },
-        {
-            id: 10,
-            name: 'Pumping filling start',
-            description: ''
-        },
-        {
-            id: 11,
-            name: 'Pumping filling stop',
-            description: ''
-        },
-        {
-            id: 12,
-            name: 'Pumping filling failure',
-            description: ''
-        },
-        {
-            id: 13,
-            name: 'Pumping emptying start',
-            description: ''
-        },
-        {
-            id: 14,
-            name: 'Pumping emptying stop',
-            description: ''
-        },
-        {
-            id: 15,
-            name: 'Pumping emptying failure',
-            description: ''
-        },
-        {
-            id: 16,
-            name: 'Pumping waiting',
-            description: ''
+            description: '0:stepper, 1:food, 2:pid, 7:sedimentation, 8:filling, 9:emptying'
         },
         {
             id: 20,
