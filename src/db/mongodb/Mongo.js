@@ -63,11 +63,14 @@ class Mongo {
         options = Object.assign({
             limit: 200,
             sort: 'desc',
-            since: 0,
+            fromEpoch: 0,
+            toEpoch: Number.MAX_SAFE_INTEGER,
+            fromID:0,
+            toID: Number.MAX_SAFE_INTEGER,
             count: false
         }, options);
 
-        console.log(options);
+
 
         const projection = '';
         if (options.parameters) {
@@ -79,11 +82,28 @@ class Mongo {
         if (options.sort === 'desc') {
             sort = {epoch: -1, id: -1};
         }
-        var find = {};
-        if (options.since) {
-            find = {"epoch": {$gt: Number(options.since)}};
+        var find = [];
+        if (options.fromEpoch) {
+            find.push({"epoch": {$gt: Number(options.fromEpoch)}});
         }
-        return this.collection.find(find, projection).sort(sort).limit(parseInt(options.limit)).toArray();
+        if (options.toEpoch) {
+            find.push({"epoch": {$lt: Number(options.toEpoch)}});
+        }
+        if (options.fromID) {
+            find.push({"id": {$gt: Number(options.fromID)}});
+        }
+        if (options.toID) {
+            find.push({"id": {$lt: Number(options.toID)}});
+        }
+        find = {$and: find};
+
+        debug('query parameters', JSON.stringify(find));
+
+        var results = await this.collection.find(find, projection).sort(sort).limit(parseInt(options.limit)).toArray();
+
+        debug('number of results', results.length);
+
+        return results;
     }
 }
 

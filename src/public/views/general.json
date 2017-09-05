@@ -20,7 +20,7 @@
     "xWidth": 10,
     "yHeight": 10
   },
-  "version": "2.83.0",
+  "version": "2.84.0",
   "modules": [
     {
       "url": "modules/types/client_interaction/code_executor/",
@@ -46,7 +46,7 @@
                 ]
               ],
               "script": [
-                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            var epoch = await device.setEpochNow();\n            UI.showNotification('Set epoch to '+epoch, 'info');\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.eventsInformation={};\n            info.events.forEach( (event) => {\n                device.eventsInformation[event.id]=event;\n            });\n            \n            device.on('connect', () => {\n                console.log('Conndected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n    updateDevicesArray();\n}\n\nif (this.variable==='selectedParameters') {\n    updateChart();\n    updateAnnotations();\n}\n\n\nfunction updateAnnotations() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    var logs=device.logs.filter( a => a.event>0 );\n    var annotations=[];\n    var colors=['red','blue','yellow','green','black'];\n    for (var i=0; i<logs.length; i++) {\n        var log=logs[i];\n        annotations.push({\n            \"fillColor\": colors[i%colors.length],\n            \"type\": \"rect\",\n            \"strokeColor\": \"red\",\n            \"strokeWidth\": \"0px\",\n            \"position\": [\n              {\n                \"x\": log.epoch,\n                \"dx\": \"-1px\",\n                \"y\": \"0px\"\n                \n              },\n              {\n                \"x\": log.epoch,\n                \"dx\": \"1px\",\n                \"y\": \"10px\"\n              }\n            ],\n            \"label\": \n              {\n                \"text\": \"\",\n                \"position\": {\n                  \"x\": log.epoch,\n                  \"y\": \"20px\"\n                }\n              },\n              \"info\":log,\n              \"_highlight\":log._highlight\n          }\n        )\n    }\n    API.createData('annotations', annotations);\n    \n}\n\nfunction updateChart() {\n    var colors=['red','blue','yellow','green','black'];\n    var device = API.cache('devices')[API.getData('deviceID')];\n\n    var group=[];\n    var selectedParameters=API.getData('selectedParameters');\n    \n    if (selectedParameters && selectedParameters.length>0) {\n        group=selectedParameters.map( a => a.label );\n    }\n    var series=[];\n    var logs=API.getData('selectedLogs');\n    if (! Array.isArray(logs) || logs.length<3) {\n        logs=device.logs;\n    }\n    \n    var epochs=logs.map( log => Number(log.epoch) );\n    for (var i=0; i<group.length; i++) {\n        var key = group[i];\n        if (typeof logs[0].parameters[key]!==\"undefined\") {\n            var serie={};\n            var factor=device.parametersInformation[key].factor || 1;\n            if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n                serie.label=device.parametersInformation[key].name;\n            } else {\n                serie.label=key;\n            }\n            serie.options={\n                lineColor:colors[i%colors.length],\n                lineStyle:1\n            };\n            serie.x=epochs;\n            serie.y=logs.map( log => log.parameters[key]/factor);\n            series.push(serie);\n        }\n    }\n    API.createData('chart',{\n        data: series\n    });\n}\n\nvar previousDeviceID=API.cache('previousDeviceID') || -1;\nvar deviceID=Number(API.getData('deviceID'));\nif ((this.button || this.variable==='deviceID') && deviceID!=previousDeviceID) {\n    API.cache('previousDeviceID',deviceID);\n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        if (! API.getData('preferences').autoUpdateSettings.resurrect()) return;\n        var device = API.cache('devices')[API.getData('deviceID')];\n        console.log('update info for ',device.id, device.status);\n        if (device.status==='connect') {\n            device.info = await device.getCurrentDeviceInformation()\n        }\n        updateDevicesArray();\n    }\n    await getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n     /**\n     * We maintain the last XXX entries in browser\n     */\n    if (API.cache('updateDevicesLogs')) clearInterval(API.cache('updateDevicesLogs'));\n    async function updateDevicesLogs() {\n        if (! API.getData('preferences').autoUpdateLogs.resurrect()) return;\n        var limit=10000;\n        var device = API.cache('devices')[API.getData('deviceID')];\n\n        if (!device.logs) device.logs=[];\n        var lastEpoch=0;\n       \n        if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n        var httpRequest = await fetch('/db/'+device.id+'/entries?limit='+limit+'&since='+lastEpoch);\n        var result= await httpRequest.json();\n        result.forEach( a => {\n            a.epoch*=1000;\n            a._highlight=Math.random();\n        });\n        device.logs=device.logs.concat(result);\n        device.logs.sort( (a,b) => a.epoch - b.epoch );\n        if (device.logs.length>limit) {\n            device.logs=device.logs.slice(device.logs.length-limit);\n        }\n        \n        device.logs.forEach( a => {\n            if (a.event>0) {\n                a.eventLabel=device.eventsInformation[a.event];\n            }\n        });\n        updateDevicesArray();\n        updateChart();\n    }\n //   API.cache('updateDevicesLogs',window.setInterval( updateDevicesLogs, 10000));\n    if (this.action.name=='updateChart') {\n        updateDevicesLogs();\n    }\n    \n    \n    if (API.cache('getFreeMemory')) clearInterval(API.cache('getFreeMemory'));\n    async function getFreeMemory() {\n        var device = API.cache('devices')[API.getData('deviceID')];\n        if (device && device.status==='connect') {\n            var memory = await device.getFormattedFreeMemory();\n            console.log('free memory', memory)\n            API.createData('memory', memory);\n        }\n    }\n    await getFreeMemory();\n    API.cache('getFreeMemory',window.setInterval( getFreeMemory, 60000));\n\n    \n    \n    \n}\n\n"
+                "\nif(this.event === 'load') {\n    console.log('Load event')\n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    API.cache('arduinom', arduinom);\n    \n    var socket = io.connect('/');\n    var arduinom = window.arduinom(socket);\n    var devices = API.cache('devices');\n    arduinom.on('newDevice', async function(device) {\n        console.log('new device', device);\n        if (! devices[device.id]) {\n            console.log('adding event on ',device)\n            devices[device.id]=device;\n            var info = await device.getDeviceInformation();\n            var epoch = await device.setEpochNow();\n            UI.showNotification('Set epoch to '+epoch, 'info');\n            device.parametersInformation={};\n            info.parameters.forEach( (parameter) => {\n                device.parametersInformation[parameter.label]=parameter;\n            });\n            updateDevicesArray();\n            \n            device.eventsInformation={};\n            info.events.forEach( (event) => {\n                device.eventsInformation[event.id]=event;\n            });\n            \n            device.on('connect', () => {\n                console.log('Conndected: ',device);\n                updateDevicesArray();\n            });\n            device.on('disconnect', () => {\n                console.log('Disconnected: ',device);\n                updateDevicesArray();\n            });\n        }\n    });\n    arduinom.ready();\n}\n\n\n\nfunction updateDevicesArray() {\n    var devices = API.cache('devices');\n    var data=[];\n    for (var deviceID of Object.keys(devices)) {\n        var device=devices[deviceID];\n        data.push({\n            id:device.id,\n            status:device.status,\n            type:device.type,\n            info: device.info,\n            logs: device.logs\n        })\n    }\n    API.createData('devices', data);\n}\n\n\nif(this.event === 'load') {\n    updateDevicesArray();\n}\n\n\n\n\nvar previousDeviceID=API.cache('previousDeviceID') || -1;\nvar deviceID=Number(API.getData('deviceID'));\nif ((this.button || this.variable==='deviceID') && deviceID!=previousDeviceID) {\n    API.cache('previousDeviceID',deviceID);\n    if (API.cache('getDevicesInfo')) clearInterval(API.cache('getDevicesInfo'));\n    async function getDevicesInfo() {\n        if (! API.getData('preferences').autoUpdateSettings.resurrect()) return;\n        var device = API.cache('devices')[API.getData('deviceID')];\n        console.log('update info for ',device.id, device.status);\n        if (device.status==='connect') {\n            device.info = await device.getCurrentDeviceInformation()\n        }\n        updateDevicesArray();\n    }\n    await getDevicesInfo();\n    API.cache('getDevicesInfo',window.setInterval( getDevicesInfo, 10000));\n    \n\n    \n    \n    if (API.cache('getFreeMemory')) clearInterval(API.cache('getFreeMemory'));\n    async function getFreeMemory() {\n        var device = API.cache('devices')[API.getData('deviceID')];\n        if (device && device.status==='connect') {\n            var memory = await device.getFormattedFreeMemory();\n            console.log('free memory', memory)\n            API.createData('memory', memory);\n        }\n    }\n    await getFreeMemory();\n    API.cache('getFreeMemory',window.setInterval( getFreeMemory, 60000));\n\n    \n    \n    \n}\n\nconsole.log(this.action);\nif (deviceID && this.action) {\n    var action=this.action;\n    switch (action.name) {\n        case 'changedPreferences':\n            API.cache('devices')[API.getData('deviceID')].logs=[];\n            await updateDeviceLogs(action.value);\n            updateChart(action.value);\n            updateAnnotations();\n            break;\n        case 'addToChart':\n            await updateDeviceLogs(action.value);\n            var parameters=API.cache('chartParameters');\n            var newParameter=action.value.label+'';\n            if (! parameters.includes(newParameter)) {\n                parameters.push(newParameter);\n            }\n            updateChart(action.value);\n            updateAnnotations();\n            break;\n        case 'updateChart':\n            await updateDeviceLogs();\n            updateChart();\n            updateAnnotations();\n            break;\n        case 'clearChart':\n            API.cache('chartParameters', []);\n            updateChart();\n            break;\n    }\n}\n\n\n\nvar lastDeviceLogUpdate=0;\nasync function updateDeviceLogs(preferences) {\n    if (Date.now()-lastDeviceLogUpdate<10000) return;\n    lastDeviceLogUpdate=Date.now();\n    \n    if (! preferences) preferences=API.getData('preferences').resurrect();\n console.log(preferences);\n    var lastEpoch=0;\n    var device = API.cache('devices')[API.getData('deviceID')];\n    if (! device.logs) device.logs=[];\n    if (device.logs.length>0) lastEpoch=device.logs[device.logs.length-1].epoch;\n\n    var limit=preferences.numberLogs || 1000;\n\n    var parameters=[];\n    if (preferences.fromEpoch) {\n        parameters.push('fromEpoch='+ ((new Date(preferences.fromEpoch).getTime() / 1000)>>0));\n    } else {\n        if (lastEpoch) parameters.push('fromEpoch='+lastEpoch);\n    }\n    if (preferences.toEpoch) parameters.push('toEpoch='+ ((new Date(preferences.toEpoch).getTime() / 1000)>>0));\n    if (preferences.fromID) parameters.push('fromID='+ preferences.fromID)\n    if (preferences.toID) parameters.push('toID='+ preferences.toID)\n    if (preferences.numberLogs) parameters.push('limit='+ limit)\n \n console.log(parameters);\n \n    var httpRequest = await fetch('/db/'+device.id+'/entries?'+parameters.join('&'));\n    var result= await httpRequest.json();\n    result.forEach( a => {\n        a.epoch*=1000;\n        a._highlight=Math.random();\n    });\n    device.logs=device.logs.concat(result);\n    device.logs.sort( (a,b) => a.epoch - b.epoch );\n    if (device.logs.length>limit) {\n        device.logs=device.logs.slice(device.logs.length-limit);\n    }\n    \n    device.logs.forEach( a => {\n        if (a.event>0) {\n            a.eventLabel=device.eventsInformation[a.event];\n        }\n    });\n}\n\n\nfunction updateChart() {\n    var group=API.cache('chartParameters');\n    var colors=['red','blue','yellow','green','black'];\n    var device = API.cache('devices')[API.getData('deviceID')];\n\n    var series=[];\n    var logs=API.getData('selectedLogs');\n    if (! Array.isArray(logs) || logs.length<3) {\n        logs=device.logs;\n    }\n    if (logs.length<1) return;\n    \n    var epochs=logs.map( log => Number(log.epoch) );\n    for (var i=0; i<group.length; i++) {\n        var key = group[i];\n        if (typeof logs[0].parameters[key]!==\"undefined\") {\n            var serie={};\n            var factor=device.parametersInformation[key].factor || 1;\n            if (device.parametersInformation[key] && device.parametersInformation[key].name) {\n                serie.label=device.parametersInformation[key].name;\n            } else {\n                serie.label=key;\n            }\n            serie.options={\n                lineColor:colors[i%colors.length],\n                lineStyle:1\n            };\n            serie.x=epochs;\n            serie.y=logs.map( log => log.parameters[key]/factor);\n            series.push(serie);\n        }\n    }\n    API.createData('chart',{\n        data: series\n    });\n}\n\n\nfunction updateAnnotations() {\n    var devices = API.cache('devices');\n    var deviceID = API.getData('deviceID');\n    var device = devices[String(deviceID)];\n    var logs=device.logs.filter( a => a.event>0 );\n    var annotations=[];\n    var colors=['red','blue','yellow','green','black'];\n    for (var i=0; i<logs.length; i++) {\n        var log=logs[i];\n        annotations.push({\n            \"fillColor\": colors[i%colors.length],\n            \"type\": \"rect\",\n            \"strokeColor\": \"red\",\n            \"strokeWidth\": \"0px\",\n            \"position\": [\n              {\n                \"x\": log.epoch,\n                \"dx\": \"-1px\",\n                \"y\": \"0px\"\n                \n              },\n              {\n                \"x\": log.epoch,\n                \"dx\": \"1px\",\n                \"y\": \"10px\"\n              }\n            ],\n            \"label\": \n              {\n                \"text\": \"\",\n                \"position\": {\n                  \"x\": log.epoch,\n                  \"y\": \"20px\"\n                }\n              },\n              \"info\":log,\n              \"_highlight\":log._highlight\n          }\n        )\n    }\n    API.createData('annotations', annotations);\n    \n}\n"
               ]
             }
           ],
@@ -204,6 +204,18 @@
         {
           "rel": "execute",
           "name": "updateChart"
+        },
+        {
+          "rel": "execute",
+          "name": "addToChart"
+        },
+        {
+          "rel": "execute",
+          "name": "changedPreferences"
+        },
+        {
+          "rel": "execute",
+          "name": "clearChart"
         }
       ],
       "vars_out": [
@@ -399,7 +411,7 @@
           },
           "size": {
             "width": 30,
-            "height": 14
+            "height": 12
           },
           "zIndex": 0,
           "display": true,
@@ -596,9 +608,7 @@
                 ]
               ],
               "autoColumns": [
-                [
-                  "select"
-                ]
+                []
               ],
               "toolbar": [
                 []
@@ -709,6 +719,9 @@
           "actionCols": [
             [
               {
+                "name": "chart",
+                "tooltip": "Add to chart",
+                "icon": "fa-line-chart",
                 "backgroundColor": [
                   255,
                   255,
@@ -721,8 +734,10 @@
                   0,
                   1
                 ],
+                "action": "addToChart",
                 "position": "end",
-                "clickMode": "text"
+                "clickMode": "text",
+                "isAction": true
               }
             ]
           ],
@@ -881,12 +896,6 @@
         }
       ],
       "vars_out": [
-        {
-          "event": "onRowsSelect",
-          "rel": "rows",
-          "jpath": [],
-          "name": "selectedParameters"
-        },
         {
           "event": "onRowActive",
           "rel": "row",
@@ -1405,6 +1414,20 @@
                 ]
               }
             }
+          ],
+          "misc": [
+            {
+              "sections": {},
+              "groups": {
+                "misc": [
+                  {
+                    "highlightOptions": [
+                      "{}"
+                    ]
+                  }
+                ]
+              }
+            }
           ]
         },
         "groups": {}
@@ -1558,6 +1581,12 @@
               "icon": "fa-refresh",
               "action": "updateChart",
               "position": "begin"
+            },
+            {
+              "title": "Clear chart",
+              "icon": "fa-eraser",
+              "action": "clearChart",
+              "position": "begin"
             }
           ]
         ],
@@ -1607,9 +1636,7 @@
                 ]
               ],
               "hasButton": [
-                [
-                  "button"
-                ]
+                []
               ],
               "variable": [
                 []
@@ -1623,7 +1650,7 @@
                 0
               ],
               "script": [
-                "\nAuto update settings: <input type='checkbox' name='autoUpdateSettings'></br>\nAuto update logs and chart: <input type='checkbox' name='autoUpdateLogs'></br>\n"
+                "\nAuto update settings: <input type='checkbox' name='autoUpdateSettings'></br>\nNumber logs: <input type='number' min='100' max='100000' name='numberLogs'><br>\nEpoch from: <input type='datetime-local' name='fromEpoch'><br>\nEpoch to: <input type='datetime-local' name='toEpoch'><br>\nID: from: <input type='number' min=0 max=1000000 name='fromID'> - to: <input type='number' min=0 max=1000000 name='toID'><br>\n"
               ]
             }
           ],
@@ -1653,7 +1680,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences Template",
           "bgColor": [
             255,
             255,
@@ -1666,16 +1693,16 @@
         },
         "Admin": {
           "position": {
-            "left": 105,
-            "top": 57
+            "left": 103,
+            "top": 53
           },
           "size": {
-            "width": 32,
-            "height": 14
+            "width": 39,
+            "height": 20
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Preferences Template",
           "bgColor": [
             255,
             255,
@@ -1697,7 +1724,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences Template",
           "bgColor": [
             255,
             255,
@@ -1719,7 +1746,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences Template",
           "bgColor": [
             255,
             255,
@@ -1741,7 +1768,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences Template",
           "bgColor": [
             255,
             255,
@@ -1804,7 +1831,7 @@
           ]
         }
       ],
-      "title": "",
+      "title": "Preferences Template",
       "zindex": 0
     },
     {
@@ -1841,15 +1868,15 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 15
+            "top": 13
           },
           "size": {
             "width": 30,
-            "height": 9
+            "height": 15
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Preferences",
           "bgColor": [
             255,
             255,
@@ -1862,8 +1889,8 @@
         },
         "Admin": {
           "position": {
-            "left": 104,
-            "top": 42
+            "left": 103,
+            "top": 39
           },
           "size": {
             "width": 32,
@@ -1871,7 +1898,7 @@
           },
           "zIndex": 0,
           "display": true,
-          "title": "",
+          "title": "Preferences",
           "bgColor": [
             255,
             255,
@@ -1893,7 +1920,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences",
           "bgColor": [
             255,
             255,
@@ -1915,7 +1942,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences",
           "bgColor": [
             255,
             255,
@@ -1937,7 +1964,7 @@
           },
           "zIndex": 0,
           "display": false,
-          "title": "",
+          "title": "Preferences",
           "bgColor": [
             255,
             255,
@@ -1970,7 +1997,10 @@
       ],
       "actions_out": [
         {
-          "jpath": []
+          "event": "onFormChanged",
+          "rel": "form",
+          "jpath": [],
+          "name": "changedPreferences"
         }
       ],
       "toolbar": {
@@ -2004,7 +2034,7 @@
           ]
         }
       ],
-      "title": "",
+      "title": "Preferences",
       "zindex": 0
     },
     {
@@ -2086,11 +2116,11 @@
         },
         "Admin": {
           "position": {
-            "left": 104,
-            "top": 56
+            "left": 56,
+            "top": 60
           },
           "size": {
-            "width": 32,
+            "width": 42,
             "height": 14
           },
           "zIndex": 0,
@@ -3197,11 +3227,11 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 32
+            "top": 36
           },
           "size": {
             "width": 30,
-            "height": 41
+            "height": 35
           },
           "zIndex": 0,
           "display": true,
@@ -3391,7 +3421,7 @@
         "Default layer": {
           "position": {
             "left": 0,
-            "top": 25
+            "top": 29
           },
           "size": {
             "width": 30,
@@ -4634,7 +4664,7 @@
         "general": [
           {
             "script": [
-              "window.devices={};\nAPI.createData('devices', []);\nAPI.cache('devices', window.devices);\n\nAPI.createData('preferences', {\n    autoUpdateSettings: true,\n    autoUpdateLogs: true,\n    fromID: '',\n    numberLogs: 10000\n});"
+              "window.devices={};\nAPI.createData('devices', []);\nAPI.cache('devices', window.devices);\n\nAPI.cache('chartParameters', []);\n\nAPI.createData('preferences', {\n    autoUpdateSettings: true,\n    fromEpoch: '',\n    toEpoch:'',\n    fromID: '',\n    toID:'',\n    numberLogs: 10000\n});"
             ]
           }
         ]
