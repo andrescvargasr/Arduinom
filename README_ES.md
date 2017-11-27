@@ -1,16 +1,18 @@
 # Arduinom
-Node.js websocket server to communicate with our arduino devices
+Este proyecto emplea un servidor websocket en Node.js para comunicar nuestro PC con dispositivos Arduino compatibles.
 
-## Requirements
+## Requisitos
 
-To correct execution of project, we recommend install these programs and these versions:
+Para la correcta ejecución del proyecto se han empleado los siguientes programas con sus respectivas versiones:
 
 \* [NVM](https://github.com/creationix/nvm) (v0.33.6).
 \* Node.js (v8.9.1 LTS).
 \* [Serialport](https://github.com/node-serialport/node-serialport) (v6.0.4).
-\* MongoDB (v2.2.30)
+\* MongoDB (2.2.30)
 
-## Installation
+## Instalación
+
+
 
 ### Windows
 ```bash
@@ -19,7 +21,7 @@ npm install --global --production windows-build-tools
 Then follow unix installation procedure
 
 
-### Linux
+### Unix
 ```bash
 git clone https://github.com/Bioreactor/Arduinom.git
 ```
@@ -39,5 +41,3 @@ In order to debug you may use
 ```
 DEBUG=* node/deviceFactor.js
 ```
-
-## Issues
