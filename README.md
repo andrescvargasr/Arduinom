@@ -44,12 +44,12 @@ DEBUG=* node/deviceFactor.js
 
 ### Spanish
 
-To see a complete installation guide, please visit: [Documentation in Spanish](../blob/master/Documentation/ES).
+To see a complete installation guide, please visit: [Documentation in Spanish](../master/Documentation/ES).
 
 ## English
 
-Documentation in english is under construction. Please, use: [Documentation in Spanish](../blob/master/Documentation/ES) instead.
+Documentation in english is under construction. Please, use: [Documentation in Spanish](../master/Documentation/ES) instead.
 
 ##Issues
 
-Refer to section 5. of the (../blob/master/Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf).
+Refer to section 5. of the [../master/Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf].
