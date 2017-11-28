@@ -40,4 +40,16 @@ In order to debug you may use
 DEBUG=* node/deviceFactor.js
 ```
 
-## Issues
+## Notes
+
+### Spanish
+
+To see a complete installation guide, please visit: [Documentation in Spanish](../Documentation/ES).
+
+## English
+
+Documentation in english is under construction. Please, use: [Documentation in Spanish](../Documentation/ES) instead.
+
+##Issues
+
+Refer to section 5. of the (../Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf).
