@@ -1,0 +1,29 @@
+pi@raspi-2023-2:~ $ npm install serialport
+
+> serialport@6.0.4 install /home/pi/node_modules/serialport
+> prebuild-install || node-gyp rebuild
+
+prebuild-install info begin Prebuild-install version 2.3.0
+prebuild-install info looking for local prebuild @ prebuilds/serialport-v6.0.4-node-v57-linux-arm.tar.gz
+prebuild-install info looking for cached prebuild @ /home/pi/.npm/_prebuilds/https-github.com-EmergingTechnologyAdvisors-node-serialport-releases-download-v6.0.4-serialport-v6.0.4-node-v57-linux-arm.tar.gz
+prebuild-install http request GET https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/v6.0.4/serialport-v6.0.4-node-v57-linux-arm.tar.gz
+prebuild-install http 404 https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/v6.0.4/serialport-v6.0.4-node-v57-linux-arm.tar.gz
+prebuild-install WARN install No prebuilt binaries found (target=8.9.1 runtime=node arch=arm platform=linux)
+make: Entering directory '/home/pi/node_modules/serialport/build'
+  CXX(target) Release/obj.target/serialport/src/serialport.o
+  CXX(target) Release/obj.target/serialport/src/serialport_unix.o
+  CXX(target) Release/obj.target/serialport/src/poller.o
+  SOLINK_MODULE(target) Release/obj.target/serialport.node
+  COPY Release/serialport.node
+make: Leaving directory '/home/pi/node_modules/serialport/build'
+npm WARN saveError ENOENT: no such file or directory, open '/home/pi/package.json'
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN enoent ENOENT: no such file or directory, open '/home/pi/package.json'
+npm WARN pi No description
+npm WARN pi No repository field.
+npm WARN pi No README data
+npm WARN pi No license field.
+
++ serialport@6.0.4
+added 58 packages in 31.87s
+

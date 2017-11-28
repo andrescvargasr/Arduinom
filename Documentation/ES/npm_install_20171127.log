@@ -1,0 +1,360 @@
+pi@raspi-2023-2:~/Arduinom $ npm install
+
+> serialport@4.0.7 install /home/pi/Arduinom/node_modules/serialport
+> node-pre-gyp install --fallback-to-build
+
+node-pre-gyp info it worked if it ends with ok
+node-pre-gyp verb cli [ '/home/pi/.nvm/versions/node/v8.9.1/bin/node',
+node-pre-gyp verb cli   '/home/pi/Arduinom/node_modules/serialport/node_modules/.bin/node-pre-gyp',
+node-pre-gyp verb cli   'install',
+node-pre-gyp verb cli   '--fallback-to-build' ]
+node-pre-gyp info using node-pre-gyp@0.6.32
+node-pre-gyp info using node@8.9.1 | linux | arm
+node-pre-gyp verb command install []
+node-pre-gyp info check checked for "/home/pi/Arduinom/node_modules/serialport/build/Release/serialport.node" (not found)
+node-pre-gyp http GET https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/4.0.7/serialport-v4.0.7-node-v57-linux-arm.tar.gz
+node-pre-gyp http 404 https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/4.0.7/serialport-v4.0.7-node-v57-linux-arm.tar.gz
+node-pre-gyp ERR! Tried to download(404): https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/4.0.7/serialport-v4.0.7-node-v57-linux-arm.tar.gz 
+node-pre-gyp ERR! Pre-built binaries not found for serialport@4.0.7 and node@8.9.1 (node-v57 ABI) (falling back to source compile with node-gyp) 
+node-pre-gyp http 404 status code downloading tarball https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/4.0.7/serialport-v4.0.7-node-v57-linux-arm.tar.gz 
+node-pre-gyp verb command build [ 'rebuild' ]
+make: Entering directory '/home/pi/Arduinom/node_modules/serialport/build'
+  CXX(target) Release/obj.target/serialport/src/serialport.o
+../src/serialport.cpp: In function ‘int getIntFromObject(v8::Local<v8::Object>, std::__cxx11::string)’:
+../src/serialport.cpp:90:52: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   return getValueFromObject(options, key)->ToInt32()->Int32Value();
+                                                    ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘double getDoubleFromObject(v8::Local<v8::Object>, std::__cxx11::string)’:
+../src/serialport.cpp:102:53: warning: ‘v8::Local<v8::Number> v8::Value::ToNumber() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   return getValueFromObject(options, key)->ToNumber()->NumberValue();
+                                                     ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9707:15: note: declared here
+ Local<Number> Value::ToNumber() const {
+               ^~~~~
+../src/serialport.cpp: In function ‘void EIO_AfterOpen(uv_work_t*)’:
+../src/serialport.cpp:174:31: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+     int fd = argv[1]->ToInt32()->Int32Value();
+                               ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Update(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:193:29: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   int fd = info[0]->ToInt32()->Int32Value();
+                             ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp:217:116: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+ v8::String>("baudRate").ToLocalChecked()).ToLocalChecked()->ToInt32()->Int32Value();
+                                                                     ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Write(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:252:29: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   int fd = info[0]->ToInt32()->Int32Value();
+                             ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Close(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:369:32: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   baton->fd = info[0]->ToInt32()->Int32Value();
+                                ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Flush(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:480:29: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   int fd = info[0]->ToInt32()->Int32Value();
+                             ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Set(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:528:29: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   int fd = info[0]->ToInt32()->Int32Value();
+                             ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport.cpp: In function ‘Nan::NAN_METHOD_RETURN_TYPE Drain(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport.cpp:585:29: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   int fd = info[0]->ToInt32()->Int32Value();
+                             ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+  CXX(target) Release/obj.target/serialport/src/serialport_unix.o
+../src/serialport_unix.cpp: In function ‘OpenBatonPlatformOptions* ParsePlatformOptions(const v8::Local<v8::Object>&)’:
+../src/serialport_unix.cpp:44:109: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+ New<v8::String>("vmin").ToLocalChecked()).ToLocalChecked()->ToInt32()->Int32Value();
+                                                                     ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport_unix.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+../src/serialport_unix.cpp:45:111: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+ ew<v8::String>("vtime").ToLocalChecked()).ToLocalChecked()->ToInt32()->Int32Value();
+                                                                     ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/./serialport.h:7,
+                 from ../src/serialport_unix.cpp:1:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+  CXX(target) Release/obj.target/serialport/src/serialport_poller.o
+../src/serialport_poller.cpp: In static member function ‘static Nan::NAN_METHOD_RETURN_TYPE SerialportPoller::New(Nan::NAN_METHOD_ARGS_TYPE)’:
+../src/serialport_poller.cpp:86:31: warning: ‘v8::Local<v8::Int32> v8::Value::ToInt32() const’ is deprecated: Use maybe version [-Wdeprecated-declarations]
+   obj->fd_ = info[0]->ToInt32()->Int32Value();
+                               ^
+In file included from /home/pi/.node-gyp/8.9.1/include/node/node.h:63:0,
+                 from ../../nan/nan.h:49,
+                 from ../src/serialport_poller.cpp:5:
+/home/pi/.node-gyp/8.9.1/include/node/v8.h:9743:14: note: declared here
+ Local<Int32> Value::ToInt32() const {
+              ^~~~~
+  SOLINK_MODULE(target) Release/obj.target/serialport.node
+  COPY Release/serialport.node
+make: Leaving directory '/home/pi/Arduinom/node_modules/serialport/build'
+node-pre-gyp info ok 
+
+> leveldown@1.5.0 install /home/pi/Arduinom/node_modules/pouchdb/node_modules/leveldown
+> prebuild --install
+
+prebuild info begin Prebuild version 4.5.0
+prebuild info looking for local prebuild @ prebuilds/leveldown-v1.5.0-node-v57-linux-arm.tar.gz
+prebuild info looking for cached prebuild @ /home/pi/.npm/_prebuilds/https-github.com-level-leveldown-releases-download-v1.5.0-leveldown-v1.5.0-node-v57-linux-arm.tar.gz
+prebuild http request GET https://github.com/level/leveldown/releases/download/v1.5.0/leveldown-v1.5.0-node-v57-linux-arm.tar.gz
+prebuild http 404 https://github.com/level/leveldown/releases/download/v1.5.0/leveldown-v1.5.0-node-v57-linux-arm.tar.gz
+prebuild WARN install No prebuilt binaries found (target=v8.9.1 arch=arm platform=linux)
+prebuild info install We will now try to compile from source.
+prebuild verb starting node-gyp process 
+prebuild verb execute node-gyp with `node index.js rebuild --target=v8.9.1 --target_arch=arm` 
+prebuild verb ok 
+prebuild verb ok 
+prebuild verb ok 
+make: Entering directory '/home/pi/Arduinom/node_modules/pouchdb/node_modules/leveldown/build'
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/builder.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/db_impl.o
+In file included from /usr/include/c++/6/algorithm:62:0,
+                 from ../deps/leveldb/leveldb-1.19/db/db_impl.cc:7:
+/usr/include/c++/6/bits/stl_algo.h: In function ‘void std::__insertion_sort(_RandomAccessIterator, _RandomAccessIterator, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >; _Compare = __gnu_cxx::__ops::_Iter_less_iter]’:
+/usr/include/c++/6/bits/stl_algo.h:1837:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+     __insertion_sort(_RandomAccessIterator __first,
+     ^~~~~~~~~~~~~~~~
+/usr/include/c++/6/bits/stl_algo.h:1837:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+/usr/include/c++/6/bits/stl_algo.h:1837:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+In file included from /usr/include/c++/6/bits/stl_algo.h:61:0,
+                 from /usr/include/c++/6/algorithm:62,
+                 from ../deps/leveldb/leveldb-1.19/db/db_impl.cc:7:
+/usr/include/c++/6/bits/stl_heap.h: In function ‘void std::__adjust_heap(_RandomAccessIterator, _Distance, _Distance, _Tp, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >; _Distance = int; _Tp = long long unsigned int; _Compare = __gnu_cxx::__ops::_Iter_less_iter]’:
+/usr/include/c++/6/bits/stl_heap.h:209:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+     __adjust_heap(_RandomAccessIterator __first, _Distance __holeIndex,
+     ^~~~~~~~~~~~~
+In file included from /usr/include/c++/6/algorithm:62:0,
+                 from ../deps/leveldb/leveldb-1.19/db/db_impl.cc:7:
+/usr/include/c++/6/bits/stl_algo.h: In function ‘void std::__introsort_loop(_RandomAccessIterator, _RandomAccessIterator, _Size, _Compare) [with _RandomAccessIterator = __gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >; _Size = int; _Compare = __gnu_cxx::__ops::_Iter_less_iter]’:
+/usr/include/c++/6/bits/stl_algo.h:1937:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+     __introsort_loop(_RandomAccessIterator __first,
+     ^~~~~~~~~~~~~~~~
+/usr/include/c++/6/bits/stl_algo.h:1937:5: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+/usr/include/c++/6/bits/stl_algo.h:1951:4: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+    std::__introsort_loop(__cut, __last, __depth_limit, __comp);
+    ^~~
+/usr/include/c++/6/bits/stl_algo.h: In member function ‘leveldb::Status leveldb::DBImpl::Recover(leveldb::VersionEdit*, bool*)’:
+/usr/include/c++/6/bits/stl_algo.h:1965:4: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+    std::__introsort_loop(__first, __last,
+    ^~~
+/usr/include/c++/6/bits/stl_algo.h:1882:4: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+    std::__insertion_sort(__first, __first + int(_S_threshold), __comp);
+    ^~~
+/usr/include/c++/6/bits/stl_algo.h:1887:2: note: parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<long long unsigned int*, std::vector<long long unsigned int> >’ will change in GCC 7.1
+  std::__insertion_sort(__first, __last, __comp);
+  ^~~
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/db_iter.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/filename.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/dbformat.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/log_reader.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/log_writer.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/memtable.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/repair.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/table_cache.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/version_edit.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/version_set.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/db/write_batch.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/helpers/memenv/memenv.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/block.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/block_builder.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/filter_block.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/format.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/iterator.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/merger.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/table.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/table_builder.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/table/two_level_iterator.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/arena.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/bloom.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/cache.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/coding.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/comparator.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/crc32c.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/env.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/filter_policy.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/hash.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/logging.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/options.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/status.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/port/port_posix.o
+  CXX(target) Release/obj.target/leveldb/deps/leveldb/leveldb-1.19/util/env_posix.o
+  AR(target) Release/obj.target/deps/leveldb/leveldb.a
+  COPY Release/leveldb.a
+  CXX(target) Release/obj.target/snappy/deps/snappy/snappy-1.1.1/snappy-sinksource.o
+  CXX(target) Release/obj.target/snappy/deps/snappy/snappy-1.1.1/snappy-stubs-internal.o
+  CXX(target) Release/obj.target/snappy/deps/snappy/snappy-1.1.1/snappy.o
+  AR(target) Release/obj.target/deps/snappy/snappy.a
+  COPY Release/snappy.a
+  CXX(target) Release/obj.target/leveldown/src/batch.o
+  CXX(target) Release/obj.target/leveldown/src/batch_async.o
+  CXX(target) Release/obj.target/leveldown/src/database.o
+  CXX(target) Release/obj.target/leveldown/src/database_async.o
+  CXX(target) Release/obj.target/leveldown/src/iterator.o
+  CXX(target) Release/obj.target/leveldown/src/iterator_async.o
+  CXX(target) Release/obj.target/leveldown/src/leveldown.o
+  CXX(target) Release/obj.target/leveldown/src/leveldown_async.o
+  SOLINK_MODULE(target) Release/obj.target/leveldown.node
+  COPY Release/leveldown.node
+make: Leaving directory '/home/pi/Arduinom/node_modules/pouchdb/node_modules/leveldown/build'
+prebuild verb ok 
+prebuild verb done node-gyp'ing 
+
+> uglifyjs-webpack-plugin@0.4.6 postinstall /home/pi/Arduinom/node_modules/uglifyjs-webpack-plugin
+> node lib/post_install.js
+
+
+> electron@1.7.6 postinstall /home/pi/Arduinom/node_modules/electron
+> node install.js
+
+npm WARN prepublish-on-install As of npm@5, `prepublish` scripts are deprecated.
+npm WARN prepublish-on-install Use `prepare` for build steps and `prepublishOnly` for upload-only.
+npm WARN prepublish-on-install See the deprecation note in `npm help scripts` for more information.
+
+> arduinom@0.0.0 prepublish /home/pi/Arduinom
+> npm run build
+
+
+> arduinom@0.0.0 build /home/pi/Arduinom
+> npm run browser-build && npm run node-build
+
+
+> arduinom@0.0.0 browser-build /home/pi/Arduinom
+> node src/build/copyMethods.js && webpack
+
+Generate device API json
+Hash: aae082ab028b22aa38ca
+Version: webpack 3.1.0
+Time: 952ms
+ Asset     Size  Chunks             Chunk Names
+app.js  37.5 kB       0  [emitted]  main
+   [0] ./src/client/Common.js 1.65 kB {0} [built]
+   [1] ./src/client/addMethods.js 2.17 kB {0} [built]
+   [3] ./src/client/index.js 1.13 kB {0} [built]
+   [4] ./src/client/devices/OpenBio.js 476 bytes {0} [built]
+   [9] ./src/client/devices/OpenBioMethods.json 624 bytes {0} [built]
+  [10] ./src/client/devices/OpenSpectro.js 493 bytes {0} [built]
+  [11] ./src/client/devices/OpenSpectroMethods.json 687 bytes {0} [built]
+  [12] ./src/client/devices/Solar.js 464 bytes {0} [built]
+  [13] ./src/client/devices/SolarMethods.json 648 bytes {0} [built]
+    + 5 hidden modules
+
+> arduinom@0.0.0 node-build /home/pi/Arduinom
+> babel src --out-dir lib
+
+src/build/copyMethods.js -> lib/build/copyMethods.js
+src/build/getMethodNames.js -> lib/build/getMethodNames.js
+src/client/Common.js -> lib/client/Common.js
+src/client/addMethods.js -> lib/client/addMethods.js
+src/client/devices/OpenBio.js -> lib/client/devices/OpenBio.js
+src/client/devices/OpenSpectro.js -> lib/client/devices/OpenSpectro.js
+src/client/devices/Solar.js -> lib/client/devices/Solar.js
+src/client/index.js -> lib/client/index.js
+src/db/collections.js -> lib/db/collections.js
+src/db/mongodb/Mongo.js -> lib/db/mongodb/Mongo.js
+src/db/mongodb/__tests__/mongo.js -> lib/db/mongodb/__tests__/mongo.js
+src/db/pouchdb/Pouch.js -> lib/db/pouchdb/Pouch.js
+src/db/pouchdb/__tests__/pouch.js -> lib/db/pouchdb/__tests__/pouch.js
+src/db/sync.js -> lib/db/sync.js
+src/devices/AbstractDevice.js -> lib/devices/AbstractDevice.js
+src/devices/DeviceFactory.js -> lib/devices/DeviceFactory.js
+src/devices/DeviceManager.js -> lib/devices/DeviceManager.js
+src/devices/OpenBio/OpenBio.js -> lib/devices/OpenBio/OpenBio.js
+src/devices/OpenBio/deviceInformation.js -> lib/devices/OpenBio/deviceInformation.js
+src/devices/OpenSpectro/OpenSpectro.js -> lib/devices/OpenSpectro/OpenSpectro.js
+src/devices/OpenSpectro/deviceInformation.js -> lib/devices/OpenSpectro/deviceInformation.js
+src/devices/Solar/Solar.js -> lib/devices/Solar/Solar.js
+src/devices/Solar/deviceInformation.js -> lib/devices/Solar/deviceInformation.js
+src/electron/index.js -> lib/electron/index.js
+src/public/app.js -> lib/public/app.js
+src/public/socket-io.js -> lib/public/socket-io.js
+src/server/routes/db.js -> lib/server/routes/db.js
+src/server/server.js -> lib/server/server.js
+src/server/socketio/devices.js -> lib/server/socketio/devices.js
+src/utilities/IncrementalPoll.js -> lib/utilities/IncrementalPoll.js
+src/utilities/parser.js -> lib/utilities/parser.js
+src/utilities/util.js -> lib/utilities/util.js
+src/view/index.js -> lib/view/index.js
+npm WARN arduinom@0.0.0 No repository field.
+npm WARN arduinom@0.0.0 scripts['server'] should probably be scripts['start'].
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"arm"})
+
+added 1144 packages in 320.438s
+
