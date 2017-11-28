@@ -50,6 +50,6 @@ To see a complete installation guide, please visit: [Documentation in Spanish](.
 
 Documentation in english is under construction. Please, use: [Documentation in Spanish](../master/Documentation/ES) instead.
 
-##Issues
+## Issues
 
 Refer to section 5. of [Previous Requirements (5. Issues)](../master/Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf).
