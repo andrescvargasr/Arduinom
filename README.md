@@ -52,4 +52,4 @@ Documentation in english is under construction. Please, use: [Documentation in S
 
 ##Issues
 
-Refer to section 5. of the [5. Issues](../master/Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf).
+Refer to section 5. of [Previous Requirements (5. Issues)](../master/Documentation/ES/ARDUINOM-PREVIOUS-REQUERIMENTS-ES.pdf).
