@@ -48,7 +48,7 @@ To see a complete installation guide, please visit: [Documentation in Spanish](.
 
 ## English
 
-Documentation in english is under construction. Please, use: [Documentation in Spanish](../master/Documentation/ES) instead.
+To see a complete installation guide, please visit: [Documentation in English](../master/Documentation/EN).
 
 ## Issues
 
